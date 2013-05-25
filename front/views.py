@@ -80,8 +80,10 @@ class BookmarksList(APIView):
 		return Response(serializer.data)
 
 	def post(self, request, format=None):
+		current_user = request.user.id
 		serializer = BookmarkSerializer(data=request.DATA)
 		if serializer.is_valid():
+			serializer.object.user_id = current_user
 		 	serializer.save()
 			return Response(serializer.data, status=status.HTTP_201_CREATED)
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
