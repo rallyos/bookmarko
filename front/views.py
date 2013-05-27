@@ -5,9 +5,9 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.core.context_processors import csrf
-from front.models import Bookmark
+from front.models import Bookmark, Collection
 from django.views.decorators.csrf import csrf_exempt # remove ?
-from front.serializers import BookmarkSerializer
+from front.serializers import BookmarkSerializer, CollectionSerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -56,7 +56,6 @@ def login_user(request):
 	if user is not None:
 		if user.is_active:
 			login(request, user)
-			#Token.objects.get_or_create(user=user) #######
 			return HttpResponseRedirect('user')
 		else:
 			return HttpResponse('login failed')
@@ -113,3 +112,20 @@ class BookmarkDetail(APIView):
 		bookmark = self.get_object(pk)
 		bookmark.delete()
 		return Response(status=status.HTTP_204_NO_CONTENT)
+
+class CollectionList(APIView):
+
+	def get(self, request, format=None):
+		user_id = request.user.id
+		collection = Collection.objects.filter(user_id__exact=user_id)
+		serializer = CollectionSerializer(collection, many=True)
+		return Response(serializer.data)
+
+	def post(self, request, format=None):
+		current_user = request.user.id
+		serializer = CollectionSerializer(data=request.DATA)
+		if serializer.is_valid():
+			serializer.object.user_id = current_user
+		 	serializer.save()
+			return Response(serializer.data, status=status.HTTP_201_CREATED)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

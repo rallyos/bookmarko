@@ -4,9 +4,15 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+# Collection database model fields
+class Collection(models.Model):
+	collection_name = models.CharField(max_length=50)
+	collection_background = models.CharField(max_length=7)
+	user = models.ForeignKey(User)
+
 # Bookmark database model fields
 class Bookmark(models.Model):
-	user = models.ForeignKey(User)
 	bookmark_title = models.CharField(max_length=50)
 	bookmark_url = models.URLField()
-	collection = models.CharField(max_length=30)
+	collection = models.ForeignKey(Collection)
+	user = models.ForeignKey(User)

@@ -27,10 +27,10 @@ var BookmarkView = Backbone.View.extend({
 	},
 
 	close: function(newval) {
-		this.model.save({ 'bookmark_title': newval });
+		this.model.save({ 'bookmark_title': newval}, { headers: { 'Authorization': 'Token 026e0c58864a7e58eff66f2b88e9094583d74ae4' } });
 	},
 
 	clear: function () {
-		this.model.destroy();
+		this.model.destroy({ headers: { 'Authorization': 'Token 026e0c58864a7e58eff66f2b88e9094583d74ae4' } });
 	}
 });
