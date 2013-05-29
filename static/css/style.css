@@ -39,6 +39,7 @@ a {
 	position: relative;
 	background: #F55757; /**/;
 	color: #fff;
+	cursor: pointer;
 }
 .bookmarks-group-count {
 	float: left;

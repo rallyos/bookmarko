@@ -3,7 +3,7 @@ from django.contrib.auth.models import User, Group
 # Import all serializer classes with 'serializers'
 from rest_framework import serializers
 # Import models
-from front.models import Bookmark, Collection
+from front.models import Bookmark, BookmarkCollection
 
 class BookmarkSerializer(serializers.HyperlinkedModelSerializer):
 
@@ -14,7 +14,7 @@ class BookmarkSerializer(serializers.HyperlinkedModelSerializer):
   	user_id = serializers.IntegerField()
 
   	#
-  	collection_id = serializers.IntegerField()
+  	collection_id = serializers.IntegerField(required=False)
 
   	# Set the model for thi serializer and it's fields
 	class Meta:
@@ -22,7 +22,7 @@ class BookmarkSerializer(serializers.HyperlinkedModelSerializer):
 		fields = ('id', 'bookmark_title', 'bookmark_url', 'collection_id', 'user_id')
 
 
-class CollectionSerializer(serializers.HyperlinkedModelSerializer):
+class BookmarkCollectionSerializer(serializers.HyperlinkedModelSerializer):
 
 	# So that we can use it to control single bookmark
 	id = serializers.Field()
@@ -31,5 +31,5 @@ class CollectionSerializer(serializers.HyperlinkedModelSerializer):
   	user_id = serializers.IntegerField()
 
 	class Meta:
-		model = Collection
+		model = BookmarkCollection
 		fields = ('id','collection_name','collection_background','user_id')

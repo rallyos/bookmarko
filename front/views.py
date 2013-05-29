@@ -5,9 +5,9 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.core.context_processors import csrf
-from front.models import Bookmark, Collection
+from front.models import Bookmark, BookmarkCollection
 from django.views.decorators.csrf import csrf_exempt # remove ?
-from front.serializers import BookmarkSerializer, CollectionSerializer
+from front.serializers import BookmarkSerializer, BookmarkCollectionSerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -113,19 +113,46 @@ class BookmarkDetail(APIView):
 		bookmark.delete()
 		return Response(status=status.HTTP_204_NO_CONTENT)
 
-class CollectionList(APIView):
+class BookmarkCollectionList(APIView):
 
 	def get(self, request, format=None):
 		user_id = request.user.id
-		collection = Collection.objects.filter(user_id__exact=user_id)
-		serializer = CollectionSerializer(collection, many=True)
+		collection = BookmarkCollection.objects.filter(user_id__exact=user_id)
+		serializer = BookmarkCollectionSerializer(collection, many=True)
 		return Response(serializer.data)
 
 	def post(self, request, format=None):
 		current_user = request.user.id
-		serializer = CollectionSerializer(data=request.DATA)
+		serializer = BookmarkCollectionSerializer(data=request.DATA)
 		if serializer.is_valid():
 			serializer.object.user_id = current_user
 		 	serializer.save()
 			return Response(serializer.data, status=status.HTTP_201_CREATED)
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class BookmarkCollectionDetail(APIView):
+
+	def get_object(self, pk):
+		try:
+	 		return BookmarkCollection.objects.get(pk=pk)
+		except BookmarkCollection.DoesNotExist:
+			raise Http404
+
+	def get(self, request, pk, format=None):
+		user_id = request.user.id
+		bookmarks = Bookmark.objects.filter(user_id__exact=user_id, collection_id__exact=pk)
+		serializer = BookmarkSerializer(bookmarks, many=True)
+		return Response(serializer.data)
+
+	def put(self, request, pk, format=None):
+		collection = self.get_object(pk)
+		serializer = BookmarkCollectionSerializer(collection, data=request.DATA)
+		if serializer.is_valid():
+			serializer.save()
+	 		return Response(serializer.data)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+	def delete(self, request, pk, format=None):
+		collection = self.get_object(pk)
+		collection.delete()
+		return Response(status=status.HTTP_204_NO_CONTENT)

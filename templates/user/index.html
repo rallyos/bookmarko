@@ -9,17 +9,11 @@
 	<div id="wrap">
 		<div class="top-bar">
 			<img class="logo" src="{{ STATIC_URL }}images/logo_example.png">
+			<span>{{ user.username }}</span>
 		</div>
 		<div class="sidebar">
-			<div class="group">
-				<span class="bookmarks-group-count">11</span>
-				<span class="bookmarks-group-name">Tickets</span>
-			</div>
 		</div>
 		<div class="content">
-			{% if user.is_authenticated %}
-				<span>Hello <strong>{{ user.username }}</strong> you must be very proud of yourself.</span>
-			{% endif %}
 			<div class="content-control">
 				<form id="form" action="">
 					<input id="bookmark-input" type="text" placeholder="Search . . .">
@@ -37,14 +31,17 @@
 		<a class="bookmarks-item-url" href="<%= bookmark_url %>" target="_blank"><%= bookmark_url %></a>
 		<span class="bookmarks-item-delete">X</span>
 	</script>
+	<script type="text/template" id="collection-template">
+		<span class="bookmarks-group-name"><%= collection_name %></span>
+	</script>
 <script src="{{ STATIC_URL }}libraries/underscore-min.js"></script>
 <script src="{{ STATIC_URL }}libraries/jquery-1.9.1.min.js"></script>
 <script src="{{ STATIC_URL }}libraries/backbone-min.js"></script>
-<script src="{{ STATIC_URL }}libraries/backbone.localStorage.js"></script>
 <script src="{{ STATIC_URL }}js/main.js"></script>
-<script src="{{ STATIC_URL }}js/models/model.js"></script>
-<script src="{{ STATIC_URL }}js/collections/collection.js"></script>
-<script src="{{ STATIC_URL }}js/views/bookmark.js"></script>
-<script src="{{ STATIC_URL }}js/views/bookmarks.js"></script>
+<script src="{{ STATIC_URL }}js/routes.js"></script>
+<script src="{{ STATIC_URL }}js/models/models.js"></script>
+<script src="{{ STATIC_URL }}js/collections/collections.js"></script>
+<script src="{{ STATIC_URL }}js/views/SidebarView.js"></script>
+<script src="{{ STATIC_URL }}js/views/ContentView.js"></script>
 </body>
 </html>
