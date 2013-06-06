@@ -14,16 +14,20 @@ var SidebarView = Backbone.View.extend({
 	initialize: function () {
 		
 		// On 'add' event in 'bookmarks' collection run addBookmark() function.
-		this.listenTo(collections, 'add', this.addBookmarkCollection);
+		this.listenTo(globalBookmarkCollections, 'add', this.addBookmarkCollection);
 
 		// Sync all models with the server
-		collections.fetch();
+		globalBookmarkCollections.fetch();
+	},
+
+	events: {
+		'click .group-add': 'addBookmarkCollection'
 	},
 
 	// Makes new single bookmark view with 'bookmark' for model
-	addBookmarkCollection: function(collection) {
-		var newBookmarkCollectionView = new BookmarkCollectionView({model: collection});
-		$('.sidebar').append(newBookmarkCollectionView.render().el);
+	addBookmarkCollection: function(collectn) {
+		var newBookmarkCollectionView = new BookmarkCollectionView({model: collectn});
+		$('.sidebar').append(newBookmarkCollectionView.el);
 	}
 
 });
@@ -36,14 +40,35 @@ var sidebar = new SidebarView();
 var BookmarkCollectionView = Backbone.View.extend({
 	tagName: 'div',
 	className: 'group',
-
+	model: BookmarkCollection,
 	template: _.template($('#collection-template').html()),
+
+	initialize: function() {		
+		this.listenTo(this.model.bookmarkCollections, 'sync', this.testin)
+		this.model.bookmarkCollections.bind("sync", _.bind(this.render, this));
+		this.model.bookmarkCollections.fetch();
+	},
+
+	events: {
+		'click': 'checkin'
+	},
+	checkin: function() {
+		console.log('mhm');
+		pageRouter.navigate('#/collections/' + this.model.id ); // just testing navigate. don't use it that way
+	},
+
+	testin: function() {
+		console.log(this.model.bookmarkCollections.toJSON());
+
+		this.model.bookmarkCollections.toJSON();
+
+	},
 
 	// The render function for the single collection.
 	// It appends the template html and serialized model to the $el.
-	render: function(collection) {
+	render: function(collectn) {
 		this.$el.html(this.template(this.model.toJSON()));
-		background_color = this.model.get('collection_background');
+		var background_color = this.model.get('collection_background');
 		this.$el.css('background', background_color);
 		return this;
 	}

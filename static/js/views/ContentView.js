@@ -9,13 +9,33 @@ version 0.0.3, May 30
 var BookmarksView = Backbone.View.extend({
 	el: '.content',
 
-	initialize: function () {
+	initialize: function() {
 		
+		this.listenTo(bookmarks, 'reset', this.addAll);
+
+		this.listenTo(bookmarks, 'filter', this.filtra);
 		// On 'add' event in 'bookmarks' collection run addBookmark() function.
 		this.listenTo(bookmarks, 'add', this.addBookmark);
 
 		// Sync all models with the server and put them in collection
 		bookmarks.fetch();
+	},
+/*
+	filtra: function(id) {
+		console.log(id);
+		bookmarks.each(this.filterOne, this);
+	},
+*/
+	filtra: function(id) {
+
+		bookmarks.forEach(function(bookmarks) {
+			bookmarks.trigger('testi', bookmarks,id);
+		});
+	},
+
+	addAll: function (epic) {
+		this.$('.bookmarks-list').html('');
+		epic.each(this.addBookmark, this);
 	},
 
 	// Makes new single bookmark view.
@@ -55,7 +75,10 @@ var BookmarkView = Backbone.View.extend({
 	},
 
 	initialize: function() {
-	
+		//this.$el.attr('draggable', 'true');
+
+		this.listenTo(this.model, 'testi', this.visible);
+
 		// When the model is destroyed, it's also removed from the view.
 		this.listenTo(this.model, 'destroy', this.remove);
 	},
@@ -70,12 +93,22 @@ var BookmarkView = Backbone.View.extend({
 	// When editing the bookmark name
 	// Check every keypress, and if 'enter' is pressed the field is blurred and .text() is sent to the close() function
 	updateBookmark: function(e) {
-	if (e.which === ENTER_KEY) {
-		this.$('.bookmarks-item-title').blur();
-		var newval = this.$('.bookmarks-item-title').text();
-		this.close(newval);
-		return false;
+		if (e.which === ENTER_KEY) {
+			this.$('.bookmarks-item-title').blur();
+			var newval = this.$('.bookmarks-item-title').text();
+			this.close(newval);
+			return false;
 		}
+	},
+
+	visible: function(bookmark, id) {
+		//this.$el.removeClass('hidden');
+		if (bookmark.get('collection_id') != id) {
+			this.$el.addClass('hidden');
+		} else {
+			this.$el.removeClass('hidden');
+		}
+		//this.$el.hide();
 	},
 
 	// Get newval and update the bookmark name

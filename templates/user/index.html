@@ -12,6 +12,7 @@
 			<span>{{ user.username }}</span>
 		</div>
 		<div class="sidebar">
+			<div class="group-add"><span>New Group</span></div>
 		</div>
 		<div class="content">
 			<div class="content-control">
@@ -29,17 +30,19 @@
 	<script type="text/template" id="bookmark-template">
 		<span class="bookmarks-item-title" contenteditable="true"><%= bookmark_title %></span>
 		<a class="bookmarks-item-url" href="<%= bookmark_url %>" target="_blank"><%= bookmark_url %></a>
+		<span class="bookmarks-item-tags"><%= tags %></span>
 		<span class="bookmarks-item-delete">X</span>
 	</script>
 	<script type="text/template" id="collection-template">
-		<span class="bookmarks-group-name"><%= collection_name %></span>
+		<span class="bookmarks-group-count"><%- this.model.bookmarkCollections.length %></span>
+		<span class="bookmarks-group-name" contenteditable="true"><%= collection_name %></span>
 	</script>
 <script src="{{ STATIC_URL }}libraries/underscore-min.js"></script>
 <script src="{{ STATIC_URL }}libraries/jquery-1.9.1.min.js"></script>
 <script src="{{ STATIC_URL }}libraries/backbone-min.js"></script>
 <script src="{{ STATIC_URL }}js/main.js"></script>
-<script src="{{ STATIC_URL }}js/routes.js"></script>
 <script src="{{ STATIC_URL }}js/models/models.js"></script>
+<script src="{{ STATIC_URL }}js/routers/router.js"></script>
 <script src="{{ STATIC_URL }}js/collections/collections.js"></script>
 <script src="{{ STATIC_URL }}js/views/SidebarView.js"></script>
 <script src="{{ STATIC_URL }}js/views/ContentView.js"></script>

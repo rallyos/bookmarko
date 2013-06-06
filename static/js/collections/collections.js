@@ -15,7 +15,7 @@ var BookmarkCollections = Backbone.Collection.extend({
 });
 
 // Bookmarks Collections instance 
-var collections = new BookmarkCollections();
+var globalBookmarkCollections = new BookmarkCollections();
 
 
 // The collection of bookmarks for easy loading on login. (At least for now)
