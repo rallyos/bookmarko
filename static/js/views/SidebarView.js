@@ -1,12 +1,3 @@
-/* Sidebar view
-version 0.0.3, May 30
-
-# To be checked before beta
->> Do I need to listen for 'reset' event?
->> Do I need to set 'model: bookmark' in the addBookmark()
->> 'Strict mode?'
-*/
-
 // Sidebar View
 var SidebarView = Backbone.View.extend({
 	el: '.sidebar',
@@ -14,19 +5,23 @@ var SidebarView = Backbone.View.extend({
 	initialize: function () {
 		
 		// On 'add' event in 'bookmarks' collection run addBookmark() function.
-		this.listenTo(globalBookmarkCollections, 'add', this.addBookmarkCollection);
+		this.listenTo(globalBookmarkCollections, 'add', this.loadBookmarkCollection);
 
-		// Sync all models with the server
+		// Load all bookmark collections from the server
 		globalBookmarkCollections.fetch();
 	},
 
 	events: {
-		'click .group-add': 'addBookmarkCollection'
+		'click .group-add': 'createCollection'
+	},
+
+	createCollection: function() {
+		// :) to be continued... 
 	},
 
 	// Makes new single bookmark view with 'bookmark' for model
-	addBookmarkCollection: function(collectn) {
-		var newBookmarkCollectionView = new BookmarkCollectionView({model: collectn});
+	loadBookmarkCollection: function(bookmarks_collection) {
+		var newBookmarkCollectionView = new BookmarkCollectionView({model: bookmarks_collection});
 		$('.sidebar').append(newBookmarkCollectionView.el);
 	}
 
@@ -38,35 +33,42 @@ var sidebar = new SidebarView();
 
 // Single collection view
 var BookmarkCollectionView = Backbone.View.extend({
-	tagName: 'div',
-	className: 'group',
+	el: '.group',
 	model: BookmarkCollection,
+
 	template: _.template($('#collection-template').html()),
 
 	initialize: function() {		
-		this.listenTo(this.model.bookmarkCollections, 'sync', this.testin)
-		this.model.bookmarkCollections.bind("sync", _.bind(this.render, this));
+		
+		// When the collection is loaded from the server run function to serialize the data
+		this.listenTo(this.model.bookmarkCollections, 'sync', this.serializeCollection);
+
+		// When the collection is loaded from the server run render()
+		this.model.bookmarkCollections.bind('sync', _.bind(this.render, this));
+
+		// Load the subollection from the server
 		this.model.bookmarkCollections.fetch();
 	},
 
 	events: {
-		'click': 'checkin'
-	},
-	checkin: function() {
-		console.log('mhm');
-		pageRouter.navigate('#/collections/' + this.model.id ); // just testing navigate. don't use it that way
+		'click': 'navigateRouter'
 	},
 
-	testin: function() {
-		console.log(this.model.bookmarkCollections.toJSON());
 
+	navigateRouter: function() {
+
+		// Navigate the router based on id. In the future the url should show collection name
+		pageRouter.navigate('#/collections/' + this.model.id );
+	},
+
+	// When fetched convert them to json
+	serializeCollection: function() {
 		this.model.bookmarkCollections.toJSON();
-
 	},
 
 	// The render function for the single collection.
 	// It appends the template html and serialized model to the $el.
-	render: function(collectn) {
+	render: function(bookmarks_collection) {
 		this.$el.html(this.template(this.model.toJSON()));
 		var background_color = this.model.get('collection_background');
 		this.$el.css('background', background_color);

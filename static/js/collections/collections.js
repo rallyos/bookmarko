@@ -1,13 +1,3 @@
-/* Collections
-version 0.0.3, May 30
-
-
-# To be checked before beta
->> Collections names
->> 
-
-*/
-
 // Bookmarks collections 
 var BookmarkCollections = Backbone.Collection.extend({
 	model: BookmarkCollection,

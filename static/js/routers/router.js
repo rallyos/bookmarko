@@ -1,11 +1,12 @@
+
 var PageRouter = Backbone.Router.extend({
 
 	routes: {
-		'collections/:id': 'testvame'
+		'collections/:id': 'showCollection'
 	},
 
-	testvame: function(id) {
-		console.log('testvame ' + id);
+	// Trigger 'filter' event and send the model id
+	showCollection: function(id) {
 		bookmarks.trigger('filter', id);
 	}
 });
