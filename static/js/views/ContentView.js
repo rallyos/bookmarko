@@ -48,7 +48,9 @@ var BookmarkView = Backbone.View.extend({
 		'click .bookmarks-item-delete': 'clear',
 
 		// On keypress run updateBookmark()
-		'keypress .bookmarks-item-title': 'updateBookmark'
+		'keypress .bookmarks-item-title': 'updateBookmark',
+
+		'click .select-item': 'selectBookmark'
 	},
 
 	initialize: function() {
@@ -59,7 +61,12 @@ var BookmarkView = Backbone.View.extend({
 		this.listenTo(this.model, 'passed', this.hideBookmarks);
 
 		// When the model is destroyed, it's also removed from the view.
-		this.listenTo(this.model, 'destroy', this.remove);
+		//this.listenTo(this.model, 'destroy', this.remove);
+
+	},
+
+	selectBookmark: function() {
+		this.$('.select-item').toggleClass('select-item-selected');
 	},
 
 	// The render function for the single bookmark.
@@ -99,6 +106,13 @@ var BookmarkView = Backbone.View.extend({
 
 	// Deletes the model
 	clear: function () {
-		this.model.destroy({ headers: { 'Authorization': 'Token 026e0c58864a7e58eff66f2b88e9094583d74ae4' } });
+		this.$el.css({
+			right: '100%',
+		}, this.$el.one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', this.destrooy())
+		)
+	},
+
+	destrooy: function() {
+		this.model.destroy({ headers: { 'Authorization': 'Token 026e0c58864a7e58eff66f2b88e9094583d74ae4' } }, this.remove);
 	}
 });

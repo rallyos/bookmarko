@@ -33,7 +33,8 @@ var sidebar = new SidebarView();
 
 // Single collection view
 var BookmarkCollectionView = Backbone.View.extend({
-	el: '.group',
+	tagName: 'div',
+	className: 'group',
 	model: BookmarkCollection,
 
 	template: _.template($('#collection-template').html()),
