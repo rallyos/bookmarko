@@ -47,15 +47,14 @@ var BookmarkView = Backbone.View.extend({
 		// When the X is clicked the clear() function is initialized
 		'click .bookmarks-item-delete': 'clear',
 
+		'dragstart .select-item': 'dragStartEvent',
+
 		// On keypress run updateBookmark()
 		'keypress .bookmarks-item-title': 'updateBookmark',
 
-		'click .select-item': 'selectBookmark'
 	},
 
 	initialize: function() {
-		// this.$el.attr('draggable', 'true');
-		// Don't use - If there is a contenteditable element nested in draggable, the contenteditable doesn't focus.
 
 		// Listen for 'passed' event - runs function that will check model id's and hide/show them.
 		this.listenTo(this.model, 'passed', this.hideBookmarks);
@@ -65,8 +64,13 @@ var BookmarkView = Backbone.View.extend({
 
 	},
 
-	selectBookmark: function() {
-		this.$('.select-item').toggleClass('select-item-selected');
+	dragStartEvent: function (e) {
+		console.log(e);
+		var data
+		if (e.originalEvent) e = e.originalEvent
+
+		e.dataTransfer.effectAllowed = 'move';
+		e.dataTransfer.setData('text/html', this.innerHTML);
 	},
 
 	// The render function for the single bookmark.

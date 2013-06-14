@@ -21,6 +21,7 @@ a {
 	width: 1140px;
 	margin: 0 auto;
 	box-shadow: 0 0 0 1px #f0eff1;
+	overflow: hidden;
 }
 .top-bar {
 	width: 100%;
@@ -56,13 +57,27 @@ a {
 	border-top: solid 1px #f0eff1;
 	border-bottom: solid 1px #f0eff1;
 }
+.bookmarks-group-control {
+	width: 100%;
+	height: 77px;
+}
 .bookmarks-group-count {
 	float: left;
 	padding: 4px;
 }
+.bookmarks-group-delete {
+	display: none;
+	float: right;
+	margin: 5px 5px 0 0;
+	color: rgba(255, 255, 255, 0.65);
+}
+.bookmarks-group-control:hover .bookmarks-group-delete {
+	display: block;
+}
 .bookmarks-group-name {
 	width: 100%;
-	padding: 3px;
+	height: 17px;
+	padding: 3px 0;
 	position: absolute;
 	bottom: 0;
 	left: 0;
@@ -121,14 +136,11 @@ a {
 	width: 23px;
 	height: 40px;
 	float: left;
-	cursor: pointer;
+	cursor: move;
 	background: transparent;
 }
 .bookmarks-item:hover .select-item {
 	background: #ded2e2;
-}
-.select-item-selected {
-	background: #762c90;
 }
 .bookmarks-item-title {
 	float: left;

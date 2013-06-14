@@ -52,9 +52,16 @@ var BookmarkCollectionView = Backbone.View.extend({
 	},
 
 	events: {
-		'click': 'navigateRouter'
-	},
+		'click .bookmarks-group-control': 'navigateRouter',
+		'keypress .bookmarks-group-name': 'updateGroup',
 
+		'dragenter': 'dragEnterEvent',
+		'dragover': 'dragOverEvent',
+		'dragleave': 'dragLeaveEvent',
+		'drop': 'dragDropEvent',
+
+		'click .bookmarks-group-delete': 'clear'
+	},
 
 	navigateRouter: function() {
 
@@ -65,6 +72,65 @@ var BookmarkCollectionView = Backbone.View.extend({
 	// When fetched convert them to json
 	serializeCollection: function() {
 		this.model.bookmarkCollections.toJSON();
+	},
+
+	updateGroup: function(e) {
+		if (e.which === ENTER_KEY) {
+			this.$('.bookmarks-group-name').blur();
+			var newval = this.$('.bookmarks-group-name').text();
+			this.saveGroup(newval);
+			return false;
+		}
+	},
+
+	dragEnterEvent: function(e) {
+		console.log('IZVINISEBE IZVINISEBE IZVINISEBE');
+		this.$el.css('opacity','0.6');
+	},
+
+	dragOverEvent: function(e) {		
+		if (e.preventDefault) {
+	    	e.preventDefault(); // Necessary. Allows us to drop.
+		}
+
+		//e.dataTransfer.dropEffect = 'move';  // See the section on the DataTransfer object.
+
+		return false;
+	},
+
+	dragDropEvent: function(e) {
+
+  		if (e.stopPropagation) {
+  	  		e.stopPropagation(); // stops the browser from redirecting.
+  		} // ???????????
+
+		// Set the source column's HTML to the HTML of the column we dropped on.
+		this.innerHTML = e.dataTransfer.getData('text/html');
+		
+		console.log(e)
+		console.log(this)	
+
+		return false;
+	},
+
+	dragLeaveEvent: function() {
+		this.$el.css('opacity','1');
+	},
+
+	saveGroup: function(newval) {
+		this.model.save({ 'collection_name': newval}, { headers: { 'Authorization': 'Token 026e0c58864a7e58eff66f2b88e9094583d74ae4' } });
+	},
+
+	// Deletes the model
+	clear: function () {
+		this.$el.css({
+			right: '100%',
+		}, this.$el.one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', this.destrooy())
+		)
+	},
+
+	destrooy: function() {
+		this.model.destroy({ headers: { 'Authorization': 'Token 026e0c58864a7e58eff66f2b88e9094583d74ae4' } }, this.remove);
 	},
 
 	// The render function for the single collection.

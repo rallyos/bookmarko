@@ -28,14 +28,17 @@
 		<div class="footer"></div>	
 	</div>
 	<script type="text/template" id="bookmark-template">
-		<span class="select-item"></span>
+		<span class="select-item" draggable="true"></span>
 		<span class="bookmarks-item-title" contenteditable="true"><%- bookmark_title.substring(0,35)  %></span>
 		<a class="bookmarks-item-url" href="<%= bookmark_url %>" target="_blank"><%= bookmark_url %></a>
 		<span class="bookmarks-item-tags"><%= tags %></span>
 		<span class="bookmarks-item-delete">X</span>
 	</script>
 	<script type="text/template" id="collection-template">
-		<span class="bookmarks-group-count"><%- this.model.bookmarkCollections.length %></span>
+		<div class="bookmarks-group-control">
+			<span class="bookmarks-group-count"><%- this.model.bookmarkCollections.length %></span>
+			<span class="bookmarks-group-delete">X</span>
+		</div>
 		<span class="bookmarks-group-name" contenteditable="true"><%= collection_name %></span>
 	</script>
 <script src="{{ STATIC_URL }}libraries/underscore-min.js"></script>
