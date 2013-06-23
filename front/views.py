@@ -48,6 +48,11 @@ def user(request):
 		return render(request, 'user/index.html')
 	else:
 		return render(request, 'index.html')
+
+
+import datetime
+from django.utils.timezone import utc
+
 # Login
 def login_user(request):
 	username = request.GET[ 'username' ]
@@ -55,12 +60,17 @@ def login_user(request):
 	user = authenticate(username=username, password=password)
 	if user is not None:
 		if user.is_active:
-			
 			# Get or Create the token object for the logged user 
 			token, created = Token.objects.get_or_create(user=user)
+
+			if not created:
+				# update the created time of the token to keep it valid
+				token.created = datetime.datetime.utcnow().replace(tzinfo=utc)
+				token.save()			
+
 			login(request, user)
 
-			# Create the token cookie 
+			# Create the token cookie
 			resp = HttpResponseRedirect('user')
 			resp.set_cookie('Token', token)
 			return resp

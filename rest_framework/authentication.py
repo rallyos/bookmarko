@@ -5,6 +5,8 @@ from __future__ import unicode_literals
 import base64
 from datetime import datetime
 
+from django.utils.timezone import utc
+
 from django.contrib.auth import authenticate
 from django.core.exceptions import ImproperlyConfigured
 from rest_framework import exceptions, HTTP_HEADER_ENCODING
@@ -167,6 +169,11 @@ class TokenAuthentication(BaseAuthentication):
 
         if not token.user.is_active:
             raise exceptions.AuthenticationFailed('User inactive or deleted')
+
+        utc_now = datetime.datetime.utcnow().replace(tzinfo=utc)
+
+        if token.created < utc_now - datetime.timedelta(hours=24):
+            raise exceptions.AuthenticationFailed('Token has expired')
 
         return (token.user, token)
 
