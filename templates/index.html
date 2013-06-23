@@ -48,7 +48,7 @@
 <body>
 	<div id="wrap">
 		<div id="login-box">
-			<form id="loginform" type="POST" action="login_user">
+			<form id="loginform" type="POST" action="login_user">{% csrf_token %}
 				<input type="email" name="username" id="username" placeholder="Email">
 				<input type="password" name="password" id="password" placeholder="Password">
 				<input type="submit" value="Login">

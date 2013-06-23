@@ -15,6 +15,15 @@ var SidebarView = Backbone.View.extend({
 		'click .group-add': 'createCollection'
 	},
 
+	/*
+		Sidebar colors array
+		1: #EB4040 (red)
+		2: #4ABB3E (green)
+		3: #343534 (black)
+		4: #33A3C0 (green-blue)
+		5: #863825 (brown)
+	*/
+
 	createCollection: function() {
 		// :) to be continued... 
 	},
@@ -104,13 +113,14 @@ var BookmarkCollectionView = Backbone.View.extend({
   	  		e.stopPropagation(); // stops the browser from redirecting.
   		} // ???????????
 
-		// Set the source column's HTML to the HTML of the column we dropped on.
+	// Set the source column's HTML to the HTML of the column we dropped on.
+		dragSrcEl.innerHTML = this.innerHTML;
 		this.innerHTML = e.dataTransfer.getData('text/html');
 		
-		console.log(e)
-		console.log(this)	
-
 		return false;
+
+		console.log(e)
+		console.log(this)
 	},
 
 	dragLeaveEvent: function() {
@@ -118,7 +128,7 @@ var BookmarkCollectionView = Backbone.View.extend({
 	},
 
 	saveGroup: function(newval) {
-		this.model.save({ 'collection_name': newval}, { headers: { 'Authorization': 'Token 026e0c58864a7e58eff66f2b88e9094583d74ae4' } });
+		this.model.save({ 'collection_name': newval}, { headers: { 'Authorization': 'Token ' + token } });
 	},
 
 	// Deletes the model
@@ -130,7 +140,7 @@ var BookmarkCollectionView = Backbone.View.extend({
 	},
 
 	destrooy: function() {
-		this.model.destroy({ headers: { 'Authorization': 'Token 026e0c58864a7e58eff66f2b88e9094583d74ae4' } }, this.remove);
+		this.model.destroy({ headers: { 'Authorization': 'Token ' + token } }, this.remove);
 	},
 
 	// The render function for the single collection.

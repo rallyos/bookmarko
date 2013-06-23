@@ -15,7 +15,6 @@ urlpatterns = patterns('',
 	url(r'^api/collections/$', views.BookmarkCollectionList.as_view()),
 	url(r'^api/collections/(?P<pk>[0-9]+)/$', views.BookmarkCollectionDetail.as_view()),
     url(r'^api/auth/', 'rest_framework.authtoken.views.obtain_auth_token'),
-    #url(r'^api/obtain/?$', 'views.obtain_expiring_auth_token'),
 )
 
 urlpatterns = format_suffix_patterns(urlpatterns)

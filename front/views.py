@@ -4,14 +4,14 @@ from django.http import HttpResponse, HttpRequest, HttpResponseRedirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from django.core.context_processors import csrf
 from front.models import Bookmark, BookmarkCollection
-from django.views.decorators.csrf import csrf_exempt # remove ?
 from front.serializers import BookmarkSerializer, BookmarkCollectionSerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.authtoken.models import Token
+
 #import urllib2
 #from BeautifulSoup import BeautifulSoup
 
@@ -55,8 +55,15 @@ def login_user(request):
 	user = authenticate(username=username, password=password)
 	if user is not None:
 		if user.is_active:
+			
+			# Get or Create the token object for the logged user 
+			token, created = Token.objects.get_or_create(user=user)
 			login(request, user)
-			return HttpResponseRedirect('user')
+
+			# Create the token cookie 
+			resp = HttpResponseRedirect('user')
+			resp.set_cookie('Token', token)
+			return resp
 		else:
 			return HttpResponse('login failed')
 	else:

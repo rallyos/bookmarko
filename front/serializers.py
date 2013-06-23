@@ -11,7 +11,7 @@ class BookmarkSerializer(serializers.HyperlinkedModelSerializer):
 	id = serializers.Field()
 	
 	# So that we can know who is the owner of the bookmarks
-  	user_id = serializers.IntegerField()
+  	user_id = serializers.IntegerField(required=False)
 
   	tags = serializers.CharField(required=False)
 
@@ -30,7 +30,7 @@ class BookmarkCollectionSerializer(serializers.HyperlinkedModelSerializer):
 	id = serializers.Field()
 	
 	# So that we can know who is the owner of the bookmarks
-  	user_id = serializers.IntegerField()
+  	user_id = serializers.IntegerField(required=False)
 
 	class Meta:
 		model = BookmarkCollection

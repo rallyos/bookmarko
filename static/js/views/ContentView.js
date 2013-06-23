@@ -105,7 +105,7 @@ var BookmarkView = Backbone.View.extend({
 	// Get newval and update the bookmark name
 	// save() makes GET request to check if the value is different, and then sends PUT request to update it
 	saveBookmark: function(newval) {
-		this.model.save({ 'bookmark_title': newval}, { headers: { 'Authorization': 'Token 026e0c58864a7e58eff66f2b88e9094583d74ae4' } });
+		this.model.save({ 'bookmark_title': newval}, { headers: { 'Authorization': 'Token ' + token } });
 	},
 
 	// Deletes the model
@@ -117,6 +117,6 @@ var BookmarkView = Backbone.View.extend({
 	},
 
 	destrooy: function() {
-		this.model.destroy({ headers: { 'Authorization': 'Token 026e0c58864a7e58eff66f2b88e9094583d74ae4' } }, this.remove);
+		this.model.destroy({ headers: { 'Authorization': 'Token ' + token } }, this.remove);
 	}
 });
