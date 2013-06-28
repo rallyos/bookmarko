@@ -35,11 +35,26 @@
 		<span class="bookmarks-item-delete">X</span>
 	</script>
 	<script type="text/template" id="collection-template">
-		<div class="bookmarks-group-control">
-			<span class="bookmarks-group-count"><%- this.model.bookmarkCollections.length %></span>
-			<span class="bookmarks-group-delete">X</span>
+		<div class="group">
+			<div class="bookmarks-group-control">
+				<span class="bookmarks-group-count"><%- this.model.bookmarkCollections.length %></span>
+			</div>
+			<div class="bookmarks-group-actions">
+				<span class="bookmarks-group-delete">X</span>
+				<img class="toggle-palette" src="{{ STATIC_URL }}images/toggle_palette.png">
+			</div>
+			<span class="bookmarks-group-name" contenteditable="true"><%= collection_name %></span>
 		</div>
-		<span class="bookmarks-group-name" contenteditable="true"><%= collection_name %></span>
+		<div class="bookmarks-group-color-palette">
+			<span class="bookmarks-group-color palette-color-red"></span>
+			<span class="bookmarks-group-color palette-color-green"></span>
+			<span class="bookmarks-group-color palette-color-black"></span>
+			<span class="bookmarks-group-color palette-color-lightblue"></span>
+			<span class="bookmarks-group-color palette-color-brown"></span>
+			<span class="bookmarks-group-color palette-color-blue"></span>
+			<span class="bookmarks-group-color palette-color-orange"></span>
+			<span class="bookmarks-group-color palette-color-grey"></span>
+		</div>
 	</script>
 <script src="{{ STATIC_URL }}libraries/underscore-min.js"></script>
 <script src="{{ STATIC_URL }}libraries/jquery-1.9.1.min.js"></script>

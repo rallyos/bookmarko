@@ -14,16 +14,7 @@ var SidebarView = Backbone.View.extend({
 	events: {
 		'click .group-add': 'createCollection'
 	},
-
-	/*
-		Sidebar colors array
-		1: #EB4040 (red)
-		2: #4ABB3E (green)
-		3: #343534 (black)
-		4: #33A3C0 (green-blue)
-		5: #863825 (brown)
-	*/
-
+	
 	createCollection: function() {
 		// :) to be continued... 
 	},
@@ -43,7 +34,7 @@ var sidebar = new SidebarView();
 // Single collection view
 var BookmarkCollectionView = Backbone.View.extend({
 	tagName: 'div',
-	className: 'group',
+	className: 'group-wrap',
 	model: BookmarkCollection,
 
 	template: _.template($('#collection-template').html()),
@@ -69,7 +60,10 @@ var BookmarkCollectionView = Backbone.View.extend({
 		'dragleave': 'dragLeaveEvent',
 		'drop': 'dragDropEvent',
 
-		'click .bookmarks-group-delete': 'clear'
+		'click .bookmarks-group-delete': 'clear',
+
+		'click .toggle-palette': 'togglePalette',
+		'click .bookmarks-group-color': 'changeGroupColor'
 	},
 
 	navigateRouter: function() {
@@ -92,35 +86,104 @@ var BookmarkCollectionView = Backbone.View.extend({
 		}
 	},
 
-	dragEnterEvent: function(e) {
-		console.log('IZVINISEBE IZVINISEBE IZVINISEBE');
-		this.$el.css('opacity','0.6');
+	togglePalette: function() {
+		var cPaletteHeight = this.$('.bookmarks-group-color-palette').css('height');
+		
+
+		//this.$('.bookmarks-group-color-palette').toggle();
+		if (cPaletteHeight == '50px') {
+			this.$('.bookmarks-group-color-palette').css('height', '0');
+		} else if (cPaletteHeight == '0px') {
+			this.$('.bookmarks-group-color-palette').css('height', '50px');
+		}
+
+		//this.$('.bookmarks-group-color-palette').toggle(function() {
+		//	$(this).css('height', '50px');
+		//});
 	},
 
-	dragOverEvent: function(e) {		
+	changeGroupColor: function(click) {
+
+		if (click.target.classList[1] == 'palette-color-red') {
+			newBgColor = '#EB4040';
+		}
+
+		if (click.target.classList[1] == 'palette-color-green') {
+			newBgColor = '#4ABB3E';
+		}
+
+		if (click.target.classList[1] == 'palette-color-black') {
+			newBgColor = '#343534';
+		}
+
+		if (click.target.classList[1] == 'palette-color-lightblue') {
+			newBgColor = '#33A3C0';
+		}
+
+		if (click.target.classList[1] == 'palette-color-brown') {
+			newBgColor = '#863825';
+		}
+
+		if (click.target.classList[1] == 'palette-color-blue') {
+			newBgColor = '#2D5086';
+		}
+
+		if (click.target.classList[1] == 'palette-color-orange') {
+			newBgColor = '#eb6d20';
+		}
+
+		if (click.target.classList[1] == 'palette-color-grey') {
+			newBgColor = '#A3A3A3';
+		}
+
+		this.$('.group').css('background-color', newBgColor);
+		this.model.save('collection_background', newBgColor, { headers: { 'Authorization': 'Token ' + token } });
+	},
+
+	dragEnterEvent: function(e) {
+		this.$el.css('opacity','0.6');
+
+		console.log(this.model.id);
+	},
+
+	dragOverEvent: function(e) {
 		if (e.preventDefault) {
 	    	e.preventDefault(); // Necessary. Allows us to drop.
 		}
-
-		//e.dataTransfer.dropEffect = 'move';  // See the section on the DataTransfer object.
 
 		return false;
 	},
 
 	dragDropEvent: function(e) {
 
-  		if (e.stopPropagation) {
-  	  		e.stopPropagation(); // stops the browser from redirecting.
-  		} // ???????????
+		data = JSON.parse(e.originalEvent.dataTransfer.getData('model'));
+		data.collection_id = this.model.id;
 
-	// Set the source column's HTML to the HTML of the column we dropped on.
-		dragSrcEl.innerHTML = this.innerHTML;
-		this.innerHTML = e.dataTransfer.getData('text/html');
+		console.log(data);
 		
+		this.testvame(data);
 		return false;
+	},
 
-		console.log(e)
-		console.log(this)
+	testvame: function(data) {
+		console.log(data)
+
+		var xhr = new XMLHttpRequest();
+		xhr.open('PUT', 'http://markedbyme.appspot.com/api/' + data.id, true);
+		xhr.setRequestHeader('Content-Type','application/json');
+		xhr.setRequestHeader('Authorization','Token ' + token);
+		var req = {'bookmark_title': data.bookmark_title, 'bookmark_url': data.bookmark_url, 'collection_id': data.collection_id}; //don't forget to get user_id
+		xhr.send(JSON.stringify(req));
+
+		testHide = bookmarks.get(data.id);
+		//console.log(testHide)
+
+		testHide.trigger('hidd')
+	},
+
+	hideThisShit: function(testHide) {
+		console.log(testHide)
+		console.log(testHide.$el)
 	},
 
 	dragLeaveEvent: function() {
@@ -148,7 +211,7 @@ var BookmarkCollectionView = Backbone.View.extend({
 	render: function(bookmarks_collection) {
 		this.$el.html(this.template(this.model.toJSON()));
 		var background_color = this.model.get('collection_background');
-		this.$el.css('background', background_color);
+		this.$('.group').css('background', background_color);
 		return this;
 	}
 

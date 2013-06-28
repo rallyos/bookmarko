@@ -59,18 +59,29 @@ var BookmarkView = Backbone.View.extend({
 		// Listen for 'passed' event - runs function that will check model id's and hide/show them.
 		this.listenTo(this.model, 'passed', this.hideBookmarks);
 
+		this.listenTo(this.model, 'hidd', this.hideit)
 		// When the model is destroyed, it's also removed from the view.
 		//this.listenTo(this.model, 'destroy', this.remove);
 
 	},
 
 	dragStartEvent: function (e) {
-		console.log(e);
-		var data
-		if (e.originalEvent) e = e.originalEvent
+		
+	//	e = e.originalEvent;
 
-		e.dataTransfer.effectAllowed = 'move';
-		e.dataTransfer.setData('text/html', this.innerHTML);
+	//	dragSrcEl = this;
+		var data = {
+			'id': this.model.id,
+			'bookmark_title': this.model.get('bookmark_title'),
+			'bookmark_url': this.model.get('bookmark_url'),
+			'collection_id': this.model.get('collection_id')
+		};
+
+		var data = JSON.stringify(data)
+
+		e.originalEvent.dataTransfer.effectAllowed = 'move';
+		e.originalEvent.dataTransfer.setData('model', data);
+
 	},
 
 	// The render function for the single bookmark.
@@ -78,6 +89,13 @@ var BookmarkView = Backbone.View.extend({
 	render: function(bookmark) {
 		this.$el.html(this.template(this.model.toJSON()));
 		return this;
+	},
+
+	hideit: function(tohide) {
+		console.log(this)
+		console.log(this.$el)
+
+		this.$el.addClass('hidden');
 	},
 
 	// When editing the bookmark name
