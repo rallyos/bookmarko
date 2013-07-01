@@ -35,7 +35,7 @@ a {
 	width: 9%;
 	float: left;
 	height: 700px; /**/
-	background: #F5F5F5;
+	background: #FAFAFA;
 }
 .group-wrap {
 	position: relative;
@@ -51,7 +51,7 @@ a {
 	overflow: hidden;
 	transition: 0.2s ease-in;
 }
-.group-add {
+.home-button {
 	width: 100%;
 	height: 40px;
 	font-weight: 300;
@@ -61,6 +61,20 @@ a {
 	cursor: pointer;
 	border-top: solid 1px #f0eff1;
 	border-bottom: solid 1px #f0eff1;
+}
+.group-add {
+	width: 90px;
+	height: 90px;
+	margin: 10px auto 0;
+	color: #e0e0e0;
+	line-height: 90px;
+	border: dashed 2px #e0e0e0;
+	cursor: pointer;
+	transition: 0.3s;
+}
+.group-add:hover {
+	color: #cbcdcd;
+	border: dashed 2px #cbcdcd;
 }
 .bookmarks-group-control {
 	width: 75%;

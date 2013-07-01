@@ -11,8 +11,18 @@ var ContentView = Backbone.View.extend({
 		// On 'add' event in 'bookmarks' collection run addBookmark() function.
 		this.listenTo(bookmarks, 'add', this.addBookmark);
 
+		this.listenTo(bookmarks, 'entered', this.userEntered);
+
 		// Sync all models with the server and put them in collection
-		bookmarks.fetch();
+		bookmarks.fetch({success: function() {
+			bookmarks.trigger('entered');
+		}});
+	},
+
+	userEntered: function() {
+		id = null;
+
+		bookmarks.trigger('filter', id);
 	},
 
 	triggerCheck: function(id) {
@@ -112,6 +122,8 @@ var BookmarkView = Backbone.View.extend({
 	// Checks the id of every passed model, and hide them
 	// if they are not the same as the id of the collection that is passed from the router
 	hideBookmarks: function(bookmark, id) {
+
+		console.log(id);
 
 		if ( bookmark.get('collection_id') != id ) {
 			this.$el.addClass('hidden');

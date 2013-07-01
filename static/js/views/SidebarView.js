@@ -6,17 +6,48 @@ var SidebarView = Backbone.View.extend({
 		
 		// On 'add' event in 'bookmarks' collection run addBookmark() function.
 		this.listenTo(globalBookmarkCollections, 'add', this.loadBookmarkCollection);
+		this.listenTo(globalBookmarkCollections, 'new', this.addButton);
 
 		// Load all bookmark collections from the server
-		globalBookmarkCollections.fetch();
+		globalBookmarkCollections.fetch({ success: function() {
+			lastGroup = $('.group-wrap').last();
+			$('<div class="group-add"><span>New Group</span></div>').insertAfter(lastGroup);
+		}});
+
 	},
 
 	events: {
+		'click .home-button': 'navHome',
 		'click .group-add': 'createCollection'
 	},
 	
+	addButton: function() {
+		lastGroup = $('.group-wrap').last();
+		$('<div class="group-add"><span>New Group</span></div>').insertAfter(lastGroup);
+		console.log('working and shit')
+	},
+
+	navHome: function() {
+		pageRouter.navigate('', true);
+	},
+
+	newCollection: function() {
+		$('.sidebar').append(BookmarkCollectionView.template);	
+	},
+
 	createCollection: function() {
-		// :) to be continued... 
+		var wtf = new BookmarkCollection();
+		data = {collection_name: 'izvinisebe', collection_background: '#343534'}
+		wtf.url = 'api/collections/';
+
+		wtf.save(data, { headers: { 'Authorization': 'Token ' + token } });
+		
+		$('.group-add').remove();
+		
+		globalBookmarkCollections.fetch({reset: true, success: function() {
+			globalBookmarkCollections.trigger('new');
+		}});
+		globalBookmarkCollections.add(wtf);
 	},
 
 	// Makes new single bookmark view with 'bookmark' for model
@@ -43,6 +74,7 @@ var BookmarkCollectionView = Backbone.View.extend({
 		
 		// When the collection is loaded from the server run function to serialize the data
 		this.listenTo(this.model.bookmarkCollections, 'sync', this.serializeCollection);
+		this.listenTo(this.model.bookmarkCollections, 'all', this.render);
 
 		// When the collection is loaded from the server run render()
 		this.model.bookmarkCollections.bind('sync', _.bind(this.render, this));
@@ -161,6 +193,9 @@ var BookmarkCollectionView = Backbone.View.extend({
 
 		console.log(data);
 		
+		this.model.bookmarkCollections.fetch({reset: true})
+		this.model.bookmarkCollections.render;
+
 		this.testvame(data);
 		return false;
 	},
