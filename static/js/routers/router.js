@@ -3,7 +3,8 @@ var PageRouter = Backbone.Router.extend({
 
 	routes: {
 		'': 'mhm',
-		'collections/:id': 'showCollection'
+		'collections/:id': 'showCollection',
+		'tags/:tag': 'filterByTag'
 	},
 
 	mhm: function() {
@@ -15,7 +16,11 @@ var PageRouter = Backbone.Router.extend({
 	// Trigger 'filter' event and send the model id
 	showCollection: function(id) {
 		bookmarks.trigger('filter', id);
-	}
+	},
+
+	filterByTag: function(tag) {
+		bookmarks.trigger('filterTag', tag);
+	},
 });
 
 var pageRouter = new PageRouter();

@@ -24,7 +24,8 @@ var SidebarView = Backbone.View.extend({
 	addButton: function() {
 		lastGroup = $('.group-wrap').last();
 		$('<div class="group-add"><span>New Group</span></div>').insertAfter(lastGroup);
-		console.log('working and shit')
+		groupInput = $('.bookmarks-group-name').last();
+		groupInput.empty().focus();
 	},
 
 	navHome: function() {
@@ -37,17 +38,21 @@ var SidebarView = Backbone.View.extend({
 
 	createCollection: function() {
 		var wtf = new BookmarkCollection();
-		data = {collection_name: 'izvinisebe', collection_background: '#343534'}
+		data = {collection_name: 'Group', collection_background: '#343534'};
 		wtf.url = 'api/collections/';
 
-		wtf.save(data, { headers: { 'Authorization': 'Token ' + token } });
-		
-		$('.group-add').remove();
-		
-		globalBookmarkCollections.fetch({reset: true, success: function() {
-			globalBookmarkCollections.trigger('new');
-		}});
+		wtf.set(data);
+
 		globalBookmarkCollections.add(wtf);
+
+		wtf.save(data, { headers: { 'Authorization': 'Token ' + token }, wait: true, success: function(){
+			globalBookmarkCollections.trigger('new');
+			edvali = globalBookmarkCollections.get(wtf.id);
+			edvali.url = 'api/collections/' + edvali.id;
+		}});
+
+		$('.group-add').remove();
+
 	},
 
 	// Makes new single bookmark view with 'bookmark' for model
@@ -78,6 +83,9 @@ var BookmarkCollectionView = Backbone.View.extend({
 
 		// When the collection is loaded from the server run render()
 		this.model.bookmarkCollections.bind('sync', _.bind(this.render, this));
+
+		this.listenTo(this.model, 'destroy', this.remove);
+
 
 		// Load the subollection from the server
 		this.model.bookmarkCollections.fetch();
@@ -174,8 +182,6 @@ var BookmarkCollectionView = Backbone.View.extend({
 
 	dragEnterEvent: function(e) {
 		this.$el.css('opacity','0.6');
-
-		console.log(this.model.id);
 	},
 
 	dragOverEvent: function(e) {
@@ -189,36 +195,39 @@ var BookmarkCollectionView = Backbone.View.extend({
 	dragDropEvent: function(e) {
 
 		data = JSON.parse(e.originalEvent.dataTransfer.getData('model'));
-		data.collection_id = this.model.id;
 
-		console.log(data);
+		var collectionID = data.collection_id;
+
+		var draggedModel = bookmarks.get(collectionID);
+		var dropTargetGroup = this.model;
+
+		console.log('We move ' + collectionID + ' to ' + this.model.id);
+
+		if ( collectionID != null ) {
+			console.log('Moving bookmark from one group to another')
+			globalBookmarkCollections.get(collectionID).bookmarkCollections.remove(bookmarks.get(data.id));
+			justtest = bookmarks.get(data.id);
+			bookmarks.get(data.id).set({collection_id: this.model.id})
+			this.model.bookmarkCollections.add(bookmarks.get(data.id));
+			bookmarks.get(data.id).save({collection_id: this.model.id}, { headers: { 'Authorization': 'Token ' + token } });
+		} else {
+			console.log('Moving bookmark that dont have collection id');
+			console.log(this.model.id);
+			bookmarks.get(data.id).set({collection_id: this.model.id})
+			this.model.bookmarkCollections.add(bookmarks.get(data.id));
+			bookmarks.get(data.id).save({collection_id: this.model.id}, { headers: { 'Authorization': 'Token ' + token } });
+		}
 		
-		this.model.bookmarkCollections.fetch({reset: true})
-		this.model.bookmarkCollections.render;
-
-		this.testvame(data);
+		this.testvame(justtest);
 		return false;
 	},
 
-	testvame: function(data) {
-		console.log(data)
+	testvame: function(justtest) {
 
-		var xhr = new XMLHttpRequest();
-		xhr.open('PUT', 'http://markedbyme.appspot.com/api/' + data.id, true);
-		xhr.setRequestHeader('Content-Type','application/json');
-		xhr.setRequestHeader('Authorization','Token ' + token);
-		var req = {'bookmark_title': data.bookmark_title, 'bookmark_url': data.bookmark_url, 'collection_id': data.collection_id}; //don't forget to get user_id
-		xhr.send(JSON.stringify(req));
-
-		testHide = bookmarks.get(data.id);
-		//console.log(testHide)
-
-		testHide.trigger('hidd')
+		justtest.trigger('hidd')
 	},
 
 	hideThisShit: function(testHide) {
-		console.log(testHide)
-		console.log(testHide.$el)
 	},
 
 	dragLeaveEvent: function() {
@@ -235,10 +244,11 @@ var BookmarkCollectionView = Backbone.View.extend({
 			right: '100%',
 		}, this.$el.one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', this.destrooy())
 		)
+
 	},
 
 	destrooy: function() {
-		this.model.destroy({ headers: { 'Authorization': 'Token ' + token } }, this.remove);
+		this.model.destroy({ headers: { 'Authorization': 'Token ' + token } });
 	},
 
 	// The render function for the single collection.

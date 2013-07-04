@@ -39,7 +39,6 @@ a {
 }
 .group-wrap {
 	position: relative;
-	transition: 0.2s ease-in;
 }
 .group {
 	width: 100%;
@@ -49,7 +48,6 @@ a {
 	color: #fff;
 	cursor: pointer;
 	overflow: hidden;
-	transition: 0.2s ease-in;
 }
 .home-button {
 	width: 100%;
@@ -219,6 +217,15 @@ a {
 	font-size: 0.7rem;
 	position: absolute;
 	left: 70%;
+	padding: 1px 5px;
+	margin: 8px 0;
+	line-height: 20px;
+	border: solid 1px #CBCBCB;
+	background: #FFF;
+	cursor: default;
+}
+.bookmarks-item-tags:hover {
+	background: #FAFAFA;
 }
 .bookmarks-item-delete {
 	display: block;
