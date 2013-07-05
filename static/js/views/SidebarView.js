@@ -10,6 +10,11 @@ var SidebarView = Backbone.View.extend({
 
 		// Load all bookmark collections from the server
 		globalBookmarkCollections.fetch({ success: function() {
+
+			if ( $('.group-wrap').length == 0 ) {
+				$('<div class="group-add"><span>New Group</span></div>').appendTo('.sidebar');
+			}
+
 			lastGroup = $('.group-wrap').last();
 			$('<div class="group-add"><span>New Group</span></div>').insertAfter(lastGroup);
 		}});
@@ -127,52 +132,50 @@ var BookmarkCollectionView = Backbone.View.extend({
 	},
 
 	togglePalette: function() {
+
 		var cPaletteHeight = this.$('.bookmarks-group-color-palette').css('height');
 		
-
-		//this.$('.bookmarks-group-color-palette').toggle();
 		if (cPaletteHeight == '50px') {
 			this.$('.bookmarks-group-color-palette').css('height', '0');
 		} else if (cPaletteHeight == '0px') {
 			this.$('.bookmarks-group-color-palette').css('height', '50px');
 		}
 
-		//this.$('.bookmarks-group-color-palette').toggle(function() {
-		//	$(this).css('height', '50px');
-		//});
 	},
 
 	changeGroupColor: function(click) {
 
-		if (click.target.classList[1] == 'palette-color-red') {
+		var clickedElClass = click.target.classList[1];
+
+		if (clickedElClass == 'palette-color-red') {
 			newBgColor = '#EB4040';
 		}
 
-		if (click.target.classList[1] == 'palette-color-green') {
+		if (clickedElClass == 'palette-color-green') {
 			newBgColor = '#4ABB3E';
 		}
 
-		if (click.target.classList[1] == 'palette-color-black') {
+		if (clickedElClass == 'palette-color-black') {
 			newBgColor = '#343534';
 		}
 
-		if (click.target.classList[1] == 'palette-color-lightblue') {
+		if (clickedElClass == 'palette-color-lightblue') {
 			newBgColor = '#33A3C0';
 		}
 
-		if (click.target.classList[1] == 'palette-color-brown') {
+		if (clickedElClass == 'palette-color-brown') {
 			newBgColor = '#863825';
 		}
 
-		if (click.target.classList[1] == 'palette-color-blue') {
+		if (clickedElClass == 'palette-color-blue') {
 			newBgColor = '#2D5086';
 		}
 
-		if (click.target.classList[1] == 'palette-color-orange') {
+		if (clickedElClass == 'palette-color-orange') {
 			newBgColor = '#eb6d20';
 		}
 
-		if (click.target.classList[1] == 'palette-color-grey') {
+		if (clickedElClass == 'palette-color-grey') {
 			newBgColor = '#A3A3A3';
 		}
 
@@ -196,42 +199,45 @@ var BookmarkCollectionView = Backbone.View.extend({
 
 		data = JSON.parse(e.originalEvent.dataTransfer.getData('model'));
 
-		var collectionID = data.collection_id;
+		var draggedModelCollectionID = data.collection_id;
+		var draggedModel = bookmarks.get(data.id);
 
-		var draggedModel = bookmarks.get(collectionID);
-		var dropTargetGroup = this.model;
+		var dropTarget = this.model.bookmarkCollections;
+		var dropTargetID = this.model.id;
 
-		console.log('We move ' + collectionID + ' to ' + this.model.id);
+		if ( draggedModelCollectionID != null ) {
 
-		if ( collectionID != null ) {
-			console.log('Moving bookmark from one group to another')
-			globalBookmarkCollections.get(collectionID).bookmarkCollections.remove(bookmarks.get(data.id));
-			justtest = bookmarks.get(data.id);
-			bookmarks.get(data.id).set({collection_id: this.model.id})
-			this.model.bookmarkCollections.add(bookmarks.get(data.id));
-			bookmarks.get(data.id).save({collection_id: this.model.id}, { headers: { 'Authorization': 'Token ' + token } });
+			var draggedModelCollection = globalBookmarkCollections.get(draggedModelCollectionID).bookmarkCollections;
+
+			draggedModelCollection.remove(draggedModel);
+
+			draggedModel.set({collection_id: dropTargetID})
+
+			dropTarget.add(draggedModel);
+
+			draggedModel.save({collection_id: dropTargetID}, { headers: { 'Authorization': 'Token ' + token } });
 		} else {
-			console.log('Moving bookmark that dont have collection id');
-			console.log(this.model.id);
-			bookmarks.get(data.id).set({collection_id: this.model.id})
-			this.model.bookmarkCollections.add(bookmarks.get(data.id));
-			bookmarks.get(data.id).save({collection_id: this.model.id}, { headers: { 'Authorization': 'Token ' + token } });
+
+			draggedModel.set({collection_id: dropTargetID})
+		
+			dropTarget.add(draggedModel);
+		
+			draggedModel.save({collection_id: dropTargetID}, { headers: { 'Authorization': 'Token ' + token } });
 		}
 		
-		this.testvame(justtest);
+		this.hideDragged(draggedModel);
+		this.$el.css('opacity','1');
 		return false;
 	},
 
-	testvame: function(justtest) {
-
-		justtest.trigger('hidd')
-	},
-
-	hideThisShit: function(testHide) {
-	},
-
 	dragLeaveEvent: function() {
+
 		this.$el.css('opacity','1');
+	},
+
+	hideDragged: function(draggedModel) {
+
+		draggedModel.trigger('hide');
 	},
 
 	saveGroup: function(newval) {
@@ -256,7 +262,7 @@ var BookmarkCollectionView = Backbone.View.extend({
 	render: function(bookmarks_collection) {
 		this.$el.html(this.template(this.model.toJSON()));
 		var background_color = this.model.get('collection_background');
-		this.$('.group').css('background', background_color);
+		this.$('.group').css('background-color', background_color);
 		return this;
 	}
 
