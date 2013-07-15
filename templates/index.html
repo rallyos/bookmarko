@@ -1,59 +1,84 @@
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-	<meta charset="utf-8">
-	<link href='http://fonts.googleapis.com/css?family=Roboto:400,100,300' rel='stylesheet'>
-	<title>Bookmarko 0.0.2</title>
+	<meta charset="UTF-8">
+	<link href='http://fonts.googleapis.com/css?family=Roboto:400,100,300|Open+Sans:400,300' rel='stylesheet'>
+	<link href="{{ STATIC_URL }}css/main.css" rel="stylesheet">
+	<title>Bookmarko 0.1 | Manage your bookmarks with style</title>
 </head>
-<!-- FOR TESTING PURPOSES - PLEASE REMOVE -->
-<style type="text/css">
-#loginform {
-	width: 35%;
-	margin: 5px auto;
-}
-#loginform input[type="email"] {
-	margin-left: 1%;
-}
-#loginform input[type="email"],
-#loginform input[type="password"] {
-	width: 35%;
-	padding: 5px;
-	border: solid 1px #ced2d2;
-	border-radius: 3px;
-	outline: 0;
-	box-shadow: inset 0 0 5px 0 rgba(206, 210, 210, 0.3);
-}
-#loginform input[type="email"]:hover,
-#loginform input[type="password"]:hover {
-	border: solid 1px #adb0b0;
-}
-#loginform input[type="email"]:focus,
-#loginform input[type="password"]:focus {
-	box-shadow: 0 0 2px #EB4949;
-}
-
-#loginform input[type="submit"] {
-	width: 20%;
-	padding: 5px;
-	border: 0;
-	border-radius: 3px;
-	color: white;
-	background: rgba(245, 23, 23, 0.7);
-	cursor: pointer;
-}
-#loginform input[type="submit"]:hover {
-	background: #EB4949;
-}
-</style>
-<!-- FOR TESTING PURPOSES - PLEASE REMOVE /close -->
 <body>
-	<div id="wrap">
-		<div id="login-box">
-			<form id="loginform" type="POST" action="login_user">{% csrf_token %}
-				<input type="email" name="username" id="username" placeholder="Email">
-				<input type="password" name="password" id="password" placeholder="Password">
-				<input type="submit" value="Login">
-			</form>
-		</div>
+	<header class="header">
+		<img class="logo" width="144" height="40" src="{{ STATIC_URL }}images/logo_example.png">
+		<nav class="nav-block">
+			<ul class="menu">
+				<li class="menu-item" id="form-toggle">Sign In</li>
+				<li class="menu-item">Features</li>
+				<li class="menu-item">About</li>
+				<li class="menu-item">Blog</li>
+			</ul>
+		</nav>
+	</header>
+	<section class="sign-block">
+			<h1 class="sign-header">Bookmark management made easy</h1>
+			<div class="sign-up-block">
+				<form class="sign-up-form" method="POST" action="register_user">{% csrf_token %}
+					<input class="sign-up-input" id="id_username" type="email" name="username" placeholder="Email address" maxlength="30" required>
+					<input class="sign-up-input" id="id_password1" type="password" name="password1" placeholder="Password" required>
+					<!-- <input id="id_password2" type="password" name="password2" placeholder="Password" required> -->
+					<input class="sign-up-submit" type="submit" value="Sign Up">
+				</form>
+				                        <form id="loginform" type="POST" action="login_user">{% csrf_token %}
+                                <input type="email" name="username" id="username" placeholder="Email">
+                                <input type="password" name="password" id="password" placeholder="Password">
+                                <input type="submit" value="Login">
+                        </form>
+			</div>
+	</section>
+	<div class="features-wrap">
+		<h1 class="features-top-header">Get excited about bookmarking</h1>
+		<section class="features-block">
+			<article class="feature">
+				<h1 class="feature-title" id="title-top-left">Easy to use interface</h1>
+				<img class="feature-image-left" width="141" height="141" src="{{ STATIC_URL }}images/feature-img1.png">
+				<img class="feature-image-right" width="141" height="141" src="{{ STATIC_URL }}images/feature-img2.png">
+				<p class="feature-text">The interface is simple, it uses some design principles from mail clients. You can create groups and move bookmarks to them with drag and drop. Managing your saved sites happens with just a couple of clicks.</p>
+			</article>
+			<article class="feature">
+				<h1 class="feature-title" id="title-top-right">Quick search and tags</h1>
+				<img class="feature-image-left" width="141" height="141" src="{{ STATIC_URL }}images/feature-img3.png">
+				<img class="feature-image-right" width="141" height="141" src="{{ STATIC_URL }}images/feature-img4.png">
+				<p class="feature-text">Finding the site that you saved months before is a joy. The search bar offers fast and smart way to look through your collection. You can also tag bookmarks with keywords for better search experience.</p>
+			</article>
+			<article class="feature">
+				<h1 class="feature-title" id="title-bottom-left">Focused on bookmarking, not on sharing</h1>
+				<img class="feature-image-left" width="141" height="141" src="{{ STATIC_URL }}images/feature-img1.png">
+				<img class="feature-image-right" width="141" height="141" src="{{ STATIC_URL }}images/feature-img2.png">
+				<p class="feature-text">Chupa chups topping lollipop tootsie roll dragée halvah. Chocolate cake pudding soufflé. Sweet pudding jujubes dragée. Chocolate bar bonbon jelly-o cookie. Marshmallow jelly jujubes caramels fruitcake sweet roll faworki. Muffin </p>
+			</article>
+			<article class="feature">
+				<h1 class="feature-title" id="title-bottom-right">Optimized for most devices</h1>
+				<img class="feature-image" id="devices" width="302" height="141" src="{{ STATIC_URL }}images/feature-img5.png">				
+				<p class="feature-text">Bookmarko was made with responsive design in mind. It was build to support wide range of devices. The site is optimized for touch input ,so you can access and use it from your mobile device.</p>
+			</article>
+		</section>
+		<section class="bottom-features-block">
+			<article class="bottom-feature">
+				<img class="bottom-feature-image" width="150" height="150" src="{{ STATIC_URL }}images/circle.png">
+				<p class="bottom-feature-text">Bookmarko is still in beta and will be a always developing project. There are still many things to come.</p>
+			</article>
+			<article class="bottom-feature">
+				<img class="bottom-feature-image" width="150" height="150" src="{{ STATIC_URL }}images/circle.png">
+				<p class="bottom-feature-text">Chupa chups topping lollipop tootsie roll dragée halvah. Choc cake pudding soufflé. Sweet pudding jujubes dragée.</p>
+			</article>
+			<article class="bottom-feature">
+				<img class="bottom-feature-image" width="150" height="150" src="{{ STATIC_URL }}images/circle.png">
+				<p class="bottom-feature-text">Chupa chups topping lollipop tootsie roll dragée halvah. Choc cake pudding soufflé. Sweet pudding jujubes dragée.</p>
+			</article>
+		</section>
 	</div>
+	<footer class="footer">
+	</footer>
+<script src="{{ STATIC_URL }}libraries/jquery-1.9.1.min.js"></script>
+<script src="{{ STATIC_URL }}js/index.js"></script>
 </body>
 </html>

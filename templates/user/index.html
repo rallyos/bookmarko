@@ -1,42 +1,45 @@
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-	<meta charset="utf-8">
-	<link href='http://fonts.googleapis.com/css?family=Roboto:400,100,300' rel='stylesheet'>
-	<link href="{{ STATIC_URL }}css/style.css" rel="stylesheet">
-	<title>Bookmarko 0.0.7</title>
+	<meta charset="UTF-8">
+	<link href='http://fonts.googleapis.com/css?family=Roboto:400,100,300|Open+Sans:400,300' rel='stylesheet'>
+	<link href="{{ STATIC_URL }}css/user.css" rel="stylesheet">	
+	<title>Bookmarko 0.1 | Manage your bookmarks with style</title>
 </head>
 <body>
-	<div id="wrap">
-		<div class="top-bar">
-			<img class="logo" src="{{ STATIC_URL }}images/logo_example.png">
-			<span>{{ user.username }}</span>
-		</div>
+	<div class="wrap">
 		<div class="sidebar">
-			<div class="home-button"><span>Home</span></div>
+			<div class="home-button"><span class="home-button-text">Home</span></div>
 		</div>
 		<div class="content">
-			<div class="content-control">
-				<form id="form" action="">
-					<input id="bookmark-input" type="text" placeholder="Search . . .">
-				</form>
+			<div class="content-header">
+				<input type="text" class="input-search" placeholder="Search . . .">
+				<div class="content-actions-block">
+					<span class="content-actions-button with-icon" id="starred"></span>
+					<div class="content-actions-button content-actions-view-settings">
+						<span class="change-view-button" id="list"></span>
+						<span class="change-view-button" id="list-icons"></span>
+						<span class="change-view-button" id="grid"></span>
+					</div>
+					<span class="content-actions-button with-icon" id="settings"></span>
+					<a href="logout_user" class="content-actions-button" id="sign-out">Sign out</a>
+				</div>
 			</div>
-			<div class="bookmarks-content">
-				<ul class="bookmarks-list">
-				</ul>
+			<div class="bookmarks-section">
+				<ul class="bookmarks-list"></ul>
 			</div>
 		</div>
-		<div class="footer"></div>	
 	</div>
 	<script type="text/template" id="bookmark-template">
-		<span class="select-item" draggable="true"></span>
-		<span class="bookmarks-item-title" contenteditable="true"><%- bookmark_title.substring(0,35)  %></span>
-		<a class="bookmarks-item-url" href="<%= bookmark_url %>" target="_blank"><%= bookmark_url %></a>
-		<span class="bookmarks-item-tags"><%= tags %></span>
-		<span class="bookmarks-item-delete">X</span>
+		<span class="select-bookmark" draggable="true"></span>
+		<span class="bookmark-title" contenteditable="true"><%- bookmark_title.substring(0,35)  %></span>
+		<a class="bookmark-url" href="<%= bookmark_url %>" target="_blank"><%= bookmark_url %></a>
+		<span class="bookmark-tags"><%= tags %></span>
+		<span class="bookmark-delete">X</span>
 	</script>
-	<script type="text/template" id="collection-template">
+	<script type="text/template" id="group-template">
 		<div class="group">
-			<div class="bookmarks-group-control">
+			<div class="bookmarks-group-nav">
 				<span class="bookmarks-group-count"><%- this.model.bookmarkCollections.length %></span>
 			</div>
 			<div class="bookmarks-group-actions">

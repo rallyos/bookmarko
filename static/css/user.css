@@ -1,0 +1,308 @@
+body {
+	margin: 0;
+	padding: 0;
+	font-family: 'Open Sans', sans-serif;
+	color: #343534;
+}
+input,ul {
+	margin: 0;
+	padding: 0;
+}
+a {
+	text-decoration: none;
+	color: #343534;
+}
+.wrap {}
+.sidebar {
+	width: 103px;
+	height: 100%;
+	float: left;
+	position: fixed;
+	border-right: solid 1px #f0eff1;
+	background: #fafafa;
+	overflow: scroll;
+}
+.home-button {
+	width: 100%;
+	height: 50px;
+	text-align: center;
+	border-bottom: solid 1px #f0eff1;
+	background: #fff;
+	cursor: pointer;
+}
+.home-button-text {
+	color: #faa1a1;
+	font-size: 1.2rem;
+	line-height: 50px;
+}
+.group-wrap {
+	position: relative;
+}
+.group {
+	width: 100%;
+	height: 100px;
+	position: relative;
+	font-weight: 300;
+	color: #fff;
+	cursor: pointer;
+	overflow: hidden;
+}
+.group-add {
+	width: 90px;
+	height: 90px;
+	margin: 10px auto 0;
+	color: #e0e0e0;
+	font-size: 0.9rem;
+	text-align: center;
+	line-height: 90px;
+	border: dashed 2px #e0e0e0;
+	cursor: pointer;
+	transition: 0.3s;
+}
+.group-add:hover {
+	color: #cbcdcd;
+	border: dashed 2px #cbcdcd;
+}
+.bookmarks-group-nav {
+	width: 75%;
+	height: 75px;
+	float: left;
+}
+.bookmarks-group-actions {
+	width: 25%;
+	height: 75px;
+	float: left;
+	-webkit-transform: translateX(100%);
+	transition: 0.3s;
+}
+.bookmarks-group-count {
+	float: left;
+	padding: 5px;
+}
+.bookmarks-group-delete {
+	padding: 0 5px;
+	float: right;
+	font-size: 0.8rem;
+	color: rgba(255, 255, 255, 0.65);
+	transition: 0.3s;
+}
+.bookmarks-group-delete:hover {
+	color: #666;
+	background: rgba(255, 255, 255, 0.8);
+}
+.bookmarks-group-color-palette {
+	width: 100%;
+	height: 0;
+	overflow: hidden;
+	transition: 0.2s;
+}
+.bookmarks-group-color {
+	width: 25%;
+	height: 25px;
+	display: block;
+	float: left;
+}
+.toggle-palette {
+	width: 17px;
+	height: 17px;
+	float: right;
+	margin: 32px 4px 0 0;
+}
+.palette-color-red {
+	background: #EB4040;
+}
+.palette-color-green {
+	background: #4ABB3E;
+}
+.palette-color-black {
+	background: #343534;
+}
+.palette-color-lightblue {
+	background: #33A3C0;
+}
+.palette-color-brown {
+	background: #863825;
+}
+.palette-color-blue {
+	background: #3E45BB;
+}
+.palette-color-orange {
+	background: #eb6d20;
+}
+.palette-color-grey {
+	background: #A3A3A3;
+}
+.group:hover .bookmarks-group-actions {
+	-webkit-transform: translateX(0);
+}
+.bookmarks-group-name {
+	width: 100%;
+	height: 17px;
+	padding: 4px 0;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	font-size: 0.9rem;
+	text-align: center;
+	background: rgba(255, 255, 255, 0.1);
+}
+.content {
+	height: 100%;
+	margin-left: 104px;
+	overflow: hidden;
+}
+.content-header {
+	border-bottom: solid 1px #f0eff1;
+	overflow: hidden;
+}
+.input-search {
+	width: 64%;
+	height: 50px;
+	float: left;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 1.3rem;
+	font-weight: 300;
+	color: #A9ABBE;
+	text-indent: 8px;
+	background: #fff;
+	border: 0;
+	outline: 0;
+	border-right: solid 1px #F0EFF1;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+.content-actions-block {
+	width: 36%;
+	height: 50px;
+	float: left;
+}
+.content-actions-button {
+	background: #f8f8f8;
+	border: solid 1px #E5E6E8;
+	border-radius: 2px;
+	cursor: pointer;
+}
+.with-icon {
+	display: block;
+	width: 46px;
+	height: 30px;
+	float: left;
+	margin: 10px 0 10px 30px;
+	background-repeat: no-repeat;
+	background-size: 20px;
+	background-position: 14px 5px;	
+}
+#starred {
+	background-image: url(http://markedbyme.appspot.com/static/images/grey-star.png);
+}
+#settings {
+	background-image: url(http://markedbyme.appspot.com/static/images/cog.png);
+}
+.content-actions-view-settings {
+	width: 132px;
+	float: left;
+	margin: 10px 0 10px 30px;
+}
+.change-view-button {
+	display: block;
+	width: 40px;
+	height: 30px;
+	float: left;
+	padding: 0 2px;
+	background-repeat: no-repeat;
+	background-size: 20px;
+	background-position: 10px 5px;
+}
+#list {
+	background-image: url(http://markedbyme.appspot.com/static/images/test.png);
+}
+#list-icons {
+	background-image: url(http://markedbyme.appspot.com/static/images/test.png);
+}
+#grid {
+	background-image: url(http://markedbyme.appspot.com/static/images/test.png);
+}
+#sign-out {
+	float: right;
+	margin: 10px 30px 10px 30px;
+	padding: 0 10px;
+	font-weight: 300;
+	line-height: 30px;
+	color: #cbcccc;
+}
+.bookmarks-section {
+	width: 100%;
+}
+.bookmarks-list {
+	width: 100%;
+	list-style: none;
+}
+.bookmark {
+	position: relative;
+	height: 40px;
+	font-size: 0.9rem;
+	line-height: 40px;
+	background: #fff;
+	transition: 0.3s;
+}
+.bookmark:nth-child(odd) {
+	background: #fdfcfd;
+}
+.select-bookmark {
+	display: block;
+	width: 20px;
+	height: 40px;
+	float: left;
+	cursor:grab;
+	cursor:-moz-grab;
+	cursor:-webkit-grab;
+	background-repeat: no-repeat;
+	background-size: 20px 40px
+}
+.bookmark:hover .select-bookmark {
+	background-image: url(http://markedbyme.appspot.com/static/images/dots.png);
+}
+.bookmark-title {
+	float: left;
+	margin-left: 12px;
+}
+.bookmark-url {
+	position: absolute;
+	left: 34%;
+}
+.bookmark-tags {
+	position: absolute;
+	left: 70%;
+	padding: 1px 5px;
+	margin: 8px 0;
+	font-size: 0.7rem;
+	line-height: 20px;
+	border: solid 1px #CBCBCB;
+	background: #FFF;
+	cursor: default;
+}
+.bookmark-tags:hover {
+	background: #FAFAFA;
+}
+.bookmark-delete {
+	display: block;
+	float: right;
+	margin-right: 8px;
+	color: transparent;
+	cursor: pointer;
+}
+.bookmark:hover .bookmark-delete {
+	color: #d5d4d5;
+}
+.bookmark-delete:hover {
+	color: #A3A3A3;
+}
+.hidden {
+	display: none;
+}
+[contenteditable="true"]:active,
+[contenteditable="true"]:focus {
+	outline: 0;
+	text-decoration: underline;
+}

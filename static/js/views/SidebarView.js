@@ -6,6 +6,8 @@ var SidebarView = Backbone.View.extend({
 		
 		// On 'add' event in 'bookmarks' collection run addBookmark() function.
 		this.listenTo(globalBookmarkCollections, 'add', this.loadBookmarkCollection);
+
+
 		this.listenTo(globalBookmarkCollections, 'new', this.addButton);
 
 		// Load all bookmark collections from the server
@@ -19,41 +21,51 @@ var SidebarView = Backbone.View.extend({
 			$('<div class="group-add"><span>New Group</span></div>').insertAfter(lastGroup);
 		}});
 
+
+
 	},
 
 	events: {
+
+		//
 		'click .home-button': 'navHome',
+
+		//
 		'click .group-add': 'createCollection'
 	},
 	
+	//
 	addButton: function() {
 		lastGroup = $('.group-wrap').last();
 		$('<div class="group-add"><span>New Group</span></div>').insertAfter(lastGroup);
-		groupInput = $('.bookmarks-group-name').last();
-		groupInput.empty().focus();
+		groupInput = $('.bookmarks-group-name').last();   //??? groupInput because it's being edited :) , maybe it could be changed
+		groupInput.empty().focus();   //??? groupInput because it's being edited :) , maybe it could be changed
 	},
 
+	// 
 	navHome: function() {
 		pageRouter.navigate('', true);
 	},
 
+	// 
 	newCollection: function() {
 		$('.sidebar').append(BookmarkCollectionView.template);	
 	},
 
+	// 
 	createCollection: function() {
-		var wtf = new BookmarkCollection();
+		var newGroup = new BookmarkCollection();
 		data = {collection_name: 'Group', collection_background: '#343534'};
-		wtf.url = 'api/collections/';
+		newGroup.url = 'api/collections/';
 
-		wtf.set(data);
+		newGroup.set(data);
 
-		globalBookmarkCollections.add(wtf);
+		globalBookmarkCollections.add(newGroup);
 
-		wtf.save(data, { headers: { 'Authorization': 'Token ' + token }, wait: true, success: function(){
+		newGroup.save(data, { headers: { 'Authorization': 'Token ' + token }, wait: true, success: function(){
 			globalBookmarkCollections.trigger('new');
-			edvali = globalBookmarkCollections.get(wtf.id);
-			edvali.url = 'api/collections/' + edvali.id;
+			newGroup = globalBookmarkCollections.get(newGroup.id);
+			newGroup.url = 'api/collections/' + newGroup.id;
 		}});
 
 		$('.group-add').remove();
@@ -78,7 +90,7 @@ var BookmarkCollectionView = Backbone.View.extend({
 	className: 'group-wrap',
 	model: BookmarkCollection,
 
-	template: _.template($('#collection-template').html()),
+	template: _.template($('#group-template').html()),
 
 	initialize: function() {		
 		
@@ -94,10 +106,11 @@ var BookmarkCollectionView = Backbone.View.extend({
 
 		// Load the subollection from the server
 		this.model.bookmarkCollections.fetch();
+
 	},
 
 	events: {
-		'click .bookmarks-group-control': 'navigateRouter',
+		'click .bookmarks-group-nav': 'navigateRouter',
 		'keypress .bookmarks-group-name': 'updateGroup',
 
 		'dragenter': 'dragEnterEvent',
@@ -168,7 +181,7 @@ var BookmarkCollectionView = Backbone.View.extend({
 		}
 
 		if (clickedElClass == 'palette-color-blue') {
-			newBgColor = '#2D5086';
+			newBgColor = '#3E45BB';
 		}
 
 		if (clickedElClass == 'palette-color-orange') {
@@ -179,7 +192,7 @@ var BookmarkCollectionView = Backbone.View.extend({
 			newBgColor = '#A3A3A3';
 		}
 
-		this.$('.group').css('background-color', newBgColor);
+		this.$el.css('background-color', newBgColor);
 		this.model.save('collection_background', newBgColor, { headers: { 'Authorization': 'Token ' + token } });
 	},
 
@@ -191,7 +204,6 @@ var BookmarkCollectionView = Backbone.View.extend({
 		if (e.preventDefault) {
 	    	e.preventDefault(); // Necessary. Allows us to drop.
 		}
-
 		return false;
 	},
 
@@ -262,7 +274,7 @@ var BookmarkCollectionView = Backbone.View.extend({
 	render: function(bookmarks_collection) {
 		this.$el.html(this.template(this.model.toJSON()));
 		var background_color = this.model.get('collection_background');
-		this.$('.group').css('background-color', background_color);
+		this.$el.css('background-color', background_color);
 		return this;
 	}
 

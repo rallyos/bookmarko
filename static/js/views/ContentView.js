@@ -11,44 +11,53 @@ var ContentView = Backbone.View.extend({
 		// On 'add' event in 'bookmarks' collection run addBookmark() function.
 		this.listenTo(bookmarks, 'add', this.addBookmark);
 
+
 		this.listenTo(bookmarks, 'entered', this.userEntered);
+
 
 		this.listenTo(bookmarks, 'filterTag', this.filterTags);
 
-		// Sync all models with the server and put them in collection
+
+		// Sync all models with the server and put them in collection |||| Put this in function? and then call it ot init
 		bookmarks.fetch({success: function() {
 			bookmarks.trigger('entered');
 		}});
+
+
+
+		this.$searchInput = this.$('.input-search');
+
 	},
 
-	filterTags: function(tag) {
+	events: {
+		'keyup .input-search': 'searchBookmarks'
+	},
 
+	// The render function for the single bookmark.
+	// It appends the template html and serialized model to the $el. -> li.bookmarks-item
+
+
+	filterTags: function(tag) {
 		bookmarks.forEach(function(bookmarks) {
 			bookmarks.trigger('filterbyt', bookmarks, tag);
 		});	
 
 	},
 
-	events: {
-		'keyup #bookmark-input': 'searchBookmarks'
-	},
-
-	searchBookmarks: function(text) {
-		var valu = this.$('#bookmark-input').val();
+	searchBookmarks: function() {
+		var searchWord = this.$searchInput.val();
 
 		bookmarks.forEach(function(bookmarks) {
-			bookmarks.trigger('search', bookmarks, valu);
+			bookmarks.trigger('search', bookmarks, searchWord);
 		});	
 	},
 
 	userEntered: function() {
 		id = null;
-
 		bookmarks.trigger('filter', id);
 	},
 
 	triggerCheck: function(id) {
-
 		// Trigger event for every model
 		bookmarks.forEach(function(bookmarks) {
 			bookmarks.trigger('passed', bookmarks,id);
@@ -71,21 +80,21 @@ var bookmarksList = new ContentView();
 // Single bookmark view
 var BookmarkView = Backbone.View.extend({
 	tagName: 'li',
-	className: 'bookmarks-item',
+	className: 'bookmark',
 
 	template: _.template($('#bookmark-template').html()),
 
 	events: {
 
 		// When the X is clicked the clear() function is initialized
-		'click .bookmarks-item-delete': 'clear',
+		'click .bookmark-delete': 'clear',
 
-		'dragstart .select-item': 'dragStartEvent',
+		'dragstart .select-bookmark': 'dragStartEvent',
 
 		// On keypress run updateBookmark()
-		'keypress .bookmarks-item-title': 'updateBookmark',
+		'keypress .bookmark-title': 'updateBookmark',
 
-		'click .bookmarks-item-tags': 'tagClicked'
+		'click .bookmark-tags': 'tagClicked'
 
 	},
 
@@ -100,6 +109,12 @@ var BookmarkView = Backbone.View.extend({
 		this.listenTo(this.model, 'search', this.showResults);
 
 		this.listenTo(this.model, 'filterbyt', this.filterThis)
+
+	},
+
+	render: function(bookmark) {
+		this.$el.html(this.template(this.model.toJSON()));
+		return this;
 	},
 
 	tagClicked: function() {
@@ -117,21 +132,20 @@ var BookmarkView = Backbone.View.extend({
 		}
 	},
 
-	showResults: function(bookmark, valu) {
-		console.log(valu)
+	showResults: function(bookmark, searchWord) {
+		console.log(searchWord)
 		test = bookmark.get('bookmark_title' );
 		testa = bookmark.get('bookmark_url');
 		
-		if ( test.match(valu) || testa.match(valu) ) {
+		if ( test.match(searchWord) || testa.match(searchWord) ) {
 			this.$el.removeClass('hidden');
 		} else {
-			console.log(test + ' + ' + valu);
+			console.log(test + ' + ' + searchWord);
 			this.$el.addClass('hidden');
 		}
 	},
 
 	dragStartEvent: function (e) {
-		
 		var data = {
 			'id': this.model.id,
 			'collection_id': this.model.get('collection_id'),
@@ -139,20 +153,20 @@ var BookmarkView = Backbone.View.extend({
 
 		var data = JSON.stringify(data)
 
+		var dragIcon = document.createElement('img');
+		dragIcon.src = 'http://markedbyme.appspot.com/static/images/dragimg.png';
+		dragIcon.width = 50;
+
+		
+		e.originalEvent.dataTransfer.setDragImage(dragIcon, 10, 17);
+
+
 		e.originalEvent.dataTransfer.effectAllowed = 'move';
 		e.originalEvent.dataTransfer.setData('model', data);
 
 	},
 
-	// The render function for the single bookmark.
-	// It appends the template html and serialized model to the $el. -> li.bookmarks-item
-	render: function(bookmark) {
-		this.$el.html(this.template(this.model.toJSON()));
-		return this;
-	},
-
 	hideit: function(draggedModel) {
-		
 		this.$el.addClass('hidden');
 	},
 
@@ -160,8 +174,8 @@ var BookmarkView = Backbone.View.extend({
 	// Check every keypress, and if 'enter' is pressed the field is blurred and .text() is sent to the saveBookmark() function
 	updateBookmark: function(e) {
 		if (e.which === ENTER_KEY) {
-			this.$('.bookmarks-item-title').blur();
-			var newval = this.$('.bookmarks-item-title').text();
+			this.$('.bookmark-title').blur();
+			var newval = this.$('.bookmark-title').text();
 			this.saveBookmark(newval);
 			return false;
 		}
@@ -170,7 +184,6 @@ var BookmarkView = Backbone.View.extend({
 	// Checks the id of every passed model, and hide them
 	// if they are not the same as the id of the collection that is passed from the router
 	hideBookmarks: function(bookmark, id) {
-
 		if ( bookmark.get('collection_id') != id ) {
 			this.$el.addClass('hidden');
 		} else {

@@ -1,86 +1,59 @@
 <html>
 <head>
-	<meta charset="utf-8">
-	<link href='http://fonts.googleapis.com/css?family=Roboto:400,100,300' rel='stylesheet'>
-	<title>Bookmarko 0.0.2</title>
+        <meta charset="utf-8">
+        <link href='http://fonts.googleapis.com/css?family=Roboto:400,100,300' rel='stylesheet'>
+        <title>Bookmarko 0.0.2</title>
 </head>
 <!-- FOR TESTING PURPOSES - PLEASE REMOVE -->
 <style type="text/css">
-#wrapper {
-	margin-top: 30px;
-	padding: 20px;
-	border-radius: 4px;
-	background: white;
+#loginform {
+        width: 35%;
+        margin: 5px auto;
 }
-#register {
-	display: block;
-	width: 15%;
-	margin: 30px auto;
-	padding: 3px;
-	text-align: center;
-	border-radius: 3px;
-	border: solid 1px #1778E2;
-	box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.45), inset 0 -1px 1px rgba(255, 255, 255, 0.45);
-	color: white;
-	background: #0094F7;
-	text-shadow: 0 -1px 1px #0C47C4;
+#loginform input[type="email"] {
+        margin-left: 1%;
 }
-#register:hover {
-	background: #2EA4F3;
+#loginform input[type="email"],
+#loginform input[type="password"] {
+        width: 35%;
+        padding: 5px;
+        border: solid 1px #ced2d2;
+        border-radius: 3px;
+        outline: 0;
+        box-shadow: inset 0 0 5px 0 rgba(206, 210, 210, 0.3);
 }
-#signup-box {
-	width: 50%;
-	margin: 0 auto;
+#loginform input[type="email"]:hover,
+#loginform input[type="password"]:hover {
+        border: solid 1px #adb0b0;
 }
-#signup-box form {
-	width: 100%;
+#loginform input[type="email"]:focus,
+#loginform input[type="password"]:focus {
+        box-shadow: 0 0 2px #EB4949;
 }
-#signup-box form input[type="email"],
-#signup-box form input[type="password"] {
-	width: 30%;
-	height: 27px;
-	margin: 30px 1%;
-	float: left;
-	font-size: 1rem;
-	text-indent: 3%;
-	border-radius: 4px;
-	border: solid 1px #CCC;
-	box-shadow: inset 0 0 5px 0 rgba(206, 210, 210, 0.3);
+
+#loginform input[type="submit"] {
+        width: 20%;
+        padding: 5px;
+        border: 0;
+        border-radius: 3px;
+        color: white;
+        background: rgba(245, 23, 23, 0.7);
+        cursor: pointer;
 }
-#signup-box form input[type="submit"] {
-	display: block;
-	margin: 0 auto;
-	padding: 8px;
-	font-size: 0.8rem;
-	border-radius: 5px;
-	border: solid 1px #CCC;
-	background: white;
-	cursor: pointer;
-	transition: background 0.3s;
-	-webkit-transition: background 0.3s;
-	-moz-transition: background 0.3s;
-	-o-transition: background 0.3s;
-}
-#signup-box form input[type="submit"]:hover {
-	background: rgba(248, 92, 92, 0.9);
-	color: white;
-	transition: background 0.3s;
-	-webkit-transition: background 0.3s;
-	-moz-transition: background 0.3s;
-	-o-transition: background 0.3s;
+#loginform input[type="submit"]:hover {
+        background: #EB4949;
 }
 </style>
 <!-- FOR TESTING PURPOSES - PLEASE REMOVE /close -->
 <body>
-	<div id="wrapper">
-		<section id="signup-box">
-			<form method="post" action="register_user">{% csrf_token %}
-				<input id="id_username" type="email" name="username" placeholder="Email" maxlength="30" required>
-				<input id="id_password1" type="password" name="password1" placeholder="Password" required>
-				<input id="id_password2" type="password" name="password2" placeholder="Password" required>
-				<input type="submit" value="GET STARTED">
-			</form>
-		</section>
-	</div>
+        <div id="wrap">
+                <div id="login-box">
+                        <form id="loginform" type="POST" action="login_user">{% csrf_token %}
+                                <input type="email" name="username" id="username" placeholder="Email">
+                                <input type="password" name="password" id="password" placeholder="Password">
+                                <input type="submit" value="Login">
+                        </form>
+                </div>
+        </div>
 </body>
 </html>
