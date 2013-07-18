@@ -40,7 +40,7 @@ def register_user(request):
 
 # Successful registration
 def register_success(request):
-	return HttpResponse('Registered!!!')
+		return render(request, 'user/index.html')
 
 # User UI
 def user(request):

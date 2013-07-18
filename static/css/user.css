@@ -50,7 +50,7 @@ a {
 .group-add {
 	width: 90px;
 	height: 90px;
-	margin: 10px auto 0;
+	margin: 10px auto 15px;
 	color: #e0e0e0;
 	font-size: 0.9rem;
 	text-align: center;
@@ -215,13 +215,13 @@ a {
 	background-position: 10px 5px;
 }
 #list {
-	background-image: url(http://markedbyme.appspot.com/static/images/test.png);
+	background-image: url(http://markedbyme.appspot.com/static/images/list.png);
 }
 #list-icons {
-	background-image: url(http://markedbyme.appspot.com/static/images/test.png);
+	background-image: url(http://markedbyme.appspot.com/static/images/list-icons.png);
 }
 #grid {
-	background-image: url(http://markedbyme.appspot.com/static/images/test.png);
+	background-image: url(http://markedbyme.appspot.com/static/images/grid.png);
 }
 #sign-out {
 	float: right;
@@ -239,7 +239,6 @@ a {
 	list-style: none;
 }
 .bookmark {
-	position: relative;
 	height: 40px;
 	font-size: 0.9rem;
 	line-height: 40px;
@@ -263,17 +262,36 @@ a {
 .bookmark:hover .select-bookmark {
 	background-image: url(http://markedbyme.appspot.com/static/images/dots.png);
 }
+.bookmark-title-block {
+	width: 35%;
+	height: 40px;
+	float: left;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
 .bookmark-title {
 	float: left;
 	margin-left: 12px;
 }
-.bookmark-url {
-	position: absolute;
-	left: 34%;
+.bookmark-url-block {
+	width: 35%;
+	height: 40px;
+	float: left;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.bookmark-url {}
+.bookmark-tags-block {
+	width: 30%;
+	height: 40px;
+	float: left;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 .bookmark-tags {
-	position: absolute;
-	left: 70%;
 	padding: 1px 5px;
 	margin: 8px 0;
 	font-size: 0.7rem;

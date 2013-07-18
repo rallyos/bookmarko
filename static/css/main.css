@@ -15,6 +15,7 @@ ul, h1, p {
 	height: 50px;
 	background: rgba(255, 255, 255, 0.9);
 	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+	z-index: 1;
 }
 .logo {
 	position: absolute;
@@ -43,31 +44,48 @@ ul, h1, p {
 	line-height: 40px;
 	cursor: pointer;
 }
-.sign-in-block {
-	-webkit-transform: translateX(100%);
-	transition: 0.3s;
-}
 .sign-block {
 	max-width: 100%;
-	height: 500px;
+	height: 600px;
 	background-image: url(http://markedbyme.appspot.com/static/images/screen.png);
+	background-size: 100%;
+	border-bottom: solid 1px #ECECEC;
 	overflow: hidden;
 }
 .sign-header {
 	margin-top: 100px;
 	color: #FFF;
-	font-size: 2.2rem;
-	font-weight: 300;
+	font-family: Roboto, sans-serif;
+	font-size: 2.5rem;
+	font-weight: 100;
 	text-align: center;
 }
 .sign-up-block {
 	width: 30%;
-	max-width: 350px; 
-	margin: 90px auto 10px;
+	max-width: 460px;
+	height: 340px;
+	margin: 40px auto 10px;
+	position: relative;
+	background: rgba(255, 255, 255, 0.95);
+	border-radius: 4px;
+	box-shadow: 0 1px 3px #B8B8B8;
+	overflow: hidden;
 	transition: 0.3s;
 }
 .sign-up-form {
+	position: absolute;
+	top: 0;
+	padding: 30px;
 	font-family: Roboto, sans-serif;
+	transition: 0.3s;
+}
+.sign-in-form {
+	position: absolute;
+	top: 0;
+	padding: 30px;
+	font-family: Roboto, sans-serif;
+	-webkit-transform: translateX(110%);
+	transition: 0.3s;
 }
 .sign-up-input {
 	width: 100%;
@@ -79,8 +97,8 @@ ul, h1, p {
 	font-weight: 300;
 	color: #909291;
 	background: rgba(255, 255, 255, 0.9);
-	border-radius: 45px;
-	border: 0;
+	border: solid 1px #D5D5D5;
+	border-radius: 3px;
 	outline: 0;
 }
 .sign-up-input::-webkit-input-placeholder {
@@ -89,14 +107,14 @@ ul, h1, p {
 .sign-up-submit {
 	width: 50%;
 	display: block;
-	margin: 30px auto 0;
+	margin: 85px auto 0;
 	padding: 7px 20px;
 	background: #FA513E;
 	font-family: inherit;
 	font-weight: 300;
 	font-size: 1.5rem;
 	color: #fff;
-	border-radius: 6px;
+	border-radius: 4px;
 	border: 0;
 	cursor: pointer;
 }
@@ -162,6 +180,12 @@ ul, h1, p {
 	color: #fff;
 	background: #979797;
 }
+.feature-view-image {
+	max-width: 130px;
+	display: block;
+	float: left;
+	margin: 40.5 21px;
+}
 #title-bottom-right {
 	color: #fff;
 	background: #50BB66;
@@ -177,13 +201,36 @@ ul, h1, p {
 	margin: 0 40px;
 	float: left;
 }
-.bottom-feature-image {
+.bottom-feature-circle {
 	display: block;
+	width: 150px;
+	height: 150px;
+	border-radius: 150px;
 	margin: 15px auto;
+}
+#feature-beta-circle {
+	text-align: center;
+	color: #fff;
+	background: #eb3d00;
+	overflow: hidden;
+}
+#feature-beta-span {
+	line-height: 150px;
+	font-size: 2.3rem;
+	font-family: 'Roboto', sans-serif;
+	font-weight: 200;
+	text-transform: uppercase;
+}
+#feature-cloud-circle {
+	background: #4285f4;
+}
+#feature-cloud-img {
+	display: block;
+	padding: 45px 25px;
 }
 .bottom-feature-text {
 	width: 100%;
-	font-size: 1.1rem;
+	font-size: 1.2rem;
 	text-align: center;
 	overflow: hidden;
 }

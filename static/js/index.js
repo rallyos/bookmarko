@@ -1,10 +1,18 @@
-/* $(document).ready(function() {
-	var $toggleForm = $('#form-toggle');
-	var $signUpBlock = $('.sign-up-block');
-	var $signInBlock = $('.sign-in-block');
+$(document).ready(function() {
+
+	var tap = $('#form-toggle').text();
 
 	$('#form-toggle').on('click', function() {
-		$signUpBlock.css('right', '100%');
+		
+		if ($('#form-toggle').text() == 'Sign In') {
+			$('.sign-up-form').css('-webkit-transform', 'translateX(-110%)');
+			$('.sign-in-form').css('-webkit-transform', 'translateX(0)');
+			$('#form-toggle').text('Sign Up');
+		} else if ($('#form-toggle').text() == 'Sign Up') {
+			$('.sign-up-form').css('-webkit-transform', 'translateX(0)');
+			$('.sign-in-form').css('-webkit-transform', 'translateX(110%)');
+			$('#form-toggle').text('Sign In');
+		}
+
 	});
 });
-*/

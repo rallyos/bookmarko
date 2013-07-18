@@ -12,7 +12,7 @@ class BookmarkCollection(models.Model):
 
 # Bookmark database model fields
 class Bookmark(models.Model):
-	bookmark_title = models.CharField(max_length=50)
+	bookmark_title = models.CharField(max_length=250)
 	bookmark_url = models.URLField()
 	tags = models.CharField(max_length=50, blank=True, null=True)
 	collection = models.ForeignKey(BookmarkCollection, blank=True, null=True)

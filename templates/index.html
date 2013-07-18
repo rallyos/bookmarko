@@ -27,11 +27,11 @@
 					<!-- <input id="id_password2" type="password" name="password2" placeholder="Password" required> -->
 					<input class="sign-up-submit" type="submit" value="Sign Up">
 				</form>
-				                        <form id="loginform" type="POST" action="login_user">{% csrf_token %}
-                                <input type="email" name="username" id="username" placeholder="Email">
-                                <input type="password" name="password" id="password" placeholder="Password">
-                                <input type="submit" value="Login">
-                        </form>
+				<form class="sign-in-form" type="POST" action="login_user">{% csrf_token %}
+					<input class="sign-up-input" type="email" name="username" id="username" placeholder="Email">
+					<input class="sign-up-input" type="password" name="password" id="password" placeholder="Password">
+					<input class="sign-up-submit" type="submit" value="Login">
+				</form>
 			</div>
 	</section>
 	<div class="features-wrap">
@@ -51,9 +51,10 @@
 			</article>
 			<article class="feature">
 				<h1 class="feature-title" id="title-bottom-left">Focused on bookmarking, not on sharing</h1>
-				<img class="feature-image-left" width="141" height="141" src="{{ STATIC_URL }}images/feature-img1.png">
-				<img class="feature-image-right" width="141" height="141" src="{{ STATIC_URL }}images/feature-img2.png">
-				<p class="feature-text">Chupa chups topping lollipop tootsie roll dragée halvah. Chocolate cake pudding soufflé. Sweet pudding jujubes dragée. Chocolate bar bonbon jelly-o cookie. Marshmallow jelly jujubes caramels fruitcake sweet roll faworki. Muffin </p>
+				<img class="feature-view-image" width="110" height="110" src="{{ STATIC_URL }}images/feature-list.png">
+				<img class="feature-view-image" width="110" height="110" src="{{ STATIC_URL }}images/feature-list-icons.png">
+				<img class="feature-view-image" width="110" height="110" src="{{ STATIC_URL }}images/feature-grid.png">
+				<p class="feature-text">Manage your content in the way that suits you best. You can choose between three views, and every one has it's advantage.</p>
 			</article>
 			<article class="feature">
 				<h1 class="feature-title" id="title-bottom-right">Optimized for most devices</h1>
@@ -63,15 +64,20 @@
 		</section>
 		<section class="bottom-features-block">
 			<article class="bottom-feature">
-				<img class="bottom-feature-image" width="150" height="150" src="{{ STATIC_URL }}images/circle.png">
+				<div class="bottom-feature-circle" id="feature-beta-circle">
+					<span id="feature-beta-span">Beta</span>
+				</div>
 				<p class="bottom-feature-text">Bookmarko is still in beta and will be a always developing project. There are still many things to come.</p>
 			</article>
 			<article class="bottom-feature">
-				<img class="bottom-feature-image" width="150" height="150" src="{{ STATIC_URL }}images/circle.png">
-				<p class="bottom-feature-text">Chupa chups topping lollipop tootsie roll dragée halvah. Choc cake pudding soufflé. Sweet pudding jujubes dragée.</p>
+				<div class="bottom-feature-circle" id="feature-cloud-circle">
+					<img id="feature-cloud-img" width="100" height="60" src="{{ STATIC_URL }}images/feature-cloud.png">
+				</div>
+				<p class="bottom-feature-text">The site is using Google App Engine for back-end, which offers us scalability and other cool things.</p>
 			</article>
 			<article class="bottom-feature">
-				<img class="bottom-feature-image" width="150" height="150" src="{{ STATIC_URL }}images/circle.png">
+				<div class="bottom-feature-circle">
+				</div>
 				<p class="bottom-feature-text">Chupa chups topping lollipop tootsie roll dragée halvah. Choc cake pudding soufflé. Sweet pudding jujubes dragée.</p>
 			</article>
 		</section>
