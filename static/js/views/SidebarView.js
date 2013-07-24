@@ -55,7 +55,7 @@ var SidebarView = Backbone.View.extend({
 	// 
 	createCollection: function() {
 		var newGroup = new BookmarkCollection();
-		data = {collection_name: 'Group', collection_background: '#343534'};
+		data = {title: 'Group', background: '#343534'};
 		newGroup.url = 'api/collections/';
 
 		newGroup.set(data);
@@ -193,7 +193,7 @@ var BookmarkCollectionView = Backbone.View.extend({
 		}
 
 		this.$el.css('background-color', newBgColor);
-		this.model.save('collection_background', newBgColor, { headers: { 'Authorization': 'Token ' + token } });
+		this.model.save('background', newBgColor, { headers: { 'Authorization': 'Token ' + token } });
 	},
 
 	dragEnterEvent: function(e) {
@@ -253,7 +253,7 @@ var BookmarkCollectionView = Backbone.View.extend({
 	},
 
 	saveGroup: function(newval) {
-		this.model.save({ 'collection_name': newval}, { headers: { 'Authorization': 'Token ' + token } });
+		this.model.save({ 'title': newval}, { headers: { 'Authorization': 'Token ' + token } });
 	},
 
 	// Deletes the model
@@ -273,7 +273,7 @@ var BookmarkCollectionView = Backbone.View.extend({
 	// It appends the template html and serialized model to the $el.
 	render: function(bookmarks_collection) {
 		this.$el.html(this.template(this.model.toJSON()));
-		var background_color = this.model.get('collection_background');
+		var background_color = this.model.get('background');
 		this.$el.css('background-color', background_color);
 		return this;
 	}

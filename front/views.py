@@ -72,7 +72,7 @@ def login_user(request):
 
 			# Create the token cookie
 			resp = HttpResponseRedirect('user')
-			resp.set_cookie('Token', token)
+			resp.set_cookie('Token', token, expires=365 * 24 * 60 * 60)
 			return resp
 		else:
 			return HttpResponse('login failed')

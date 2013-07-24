@@ -1,5 +1,6 @@
 // Content View
 // Responsible for showing all bookmarks 
+
 var ContentView = Backbone.View.extend({
 	el: '.content',
 
@@ -108,7 +109,7 @@ var BookmarkView = Backbone.View.extend({
 		//this.listenTo(this.model, 'destroy', this.remove);
 		this.listenTo(this.model, 'search', this.showResults);
 
-		this.listenTo(this.model, 'filterbyt', this.filterThis)
+		this.listenTo(this.model, 'filterbyt', this.filterThis);
 
 	},
 
@@ -117,15 +118,14 @@ var BookmarkView = Backbone.View.extend({
 		return this;
 	},
 
-	tagClicked: function() {
-		tagN = this.model.get('tags');
-		pageRouter.navigate('/tags/'+ tagN, true);
-	},
+    tagClicked: function() {
+            tagN = this.model.get('tag');
+            pageRouter.navigate('/tags/'+ tagN, true);
+    },
 
 	filterThis: function(bookmark, tag) {
 
-		console.log(bookmark)
-		if ( bookmark.get('tags') != tag ) {
+		if ( bookmark.get('tag') != tag ) {
 			this.$el.addClass('hidden');
 		} else {
 			this.$el.removeClass('hidden');
@@ -133,14 +133,13 @@ var BookmarkView = Backbone.View.extend({
 	},
 
 	showResults: function(bookmark, searchWord) {
-		console.log(searchWord)
-		test = bookmark.get('bookmark_title' );
-		testa = bookmark.get('bookmark_url');
-		
-		if ( test.match(searchWord) || testa.match(searchWord) ) {
+		test = bookmark.get('title');
+		testa = bookmark.get('url');
+		testaa = bookmark.get('tag');
+
+		if ( test.match(searchWord) || testa.match(searchWord) || testaa.match(searchWord)) {
 			this.$el.removeClass('hidden');
 		} else {
-			console.log(test + ' + ' + searchWord);
 			this.$el.addClass('hidden');
 		}
 	},
@@ -194,7 +193,7 @@ var BookmarkView = Backbone.View.extend({
 	// Get newval and update the bookmark name
 	// save() makes GET request to check if the value is different, and then sends PUT request to update it
 	saveBookmark: function(newval) {
-		this.model.save({ 'bookmark_title': newval}, { headers: { 'Authorization': 'Token ' + token } });
+		this.model.save({ 'title': newval}, { headers: { 'Authorization': 'Token ' + token } });
 	},
 
 	// Deletes the model
@@ -209,3 +208,5 @@ var BookmarkView = Backbone.View.extend({
 		this.model.destroy({ headers: { 'Authorization': 'Token ' + token } }, this.remove);
 	}
 });
+
+

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<link href='http://fonts.googleapis.com/css?family=Roboto:400,100,300|Open+Sans:400,300' rel='stylesheet'>
+	<link href='http://fonts.googleapis.com/css?family=Roboto:300,100|Open+Sans:400,300' rel='stylesheet'>
 	<link href="{{ STATIC_URL }}css/main.css" rel="stylesheet">
 	<title>Bookmarko 0.1 | Manage your bookmarks with style</title>
 </head>
@@ -12,25 +12,25 @@
 		<nav class="nav-block">
 			<ul class="menu">
 				<li class="menu-item" id="form-toggle">Sign In</li>
-				<li class="menu-item">Features</li>
+				<li class="menu-item" id="features-scroll">Features</li>
 				<li class="menu-item">About</li>
 				<li class="menu-item">Blog</li>
 			</ul>
 		</nav>
 	</header>
-	<section class="sign-block">
+	<section class="sign-section">
 			<h1 class="sign-header">Bookmark management made easy</h1>
 			<div class="sign-up-block">
-				<form class="sign-up-form" method="POST" action="register_user">{% csrf_token %}
-					<input class="sign-up-input" id="id_username" type="email" name="username" placeholder="Email address" maxlength="30" required>
-					<input class="sign-up-input" id="id_password1" type="password" name="password1" placeholder="Password" required>
-					<!-- <input id="id_password2" type="password" name="password2" placeholder="Password" required> -->
-					<input class="sign-up-submit" type="submit" value="Sign Up">
+				<form class="sign-form" id="sign-up" method="POST" action="register_user">{% csrf_token %}
+					<input class="form-input" id="id_username" type="email" name="username" placeholder="Email address" maxlength="50" required>
+					<input class="form-input" id="id_password1" type="password" name="password1" placeholder="Password" required>
+					<input class="form-input" id="id_password2" type="password" name="password2" placeholder="Password" required>
+					<input class="form-submit" type="submit" value="Sign Up">
 				</form>
-				<form class="sign-in-form" type="POST" action="login_user">{% csrf_token %}
-					<input class="sign-up-input" type="email" name="username" id="username" placeholder="Email">
-					<input class="sign-up-input" type="password" name="password" id="password" placeholder="Password">
-					<input class="sign-up-submit" type="submit" value="Login">
+				<form class="sign-form" id="sign-in" type="POST" action="login_user">{% csrf_token %}
+					<input class="form-input" type="email" name="username" id="username" placeholder="Email address">
+					<input class="form-input" type="password" name="password" id="password" placeholder="Password">
+					<input class="form-submit" id="sign-in-submit" type="submit" value="Login">
 				</form>
 			</div>
 	</section>
@@ -50,16 +50,16 @@
 				<p class="feature-text">Finding the site that you saved months before is a joy. The search bar offers fast and smart way to look through your collection. You can also tag bookmarks with keywords for better search experience.</p>
 			</article>
 			<article class="feature">
-				<h1 class="feature-title" id="title-bottom-left">Focused on bookmarking, not on sharing</h1>
+				<h1 class="feature-title" id="title-bottom-left">Multiple ways to view your saved sites</h1>
 				<img class="feature-view-image" width="110" height="110" src="{{ STATIC_URL }}images/feature-list.png">
 				<img class="feature-view-image" width="110" height="110" src="{{ STATIC_URL }}images/feature-list-icons.png">
 				<img class="feature-view-image" width="110" height="110" src="{{ STATIC_URL }}images/feature-grid.png">
-				<p class="feature-text">Manage your content in the way that suits you best. You can choose between three views, and every one has it's advantage.</p>
+				<p class="feature-text">Manage your content in the way that suits you best. You can choose between three views, and every one has it's own advantage. The third view shows some information about the saved sites, and presents them in a nice grid.</p>
 			</article>
 			<article class="feature">
 				<h1 class="feature-title" id="title-bottom-right">Optimized for most devices</h1>
 				<img class="feature-image" id="devices" width="302" height="141" src="{{ STATIC_URL }}images/feature-img5.png">				
-				<p class="feature-text">Bookmarko was made with responsive design in mind. It was build to support wide range of devices. The site is optimized for touch input ,so you can access and use it from your mobile device.</p>
+				<p class="feature-text">Bookmarko was made with responsive design in mind. It was build to support wide range of devices. The site is optimized for touch input, so you can access and use it from your mobile device.</p>
 			</article>
 		</section>
 		<section class="bottom-features-block">
@@ -83,6 +83,7 @@
 		</section>
 	</div>
 	<footer class="footer">
+		<span id="baker">Bookmarko is baked by <a id="portf" href="//dimitarralev.net" target="_blank">me</a> in BS, Bulgaria</span>
 	</footer>
 <script src="{{ STATIC_URL }}libraries/jquery-1.9.1.min.js"></script>
 <script src="{{ STATIC_URL }}js/index.js"></script>
