@@ -127,7 +127,7 @@ var BookmarkCollectionView = Backbone.View.extend({
 	navigateRouter: function() {
 
 		// Navigate the router based on id. In the future the url should show collection name
-		pageRouter.navigate('#/collections/' + this.model.id );
+		pageRouter.navigate('#/collections/' + this.model.id, true);
 	},
 
 	// When fetched convert them to json
@@ -197,6 +197,9 @@ var BookmarkCollectionView = Backbone.View.extend({
 	},
 
 	dragEnterEvent: function(e) {
+		if (e.preventDefault) {
+	    	e.preventDefault(); // Necessary. Allows us to drop.
+		}
 		this.$el.css('opacity','0.6');
 	},
 
@@ -208,7 +211,9 @@ var BookmarkCollectionView = Backbone.View.extend({
 	},
 
 	dragDropEvent: function(e) {
-
+		if (e.preventDefault) {
+	    	e.preventDefault(); // Necessary. Allows us to drop.
+		}
 		data = JSON.parse(e.originalEvent.dataTransfer.getData('model'));
 
 		var draggedModelCollectionID = data.collection_id;
@@ -249,7 +254,7 @@ var BookmarkCollectionView = Backbone.View.extend({
 
 	hideDragged: function(draggedModel) {
 
-		draggedModel.trigger('hide');
+		draggedModel.trigger('dragHide');
 	},
 
 	saveGroup: function(newval) {

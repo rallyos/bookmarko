@@ -4,7 +4,7 @@ body {
 	font-family: 'Open Sans', sans-serif;
 	color: #343534;
 }
-input,ul {
+input,ul, h1 {
 	margin: 0;
 	padding: 0;
 }
@@ -41,6 +41,11 @@ a {
 	color: #fff;
 	cursor: pointer;
 	overflow: hidden;
+}
+.group-wrap {
+	position: relative;
+	-webkit-transition: 0.3s;
+	transition: 0.3s;
 }
 .group-add {
 	width: 90px;
@@ -195,8 +200,11 @@ a {
 	background-size: 20px;
 	background-position: 13px 5px;	
 }
-#starred {
+.starred {
 	background-image: url(http://markedbyme.appspot.com/static/images/grey-star.png);
+}
+.yellow-star {
+	background-image: url(http://markedbyme.appspot.com/static/images/yellow-star.png);
 }
 #settings {
 	background-image: url(http://markedbyme.appspot.com/static/images/cog.png);
@@ -241,6 +249,7 @@ a {
 	list-style: none;
 }
 .bookmark {
+	position: relative;
 	height: 40px;
 	font-size: 0.9rem;
 	line-height: 40px;
@@ -265,6 +274,19 @@ a {
 .bookmark:hover .select-bookmark {
 	background-image: url(http://markedbyme.appspot.com/static/images/dots.png);
 }
+.bookmark-star {
+	display: block;
+	width: 20px;
+	height: 20px;
+	margin: 10px 0 10px 7px;
+	float: left;
+	background-size: 20px;
+	background-image: url(http://markedbyme.appspot.com/static/images/not-starred.png);
+	cursor: pointer;
+}
+.bookmark-starred {
+	background-image: url(http://markedbyme.appspot.com/static/images/starred.png);
+}
 .bookmark-val-block {
 	width: 35%;
 	height: 40px;
@@ -288,18 +310,17 @@ a {
 	display: inline-block;
 	font-size: 0.7rem;
 	line-height: 20px;
+    border: solid 1px #CBCBCB;
 	background: #FFF;
-	color: #888;
 	cursor: default;
-	border: solid 1px #CECECE;
+}
+.bookmark-tags:hover {
+	background: #FAFAFA;
 }
 .add-tag {
 	font-size: 1rem;
 	font-weight: 300;
 	cursor: pointer;
-}
-.bookmark-tags:hover {
-	background: #FAFAFA;
 }
 .bookmark-delete {
 	height: 20px;
@@ -328,4 +349,34 @@ a {
 [contenteditable="true"]:focus {
 	outline: 0;
 	text-decoration: underline;
+}
+.settings-block {
+	position: fixed;
+	width: 400px;
+	height: 600px;
+	right: 0;
+	top: 50px;
+	background: #fff;
+	border: solid 1px #E6E6E6;
+	z-index: 1;
+	-webkit-transition: 0.3s;
+	transition: 0.3s;
+}
+.settings-hidden {
+	-webkit-transform: translateX(100%);
+	-ms-transform: translateX(100%);
+	transform: translateX(100%);
+}
+.settings-visible {
+	-webkit-transform: translateX(0);
+	-ms-transform: translateX(0);
+	transform: translateX(0);
+}
+.settings-header {
+	padding: 5px 0;
+	font-size: 1.2rem;
+	color: #fff;
+	font-weight: 400;
+	text-align: center;
+	background: #DB4A39;
 }

@@ -82,7 +82,12 @@ input {
 	transition: 0.2s;
 	-webkit-transition: 0.2s;
 }
-#sign-in {
+.form-hide-left {
+	-webkit-transform: translateX(-110%);
+	-ms-transform: translateX(-110%);
+	transform: translateX(-110%);
+}
+.form-hide-right {
 	-webkit-transform: translateX(110%);
 	-ms-transform: translateX(110%);
 	transform: translateX(110%);

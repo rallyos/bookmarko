@@ -6,68 +6,64 @@ var ContentView = Backbone.View.extend({
 
 	initialize: function() {
 		
-		// Listens for 'filter' event and then runs a function that triggers event for every bookmark - triggerCheck
-		this.listenTo(bookmarks, 'filter', this.triggerCheck);
+		this.listenTo(bookmarks,'add', this.addBookmark);
 
-		// On 'add' event in 'bookmarks' collection run addBookmark() function.
-		this.listenTo(bookmarks, 'add', this.addBookmark);
+		this.listenTo(bookmarks,'login', this.userEntered);
 
-
-		this.listenTo(bookmarks, 'entered', this.userEntered);
+		this.listenTo(bookmarks,'filter', this.filterBy);
 
 
-		this.listenTo(bookmarks, 'filterTag', this.filterTags);
-
-
-		// Sync all models with the server and put them in collection |||| Put this in function? and then call it ot init
 		bookmarks.fetch({success: function() {
-			bookmarks.trigger('entered');
+			bookmarks.trigger('login');
 		}});
 
-
-
 		this.$searchInput = this.$('.input-search');
-
+		this.$starButton = this.$('.starred');
 	},
 
 	events: {
-		'keyup .input-search': 'searchBookmarks'
+		'keyup .input-search': 'searchBookmarks',
+		'click .starred': 'showStarred'
 	},
 
-	// The render function for the single bookmark.
-	// It appends the template html and serialized model to the $el. -> li.bookmarks-item
+	userEntered: function() {
+		param = null;
+		fn = 'collection';
+		this.filterBy(param, fn);
+	},
 
+	filterBy: function(param, fn) {
+		bookmarks.forEach(function(bookmark) {
+			bookmark.trigger('hide', bookmark, param, fn);
+		});
+	},
 
-	filterTags: function(tag) {
-		bookmarks.forEach(function(bookmarks) {
-			bookmarks.trigger('filterbyt', bookmarks, tag);
-		});	
-
+	showStarred: function() {
+		if (this.$starButton.data('pressed') == 'yes' ) {
+			
+			this.$starButton.data('pressed', 'no');
+			this.$starButton.toggleClass('yellow-star')
+			fn = 'collection';
+			param = null;
+			this.filterBy(param, fn);
+		} else {
+			
+			this.$starButton.data('pressed', 'yes');
+			this.$starButton.toggleClass('yellow-star')
+			bookmarks.forEach(function(bookmarks) {
+				bookmarks.trigger('isStarred', bookmarks);
+			});	
+		}
 	},
 
 	searchBookmarks: function() {
 		var searchWord = this.$searchInput.val();
 
-		bookmarks.forEach(function(bookmarks) {
-			bookmarks.trigger('search', bookmarks, searchWord);
+		bookmarks.forEach(function(bookmark) {
+			bookmark.trigger('search', bookmark, searchWord);
 		});	
 	},
 
-	userEntered: function() {
-		id = null;
-		bookmarks.trigger('filter', id);
-	},
-
-	triggerCheck: function(id) {
-		// Trigger event for every model
-		bookmarks.forEach(function(bookmarks) {
-			bookmarks.trigger('passed', bookmarks,id);
-		});
-
-	},
-
-	// Makes new single bookmark view.
-	// 'bookmark' variable carries the model from this function to the 'render' function
 	addBookmark: function(bookmark) {
 		var newBookmarkView = new BookmarkView({ model: bookmark });
 		$('.bookmarks-list').append(newBookmarkView.render().el);
@@ -87,29 +83,29 @@ var BookmarkView = Backbone.View.extend({
 
 	events: {
 
-		// When the X is clicked the clear() function is initialized
-		'click .bookmark-delete': 'clear',
+		'click .bookmark-star': 'starBookmark',
 
 		'dragstart .select-bookmark': 'dragStartEvent',
 
-		// On keypress run updateBookmark()
 		'keypress .bookmark-title': 'updateBookmark',
 
-		'click .bookmark-tags': 'tagClicked'
+		'click .bookmark-tags': 'tagClicked',
+
+		'click .bookmark-delete': 'clear',
 
 	},
 
 	initialize: function() {
 
-		// Listen for 'passed' event - runs function that will check model id's and hide/show them.
-		this.listenTo(this.model, 'passed', this.hideBookmarks);
-
-		this.listenTo(this.model, 'hide', this.hideit)
-		// When the model is destroyed, it's also removed from the view.
-		//this.listenTo(this.model, 'destroy', this.remove);
 		this.listenTo(this.model, 'search', this.showResults);
 
-		this.listenTo(this.model, 'filterbyt', this.filterThis);
+		this.listenTo(this.model, 'isStarred', this.hideShowStarred)
+
+		this.listenTo(this.model, 'dragHide', this.dragHide)
+
+		this.listenTo(this.model, 'hide', this.hideBookmarks);
+
+		this.listenTo(this.model, 'destroy', this.remove);
 
 	},
 
@@ -118,33 +114,8 @@ var BookmarkView = Backbone.View.extend({
 		return this;
 	},
 
-    tagClicked: function() {
-            tagN = this.model.get('tag');
-            pageRouter.navigate('/tags/'+ tagN, true);
-    },
-
-	filterThis: function(bookmark, tag) {
-
-		if ( bookmark.get('tag') != tag ) {
-			this.$el.addClass('hidden');
-		} else {
-			this.$el.removeClass('hidden');
-		}
-	},
-
-	showResults: function(bookmark, searchWord) {
-		test = bookmark.get('title');
-		testa = bookmark.get('url');
-		testaa = bookmark.get('tag');
-
-		if ( test.match(searchWord) || testa.match(searchWord) || testaa.match(searchWord)) {
-			this.$el.removeClass('hidden');
-		} else {
-			this.$el.addClass('hidden');
-		}
-	},
-
 	dragStartEvent: function (e) {
+
 		var data = {
 			'id': this.model.id,
 			'collection_id': this.model.get('collection_id'),
@@ -165,12 +136,41 @@ var BookmarkView = Backbone.View.extend({
 
 	},
 
-	hideit: function(draggedModel) {
-		this.$el.addClass('hidden');
+	starBookmark: function(bookmark) {
+		if ( this.model.get('starred') == false ) {
+			this.$('.bookmark-star').addClass("bookmark-starred");
+			this.model.save({ 'starred': true}, { headers: { 'Authorization': 'Token ' + token } });
+		} else if ( this.model.get('starred') == true ) {
+			this.$('.bookmark-star').removeClass("bookmark-starred");
+			this.model.save({ 'starred': false}, { headers: { 'Authorization': 'Token ' + token } });
+		}
 	},
 
-	// When editing the bookmark name
-	// Check every keypress, and if 'enter' is pressed the field is blurred and .text() is sent to the saveBookmark() function
+    tagClicked: function() {
+            tagN = this.model.get('tag');
+            pageRouter.navigate('/tags/'+ tagN, true);
+    },
+
+	hideShowStarred: function(bookmark) {
+			if ( bookmark.get('starred') == false ) {
+				this.$el.addClass('hidden');
+			} else {
+				this.$el.removeClass('hidden');
+			}
+	},
+
+	showResults: function(bookmark, searchWord) {
+		title = bookmark.get('title');
+		url = bookmark.get('url');
+		tag = bookmark.get('tag');
+
+		if ( title.match(searchWord) || url.match(searchWord) || tag.match(searchWord)) {
+			this.$el.removeClass('hidden');
+		} else {
+			this.$el.addClass('hidden');
+		}
+	},
+
 	updateBookmark: function(e) {
 		if (e.which === ENTER_KEY) {
 			this.$('.bookmark-title').blur();
@@ -180,23 +180,24 @@ var BookmarkView = Backbone.View.extend({
 		}
 	},
 
-	// Checks the id of every passed model, and hide them
-	// if they are not the same as the id of the collection that is passed from the router
-	hideBookmarks: function(bookmark, id) {
-		if ( bookmark.get('collection_id') != id ) {
-			this.$el.addClass('hidden');
+	hideBookmarks: function(bookmark, param, fn) {
+		if ( fn == 'collection' & bookmark.get('collection_id') != param) {
+				this.$el.addClass('hidden');
+		} else if ( fn == 'tag' & bookmark.get('tag') != param ) {
+				this.$el.addClass('hidden');
 		} else {
-			this.$el.removeClass('hidden');
+				this.$el.removeClass('hidden');
 		}
 	},
 
-	// Get newval and update the bookmark name
-	// save() makes GET request to check if the value is different, and then sends PUT request to update it
 	saveBookmark: function(newval) {
 		this.model.save({ 'title': newval}, { headers: { 'Authorization': 'Token ' + token } });
 	},
 
-	// Deletes the model
+	dragHide: function(draggedModel) {
+		this.$el.addClass('hidden');
+	},
+
 	clear: function () {
 		this.$el.css({
 			right: '100%',
@@ -205,8 +206,6 @@ var BookmarkView = Backbone.View.extend({
 	},
 
 	destrooy: function() {
-		this.model.destroy({ headers: { 'Authorization': 'Token ' + token } }, this.remove);
+		this.model.destroy({ headers: { 'Authorization': 'Token ' + token } });
 	}
 });
-
-

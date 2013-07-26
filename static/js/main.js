@@ -16,3 +16,7 @@ function getCookie(name) {
     return cookieValue;
 }
 var token = getCookie('Token');
+
+$('#settings').on('click', function() {
+    $('.settings-block').toggleClass("settings-hidden");
+});

@@ -7,21 +7,6 @@ $(document).ready(function() {
     var signUpForm = $('#sign-up');
     var signInForm = $('#sign-in');
     var formToggle = $('#form-toggle');
-	var translateL = {
-		'-webkit-transform':'translateX(-110%)',
-		'-ms-transform':'translateX(-110%)',
-		'transform':'translateX(-110%)'
-	};
-	var translateNull = {
-		'-webkit-transform':'translateX(0)',
-		'-ms-transform':'translateX(0)',
-		'transform':'translateX(0)'
-	};
-	var translateR = {
-		'-webkit-transform':'translateX(110%)',
-		'-ms-transform':'translateX(110%)',
-		'transform':'translateX(110%)'
-	};
 
 	formToggle.on('click', function() {
 
@@ -31,8 +16,8 @@ $(document).ready(function() {
 					body.animate({scrollTop: 0}, scrollTime)
 				}
 
-				signUpForm.css( translateL );
-				signInForm.css( translateNull );
+				signUpForm.toggleClass('form-hide-left');
+				signInForm.toggleClass('form-hide-right');
 
 				formToggle.text('Sign Up');
 			} else if (formToggle.text() == 'Sign Up') {
@@ -41,8 +26,8 @@ $(document).ready(function() {
 					body.animate({scrollTop: 0}, scrollTime)
 				}
 
-				signUpForm.css( translateNull );
-				signInForm.css( translateR );
+				signUpForm.toggleClass('form-hide-left')
+				signInForm.toggleClass('form-hide-right');
 
 				formToggle.text('Sign In');
 			}

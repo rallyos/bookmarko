@@ -8,18 +8,20 @@ var PageRouter = Backbone.Router.extend({
 	},
 
 	mhm: function() {
-		console.log('After login');
-		id = null;
-		bookmarks.trigger('filter', id);
+		var id = null;
+		var fn = 'collection';
+		bookmarks.trigger('filter', id, fn);
 	},
 
 	// Trigger 'filter' event and send the model id
 	showCollection: function(id) {
-		bookmarks.trigger('filter', id);
+		var fn = 'collection';
+		bookmarks.trigger('filter', id, fn);
 	},
 
 	filterByTag: function(tag) {
-		bookmarks.trigger('filterTag', tag);
+		var fn = 'tag';
+		bookmarks.trigger('filter', tag, fn);
 	},
 });
 

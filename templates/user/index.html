@@ -8,6 +8,9 @@
 </head>
 <body>
 	<div class="wrap">
+		<div class="settings-block settings-hidden">
+			<h1 class="settings-header">Settings</h1>
+		</div>
 		<div class="sidebar">
 			<div class="home-button"><span>Home</span></div>
 		</div>
@@ -15,7 +18,7 @@
 			<div class="content-header">
 				<input type="text" class="input-search" placeholder="Search . . .">
 				<div class="content-actions-block">
-					<span class="content-actions-button with-icon" id="starred"></span>
+					<span class="content-actions-button with-icon starred" data-pressed="no"></span>
 					<div class="content-actions-button content-actions-view-settings">
 						<span class="change-view-button" id="list"></span>
 						<span class="change-view-button" id="list-icons"></span>
@@ -33,6 +36,7 @@
 	<script type="text/template" id="bookmark-template">
 	<div class="bookmark-val-block">
 		<span class="select-bookmark" draggable="true"></span>
+		<span class="bookmark-star <%= starred ? 'bookmark-starred' : '' %>"></span>
 		<span class="bookmark-title" contenteditable="true" title="<%= title %>"><%= title %></span>
 	</div>
 	<div class="bookmark-val-block">
