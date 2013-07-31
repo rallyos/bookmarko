@@ -10,6 +10,14 @@
 	<div class="wrap">
 		<div class="settings-block settings-hidden">
 			<h1 class="settings-header">Settings</h1>
+			<form action="user-settings-form">
+				<div class="settings-form-section">
+					<label class="settings-form-label" for="testda">New password</label>
+					<input class="settings-form-input" type="text" name="testda">
+				</div>
+				<input class="apply-settings settings-form-button" type="submit" value="Apply">
+				<button class="cancel-settings settings-form-button">Cancel</button>
+			</form>
 		</div>
 		<div class="sidebar">
 			<div class="home-button"><span>Home</span></div>
@@ -43,7 +51,9 @@
 		<a class="bookmark-url" href="<%= url %>" target="_blank"><%= url %></a>
 	</div>	
 	<div class="bookmark-val-block" id="tags-block">
-		<span class="bookmark-tags"> <%= tag %> </span>
+		<% if (tag) { %>
+			<span class="bookmark-tags"> <%= tag %> </span>
+		<% } %>
 		<span class="add-tag" title="Add new tag">+</span>
 		<span class="bookmark-delete">X</span>
 	</div>

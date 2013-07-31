@@ -12,6 +12,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 
+
+import datetime
+from django.utils.timezone import utc
+
 #import urllib2
 #from BeautifulSoup import BeautifulSoup
 
@@ -24,10 +28,6 @@ def index(request):
 		return render(request, 'user/index.html')
 	else:
 		return render(request, 'index.html')
-
-# Register page
-def register(request):
-	return render(request, 'register/index.html')
 
 # Registration handling function
 def register_user(request):
@@ -49,9 +49,6 @@ def user(request):
 	else:
 		return render(request, 'index.html')
 
-
-import datetime
-from django.utils.timezone import utc
 
 # Login
 def login_user(request):

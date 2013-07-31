@@ -8,6 +8,10 @@ input,ul, h1 {
 	margin: 0;
 	padding: 0;
 }
+input {
+	-webkit-appearance: none;
+	-webkit-border-radius: 0;
+}
 a {
 	text-decoration: none;
 	color: #343534;
@@ -101,6 +105,9 @@ a {
 	overflow: hidden;
 	-webkit-transition: 0.2s;
 	transition: 0.2s;
+}
+.drawer-open {
+	height: 50px;
 }
 .bookmarks-group-color {
 	width: 25%;
@@ -379,4 +386,55 @@ a {
 	font-weight: 400;
 	text-align: center;
 	background: #DB4A39;
+}
+.settings-form-section {
+	width: 100%;
+	margin: 20px 0;
+	overflow: hidden;
+}
+.settings-form-label {
+	width: 30%;
+	margin-left: 3%;
+	float: left;
+	line-height: 23px;
+	font-family: 'Roboto', sans-serif;
+}
+.settings-form-input {
+	width: 60%;
+	height: 23px;
+	margin-right: 3%;
+	float: right;
+	font-size: 1rem;
+	text-indent: 5px;
+	border: solid 2px #A7A7A7;;
+	outline: 0;
+	-webkit-transition: 0.2s;
+	transition: 0.2s;
+}
+.settings-form-input:focus {
+	border: solid 2px #343534;
+}
+.settings-form-checkbox {
+
+}
+.settings-form-button {
+	width: 140px;
+	padding: 5px;
+	font-size: 1rem;
+	border: 0;
+	cursor: pointer;
+}
+.apply-settings {
+	margin: 10px 0 0 35px;
+	float: left;
+	color: #fff;
+	background: #26C940;
+	border: solid 2px #09B909;
+}
+.cancel-settings {
+	margin: 10px 35px 0 0;
+	float: right;
+	color: #343534;
+	background: #fff;
+	border: solid 2px #E4E4E4;
 }

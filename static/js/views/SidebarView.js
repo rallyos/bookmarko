@@ -4,23 +4,21 @@ var SidebarView = Backbone.View.extend({
 
 	initialize: function () {
 		
-		// On 'add' event in 'bookmarks' collection run addBookmark() function.
 		this.listenTo(globalBookmarkCollections, 'add', this.loadBookmarkCollection);
-
 
 		this.listenTo(globalBookmarkCollections, 'new', this.addButton);
 
-		// Load all bookmark collections from the server
 		globalBookmarkCollections.fetch({ success: function() {
 
-			if ( $('.group-wrap').length == 0 ) {
+			this.$groupWrap = this.$('.group-wrap');
+
+			if ( this.$groupWrap.length == 0 ) {
 				$('<div class="group-add"><span>New Group</span></div>').appendTo('.sidebar');
 			}
 
-			lastGroup = $('.group-wrap').last();
+			lastGroup = this.$groupWrap.last();
 			$('<div class="group-add"><span>New Group</span></div>').insertAfter(lastGroup);
 		}});
-
 
 
 	},
@@ -38,18 +36,8 @@ var SidebarView = Backbone.View.extend({
 	addButton: function() {
 		lastGroup = $('.group-wrap').last();
 		$('<div class="group-add"><span>New Group</span></div>').insertAfter(lastGroup);
-		groupInput = $('.bookmarks-group-name').last();   //??? groupInput because it's being edited :) , maybe it could be changed
-		groupInput.empty().focus();   //??? groupInput because it's being edited :) , maybe it could be changed
-	},
-
-	// 
-	navHome: function() {
-		pageRouter.navigate('', true);
-	},
-
-	// 
-	newCollection: function() {
-		$('.sidebar').append(BookmarkCollectionView.template);	
+		lastGroupName = $('.bookmarks-group-name').last();
+		lastGroupName.empty().focus();
 	},
 
 	// 
@@ -72,12 +60,16 @@ var SidebarView = Backbone.View.extend({
 
 	},
 
+	// 
+	navHome: function() {
+		pageRouter.navigate('', true);
+	},
+
 	// Makes new single bookmark view with 'bookmark' for model
 	loadBookmarkCollection: function(bookmarks_collection) {
 		var newBookmarkCollectionView = new BookmarkCollectionView({model: bookmarks_collection});
 		$('.sidebar').append(newBookmarkCollectionView.el);
 	}
-
 });
 
 // Initialize the view
@@ -126,11 +118,9 @@ var BookmarkCollectionView = Backbone.View.extend({
 
 	navigateRouter: function() {
 
-		// Navigate the router based on id. In the future the url should show collection name
 		pageRouter.navigate('#/collections/' + this.model.id, true);
 	},
 
-	// When fetched convert them to json
 	serializeCollection: function() {
 		this.model.bookmarkCollections.toJSON();
 	},
@@ -145,15 +135,7 @@ var BookmarkCollectionView = Backbone.View.extend({
 	},
 
 	togglePalette: function() {
-
-		var cPaletteHeight = this.$('.bookmarks-group-color-palette').css('height');
-		
-		if (cPaletteHeight == '50px') {
-			this.$('.bookmarks-group-color-palette').css('height', '0');
-		} else if (cPaletteHeight == '0px') {
-			this.$('.bookmarks-group-color-palette').css('height', '50px');
-		}
-
+		this.$('.bookmarks-group-color-palette').toggleClass('drawer-open');
 	},
 
 	changeGroupColor: function(click) {
@@ -197,23 +179,18 @@ var BookmarkCollectionView = Backbone.View.extend({
 	},
 
 	dragEnterEvent: function(e) {
-		if (e.preventDefault) {
-	    	e.preventDefault(); // Necessary. Allows us to drop.
-		}
+		if (e.preventDefault) { e.preventDefault(); }
 		this.$el.css('opacity','0.6');
 	},
 
 	dragOverEvent: function(e) {
-		if (e.preventDefault) {
-	    	e.preventDefault(); // Necessary. Allows us to drop.
-		}
+		if (e.preventDefault) { e.preventDefault(); }
 		return false;
 	},
 
 	dragDropEvent: function(e) {
-		if (e.preventDefault) {
-	    	e.preventDefault(); // Necessary. Allows us to drop.
-		}
+		if (e.preventDefault) { e.preventDefault(); }
+
 		data = JSON.parse(e.originalEvent.dataTransfer.getData('model'));
 
 		var draggedModelCollectionID = data.collection_id;
@@ -223,22 +200,14 @@ var BookmarkCollectionView = Backbone.View.extend({
 		var dropTargetID = this.model.id;
 
 		if ( draggedModelCollectionID != null ) {
-
 			var draggedModelCollection = globalBookmarkCollections.get(draggedModelCollectionID).bookmarkCollections;
-
 			draggedModelCollection.remove(draggedModel);
-
 			draggedModel.set({collection_id: dropTargetID})
-
 			dropTarget.add(draggedModel);
-
 			draggedModel.save({collection_id: dropTargetID}, { headers: { 'Authorization': 'Token ' + token } });
 		} else {
-
 			draggedModel.set({collection_id: dropTargetID})
-		
 			dropTarget.add(draggedModel);
-		
 			draggedModel.save({collection_id: dropTargetID}, { headers: { 'Authorization': 'Token ' + token } });
 		}
 		

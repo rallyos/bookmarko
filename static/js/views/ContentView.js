@@ -122,13 +122,8 @@ var BookmarkView = Backbone.View.extend({
 		};
 
 		var data = JSON.stringify(data)
-
-		var dragIcon = document.createElement('img');
-		dragIcon.src = 'http://markedbyme.appspot.com/static/images/dragimg.png';
-		dragIcon.width = 50;
-
 		
-		e.originalEvent.dataTransfer.setDragImage(dragIcon, 10, 17);
+		e.originalEvent.dataTransfer.setDragImage(img1, 10, 17);
 
 
 		e.originalEvent.dataTransfer.effectAllowed = 'move';

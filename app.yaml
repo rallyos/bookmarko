@@ -8,9 +8,9 @@ handlers:
 - url: /static
   static_dir: static
 
-- url: /icon.png
-  static_files: static/images/icon.png
-  upload: static/images/icon.png
+- url: /favicon.ico
+  static_files: static/images/favicon.ico
+  upload: static/images/favicon.ico
 
 - url: /.*
   script: main.application
