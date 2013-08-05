@@ -12,7 +12,7 @@ var ContentView = Backbone.View.extend({
 
 		this.listenTo(bookmarks,'filter', this.filterBy);
 
-
+		// Load bookmarks, and trigger the filtering function
 		bookmarks.fetch({success: function() {
 			bookmarks.trigger('login');
 		}});
@@ -26,12 +26,13 @@ var ContentView = Backbone.View.extend({
 		'click .starred': 'showStarred'
 	},
 
+	// Show bookmarks based on their collection
 	userEntered: function() {
 		param = null;
 		fn = 'collection';
 		this.filterBy(param, fn);
 	},
-
+	
 	filterBy: function(param, fn) {
 		bookmarks.forEach(function(bookmark) {
 			bookmark.trigger('hide', bookmark, param, fn);
@@ -157,9 +158,9 @@ var BookmarkView = Backbone.View.extend({
 	showResults: function(bookmark, searchWord) {
 		title = bookmark.get('title');
 		url = bookmark.get('url');
-		tag = bookmark.get('tag');
+		//tag = bookmark.get('tag'); there is a bug (cannot call match on null)
 
-		if ( title.match(searchWord) || url.match(searchWord) || tag.match(searchWord)) {
+		if ( title.match(searchWord) || url.match(searchWord) /*|| tag.match(searchWord)*/) {
 			this.$el.removeClass('hidden');
 		} else {
 			this.$el.addClass('hidden');

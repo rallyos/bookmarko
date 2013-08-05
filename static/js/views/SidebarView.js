@@ -3,80 +3,71 @@ var SidebarView = Backbone.View.extend({
 	el: '.sidebar',
 
 	initialize: function () {
-		
-		this.listenTo(globalBookmarkCollections, 'add', this.loadBookmarkCollection);
+		$newGroupButton = $('<div class="group-add"><span>New Group</span></div>');
 
+		this.listenTo(globalBookmarkCollections, 'add', this.loadBookmarkCollection);
 		this.listenTo(globalBookmarkCollections, 'new', this.addButton);
 
 		globalBookmarkCollections.fetch({ success: function() {
-
 			this.$groupWrap = this.$('.group-wrap');
 
+			// Check if there are any groups. If not, the 'new group' button must be appended.
 			if ( this.$groupWrap.length == 0 ) {
-				$('<div class="group-add"><span>New Group</span></div>').appendTo('.sidebar');
+				$newGroupButton.appendTo(this.$el); 
 			}
 
+			// After loading groups from the server insert the 'new group' button
 			lastGroup = this.$groupWrap.last();
-			$('<div class="group-add"><span>New Group</span></div>').insertAfter(lastGroup);
+			$newGroupButton.insertAfter(lastGroup);
 		}});
 
 
 	},
 
 	events: {
-
-		//
 		'click .home-button': 'navHome',
-
-		//
-		'click .group-add': 'createCollection'
+		'click .group-add': 'createGroup'
 	},
 	
-	//
+	// Get the last group, and append a 'new group' button after it.
 	addButton: function() {
 		lastGroup = $('.group-wrap').last();
-		$('<div class="group-add"><span>New Group</span></div>').insertAfter(lastGroup);
+		$newGroupButton.insertAfter(lastGroup);
 		lastGroupName = $('.bookmarks-group-name').last();
 		lastGroupName.empty().focus();
 	},
 
-	// 
-	createCollection: function() {
+	// Create new group.
+	// Due to bug when saving new BookmarkCollection object, it's attributes are set manually.
+	createGroup: function() {
 		var newGroup = new BookmarkCollection();
-		data = {title: 'Group', background: '#343534'};
+		data = {title: 'Group', background: '#EB4040'};
 		newGroup.url = 'api/collections/';
-
 		newGroup.set(data);
-
 		globalBookmarkCollections.add(newGroup);
 
-		newGroup.save(data, { headers: { 'Authorization': 'Token ' + token }, wait: true, success: function(){
+		newGroup.save(data, { headers: { 'Authorization': 'Token ' + token }, success: function(){
 			globalBookmarkCollections.trigger('new');
-			newGroup = globalBookmarkCollections.get(newGroup.id);
 			newGroup.url = 'api/collections/' + newGroup.id;
 		}});
 
 		$('.group-add').remove();
-
 	},
 
-	// 
+	// Back to home
 	navHome: function() {
 		pageRouter.navigate('', true);
 	},
 
-	// Makes new single bookmark view with 'bookmark' for model
 	loadBookmarkCollection: function(bookmarks_collection) {
 		var newBookmarkCollectionView = new BookmarkCollectionView({model: bookmarks_collection});
-		$('.sidebar').append(newBookmarkCollectionView.el);
+		$(this.$el).append(newBookmarkCollectionView.el);
 	}
 });
 
-// Initialize the view
 var sidebar = new SidebarView();
 
 
-// Single collection view
 var BookmarkCollectionView = Backbone.View.extend({
 	tagName: 'div',
 	className: 'group-wrap',
@@ -86,12 +77,9 @@ var BookmarkCollectionView = Backbone.View.extend({
 
 	initialize: function() {		
 		
-		// When the collection is loaded from the server run function to serialize the data
-		this.listenTo(this.model.bookmarkCollections, 'sync', this.serializeCollection);
-		this.listenTo(this.model.bookmarkCollections, 'all', this.render);
-
-		// When the collection is loaded from the server run render()
-		this.model.bookmarkCollections.bind('sync', _.bind(this.render, this));
+		// if you see bugs check the previous version of the constructor
+		//
+		this.listenTo(this.model.bookmarkCollections, 'add', this.render);
 
 		this.listenTo(this.model, 'destroy', this.remove);
 

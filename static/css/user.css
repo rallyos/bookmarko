@@ -303,7 +303,6 @@ a {
 	white-space: nowrap;
 }
 .bookmark-title {
-	float: left;
 	margin-left: 12px;
 }
 .bookmark-url {}
