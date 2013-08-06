@@ -166,11 +166,15 @@ a {
 	overflow: hidden;
 }
 .content-header {
+	width: 100%;
+	position: fixed;
+	z-index: 1;
+	background: #fff;
 	border-bottom: solid 1px #f0eff1;
 	overflow: hidden;
 }
 .input-search {
-	width: 64%;
+	width: 56%;
 	height: 50px;
 	float: left;
 	font-family: 'Open Sans', sans-serif;
