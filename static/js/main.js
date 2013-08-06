@@ -16,13 +16,9 @@ function getCookie(name) {
     return cookieValue;
 }
 var token = getCookie('Token');
+// Used after every request to the server
+var tokenHeader = { headers: { 'Authorization': 'Token ' + token } };
 
-$('#settings').on('click', function() {
-    $('.settings-block').toggleClass("settings-hidden");
-});
-
-// just test
-
-var img1 = new Image();
-img1.src = '//markedbyme.appspot.com/static/images/dragimg.png';
-img1.width = 50;
+var dragIcon = new Image();
+dragIcon.src = '//markedbyme.appspot.com/static/images/dragimg.png';
+dragIcon.width = 50;

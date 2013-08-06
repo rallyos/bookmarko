@@ -150,6 +150,9 @@ a {
 	-ms-transform: translateX(0);
 	transform: translateX(0);
 }
+.dragover {
+	opacity: 0.6;
+}
 .bookmarks-group-name {
 	width: 100%;
 	height: 17px;
@@ -254,6 +257,7 @@ a {
 }
 .bookmarks-section {
 	width: 100%;
+	margin-top: 51px;
 }
 .bookmarks-list {
 	width: 100%;
@@ -267,9 +271,6 @@ a {
 	background: #fff;
 	-webkit-transition: 0.3s;
 	transition: 0.3s;
-}
-.bookmark:nth-child(odd) {
-	background: #fdfcfd;
 }
 .select-bookmark {
 	display: block;

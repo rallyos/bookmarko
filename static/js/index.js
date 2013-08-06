@@ -34,8 +34,6 @@ $(document).ready(function() {
 			
 	});
 
-
-
     featuresScroll.on("click", function() {
         body.animate({scrollTop: featuresBlock.offset().top - 40}, scrollTime)
     });

@@ -77,20 +77,19 @@ var BookmarkCollectionView = Backbone.View.extend({
 
 	initialize: function() {		
 		
-		// if you see bugs check the previous version of the constructor
-		//
-		this.listenTo(this.model.bookmarkCollections, 'add', this.render);
+		// if you see bugs check the previous version of the constructor 
+		// bitbucket.org/dmralev/bookmarko/commits/72867507d8194528a3fd269ac7eff5bd601122e9#Lstatic/js/views/SidebarView.jsF89
+		// Listen for add and remove. Render if bookmark is added or removed from collection
+		// If the listener is for 'all' events, the collection renders at least 2 times, which is not good 
+		this.listenTo(this.model.bookmarkCollections, 'all', this.render);
 
 		this.listenTo(this.model, 'destroy', this.remove);
 
-
-		// Load the subollection from the server
 		this.model.bookmarkCollections.fetch();
-
 	},
 
 	events: {
-		'click .bookmarks-group-nav': 'navigateRouter',
+		'click .bookmarks-group-nav': 'navigateToGroup',
 		'keypress .bookmarks-group-name': 'updateGroup',
 
 		'dragenter': 'dragEnterEvent',
@@ -99,27 +98,67 @@ var BookmarkCollectionView = Backbone.View.extend({
 		'drop': 'dragDropEvent',
 
 		'click .bookmarks-group-delete': 'clear',
-
 		'click .toggle-palette': 'togglePalette',
 		'click .bookmarks-group-color': 'changeGroupColor'
 	},
 
-	navigateRouter: function() {
-
-		pageRouter.navigate('#/collections/' + this.model.id, true);
+	dragEnterEvent: function(e) {
+		this.$el.addClass('dragover');
 	},
 
-	serializeCollection: function() {
-		this.model.bookmarkCollections.toJSON();
+	dragOverEvent: function(e) {
+		return false;
 	},
 
-	updateGroup: function(e) {
-		if (e.which === ENTER_KEY) {
-			this.$('.bookmarks-group-name').blur();
-			var newval = this.$('.bookmarks-group-name').text();
-			this.saveGroup(newval);
-			return false;
+	dragDropEvent: function(e) {
+		if (e.preventDefault) { e.preventDefault(); }
+
+		// Convert data back to JSON
+		data = JSON.parse(e.originalEvent.dataTransfer.getData('model'));
+
+		// Store the collection id of the model that's being dragged
+		var draggedModelCollectionID = data.collection_id;
+		// Select the moved bookmark by using the the id from parsed data
+		var draggedModel = bookmarks.get(data.id);
+
+		// Store the targeted collection
+		var dropTarget = this.model.bookmarkCollections;
+		// And the id of the targeted collection
+		var dropTargetID = this.model.id;
+
+		// Check if the bookmark already has collection, and if it does we remove it from the old one.
+		// And we add it to the collection that's being dragged
+		if ( draggedModelCollectionID != null ) {
+			// Select the current collection the dragged bookmark
+			var draggedModelCollection = globalBookmarkCollections.get(draggedModelCollectionID).bookmarkCollections;
+			// Remove the the bookmark from the old collection
+			draggedModelCollection.remove(draggedModel);
+			// Set the new collection id for the dragged bookmark
+			draggedModel.set({collection_id: dropTargetID})
+			// And then add the bookmark to it
+			dropTarget.add(draggedModel);
+			// Save the bookmark's new collection id to the server
+			draggedModel.save({collection_id: dropTargetID}, tokenHeader);
+		// The easy scenario - The bookmark that's being dragged don't have collection yet	
+		} else {
+			// Set the new collection id, add the bookmark to it, and then save to server.
+			draggedModel.set({collection_id: dropTargetID})
+			dropTarget.add(draggedModel);
+			draggedModel.save({collection_id: dropTargetID}, tokenHeader);
 		}
+
+		// When the drag and drop is over, hide the moved bookmark
+		draggedModel.trigger('dragHide');
+		this.$el.removeClass('dragover');
+		return false;
+	},
+
+	dragLeaveEvent: function() {
+		this.$el.removeClass('dragover');
+	},
+
+	navigateToGroup: function() {
+		pageRouter.navigate('#/collections/' + this.model.id, true);
 	},
 
 	togglePalette: function() {
@@ -130,6 +169,7 @@ var BookmarkCollectionView = Backbone.View.extend({
 
 		var clickedElClass = click.target.classList[1];
 
+		// Since the colors in DOM are rgb we have to use alternative way of getting and setting the new color.
 		if (clickedElClass == 'palette-color-red') {
 			newBgColor = '#EB4040';
 		}
@@ -163,62 +203,22 @@ var BookmarkCollectionView = Backbone.View.extend({
 		}
 
 		this.$el.css('background-color', newBgColor);
-		this.model.save('background', newBgColor, { headers: { 'Authorization': 'Token ' + token } });
+		this.model.save('background', newBgColor, tokenHeader);
 	},
 
-	dragEnterEvent: function(e) {
-		if (e.preventDefault) { e.preventDefault(); }
-		this.$el.css('opacity','0.6');
-	},
-
-	dragOverEvent: function(e) {
-		if (e.preventDefault) { e.preventDefault(); }
-		return false;
-	},
-
-	dragDropEvent: function(e) {
-		if (e.preventDefault) { e.preventDefault(); }
-
-		data = JSON.parse(e.originalEvent.dataTransfer.getData('model'));
-
-		var draggedModelCollectionID = data.collection_id;
-		var draggedModel = bookmarks.get(data.id);
-
-		var dropTarget = this.model.bookmarkCollections;
-		var dropTargetID = this.model.id;
-
-		if ( draggedModelCollectionID != null ) {
-			var draggedModelCollection = globalBookmarkCollections.get(draggedModelCollectionID).bookmarkCollections;
-			draggedModelCollection.remove(draggedModel);
-			draggedModel.set({collection_id: dropTargetID})
-			dropTarget.add(draggedModel);
-			draggedModel.save({collection_id: dropTargetID}, { headers: { 'Authorization': 'Token ' + token } });
-		} else {
-			draggedModel.set({collection_id: dropTargetID})
-			dropTarget.add(draggedModel);
-			draggedModel.save({collection_id: dropTargetID}, { headers: { 'Authorization': 'Token ' + token } });
+	updateGroup: function(e) {
+		if (e.which === ENTER_KEY) {
+			this.$('.bookmarks-group-name').blur();
+			var newval = this.$('.bookmarks-group-name').text();
+			this.saveGroup(newval);
+			return false;
 		}
-		
-		this.hideDragged(draggedModel);
-		this.$el.css('opacity','1');
-		return false;
-	},
-
-	dragLeaveEvent: function() {
-
-		this.$el.css('opacity','1');
-	},
-
-	hideDragged: function(draggedModel) {
-
-		draggedModel.trigger('dragHide');
 	},
 
 	saveGroup: function(newval) {
-		this.model.save({ 'title': newval}, { headers: { 'Authorization': 'Token ' + token } });
+		this.model.save({ 'title': newval}, tokenHeader);
 	},
 
-	// Deletes the model
 	clear: function () {
 		this.$el.css({
 			right: '100%',
@@ -228,11 +228,9 @@ var BookmarkCollectionView = Backbone.View.extend({
 	},
 
 	destrooy: function() {
-		this.model.destroy({ headers: { 'Authorization': 'Token ' + token } });
+		this.model.destroy(tokenHeader);
 	},
 
-	// The render function for the single collection.
-	// It appends the template html and serialized model to the $el.
 	render: function(bookmarks_collection) {
 		this.$el.html(this.template(this.model.toJSON()));
 		var background_color = this.model.get('background');
