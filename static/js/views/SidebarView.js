@@ -43,10 +43,12 @@ var SidebarView = Backbone.View.extend({
 		newGroup.url = 'api/collections/';
 		newGroup.set(data);
 		globalBookmarkCollections.add(newGroup);
+		newGroup.trigger('scale');
 		newGroup.save(data, { headers: { 'Authorization': 'Token ' + token }, success: function(){
 			globalBookmarkCollections.trigger('new');
 			newGroup.url = 'api/collections/' + newGroup.id;
 			this.$('.bookmarks-group-name').focus();
+			newGroup.trigger('scale');
 		}});
 
 		$('.group-add').remove();
@@ -82,6 +84,7 @@ var BookmarkCollectionView = Backbone.View.extend({
 		this.listenTo(this.model.bookmarkCollections, 'all', this.render);
 
 		this.listenTo(this.model, 'destroy', this.remove);
+		this.listenTo(this.model, 'scale', this.animateGroup);
 
 		this.model.bookmarkCollections.fetch();
 	},
@@ -98,6 +101,10 @@ var BookmarkCollectionView = Backbone.View.extend({
 		'click .bookmarks-group-delete': 'clear',
 		'click .toggle-palette': 'togglePalette',
 		'click .bookmarks-group-color': 'changeGroupColor'
+	},
+
+	animateGroup: function() {
+		$(this.el).toggleClass('scale')
 	},
 
 	dragEnterEvent: function(e) {
@@ -156,7 +163,7 @@ var BookmarkCollectionView = Backbone.View.extend({
 	},
 
 	navigateToGroup: function() {
-		pageRouter.navigate('#/collections/' + this.model.id, true);
+		pageRouter.navigate('/collections/' + this.model.id, true);
 	},
 
 	togglePalette: function() {
@@ -208,12 +215,8 @@ var BookmarkCollectionView = Backbone.View.extend({
 		if (e.which === ENTER_KEY) {
 			this.$('.bookmarks-group-name').blur();
 			var newval = this.$('.bookmarks-group-name').text();
-			console.log(newval.length)
-			if (newval.length <= 1) {
-				this.clear();
-			} else {
-				this.saveGroup(newval);
-			}
+			this.saveGroup(newval);
+		
 			return false;
 		}
 	},

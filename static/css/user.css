@@ -27,8 +27,9 @@ a {
 	overflow: scroll;
 }
 .home-button {
-	width: 100%;
+	width: 103px;
 	height: 50px;
+	position: fixed;
 	text-align: center;
 	font-size: 1.2rem;
 	line-height: 50px;
@@ -36,6 +37,7 @@ a {
 	border-bottom: solid 1px #f0eff1;
 	background: #fff;
 	cursor: pointer;
+	z-index: 1;
 }
 .group {
 	width: 100%;
@@ -50,6 +52,14 @@ a {
 	position: relative;
 	-webkit-transition: 0.3s;
 	transition: 0.3s;
+}
+.scale {
+	-webkit-transform: scale(0);
+	-ms-transform: scale(0);
+	transform: scale(0);
+}
+.group-wrap:nth-child(2) {
+	margin-top: 51px;
 }
 .group-add {
 	width: 90px;
@@ -283,6 +293,9 @@ a {
 	background-repeat: no-repeat;
 	background-size: 20px 40px;
 }
+.being-moved {
+	opacity: 0.4;
+}
 .bookmark:hover .select-bookmark {
 	background-image: url(http://markedbyme.appspot.com/static/images/dots.png);
 }
@@ -316,11 +329,23 @@ a {
 	width: 30%;
 	margin-right: 0;
 }
+.add-tag {
+	margin: 0 2% 0 0;
+	float: left;
+	font-size: 1rem;
+	font-weight: 300;
+	cursor: pointer;
+	color: #fff;
+}
+.bookmark-tags-wrap {
+	display: inline-block;
+}
 .bookmark-tags {
 	height: 20px;
 	padding: 1px 5px;
 	margin: 8px 0;
 	display: inline-block;
+	float: left;
 	font-size: 0.7rem;
 	line-height: 20px;
     border: solid 1px #CBCBCB;
@@ -330,12 +355,26 @@ a {
 .bookmark-tags:hover {
 	background: #FAFAFA;
 }
-.add-tag {
-	margin: 0 2% 0 0;
-	font-size: 1rem;
-	font-weight: 300;
-	cursor: pointer;
+.bookmark-tags-wrap:hover .tag-delete {
+	display: inline-block;
+}
+.tag-delete {
+	height: 24px;
+	padding: 0 3px;
+	margin: 8px 0;
+	float: left;
+	line-height: 20px;
 	color: #fff;
+	background: #FF7474;
+	cursor: pointer;
+	display: none;
+	-webkit-transition: 0.2s;
+	transition: 0.2s;
+}
+.tag-delete:hover {
+	background: #FF5757;
+	-webkit-transition: 0.2s;
+	transition: 0.2s;
 }
 .bookmark:hover .add-tag {
 	color: #343534;

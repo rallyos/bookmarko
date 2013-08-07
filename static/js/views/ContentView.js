@@ -97,10 +97,12 @@ var BookmarkView = Backbone.View.extend({
 	events: {
 		'click .bookmark-star': 'starBookmark',
 		'dragstart .select-bookmark': 'dragStartEvent',
+		'dragend': 'dragEndEvent',
 		'keypress .bookmark-title': 'updateBookmark',
 		'click .add-tag': 'addTag',
 		'keyup .bookmark-tags': 'nameTag',
 		'click .bookmark-tags': 'tagClicked',
+		'click .tag-delete': 'removeTag',
 		'click .bookmark-delete': 'clear',
 	},
 
@@ -134,6 +136,12 @@ var BookmarkView = Backbone.View.extend({
 
 		e.originalEvent.dataTransfer.effectAllowed = 'move';
 		e.originalEvent.dataTransfer.setData('model', data);
+
+		this.$el.addClass('being-moved');
+	},
+
+	dragEndEvent: function() {
+			this.$el.removeClass('being-moved');
 	},
 
 	dragHide: function(draggedModel) {
@@ -179,6 +187,10 @@ var BookmarkView = Backbone.View.extend({
     tagClicked: function() {
             tagTitle = this.model.get('tag');
             pageRouter.navigate('/tags/'+ tagTitle, true);
+    },
+
+    removeTag: function() {
+    	this.model.save({tag: ''}, tokenHeader)
     },
 
 	showResults: function(bookmark, searchWord) {

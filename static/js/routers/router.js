@@ -26,4 +26,4 @@ var PageRouter = Backbone.Router.extend({
 
 var pageRouter = new PageRouter();
 
-Backbone.history.start();
+Backbone.history.start({pushState: true});

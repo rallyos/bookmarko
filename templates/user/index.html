@@ -20,7 +20,7 @@
 			</form>
 		</div>
 		<div class="sidebar">
-			<div class="home-button"><span>Home</span></div>
+				<div class="home-button"><span>Home</span></div>
 		</div>
 		<div class="content">
 			<div class="content-header">
@@ -53,7 +53,10 @@
 	<div class="bookmark-val-block" id="tags-block">
 		<span class="add-tag" title="Add new tag">+</span>
 		<% if (tag) { %>
-			<span class="bookmark-tags"> <%= tag %> </span>
+			<div class="bookmark-tags-wrap">
+				<span class="bookmark-tags"> <%= tag %> </span>
+				<span class="tag-delete">x</span>
+			</div>
 		<% } %>
 		<span class="bookmark-delete">X</span>
 	</div>
