@@ -300,8 +300,9 @@ a {
 	background-image: url(http://markedbyme.appspot.com/static/images/starred.png);
 }
 .bookmark-val-block {
-	width: 35%;
+	width: 34%;
 	height: 40px;
+	margin-right: 1%;
 	float: left;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -313,6 +314,7 @@ a {
 .bookmark-url {}
 #tags-block {
 	width: 30%;
+	margin-right: 0;
 }
 .bookmark-tags {
 	height: 20px;
@@ -329,9 +331,14 @@ a {
 	background: #FAFAFA;
 }
 .add-tag {
+	margin: 0 2% 0 0;
 	font-size: 1rem;
 	font-weight: 300;
 	cursor: pointer;
+	color: #fff;
+}
+.bookmark:hover .add-tag {
+	color: #343534;
 }
 .bookmark-delete {
 	height: 20px;

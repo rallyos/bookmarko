@@ -57,7 +57,7 @@ input {
 	overflow: hidden;
 }
 .sign-header {
-	margin-top: 100px;
+	margin-top: 130px;
 	font-family: Roboto, sans-serif;
 	font-size: 2.5rem;
 	font-weight: 100;
@@ -66,8 +66,8 @@ input {
 }
 .sign-up-block {
 	max-width: 460px;
-	height: 340px;
-	margin: 40px auto 10px;
+	height: 280px;
+	margin: 75px auto 10px;
 	position: relative;
 	background: rgba(255, 255, 255, 0.95);
 	border-radius: 4px;
@@ -106,6 +106,14 @@ input {
 	border-radius: 3px;
 	outline: 0;
 }
+.form-passwords {
+	width: 47%;
+	font-size: 1rem;
+	text-indent: 10px;
+}
+#confirm-password {
+	float: right;
+}
 .form-input::-webkit-input-placeholder {
 	font-weight: 300;
 }
@@ -125,6 +133,18 @@ input {
 }
 #sign-in-submit {
 	background: #668AE9;
+}
+.forgotten-password {
+	display: block;
+	margin-top: 21px;
+	text-align: center;
+	color: #A7A7A7;
+	cursor: pointer;
+	-webkit-transition: 0.3s;
+	transition: 0.3s;
+}
+.forgotten-password:hover {
+	color: #343534;
 }
 .features-wrap {
 	width: 100%;

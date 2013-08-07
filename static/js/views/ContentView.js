@@ -98,6 +98,8 @@ var BookmarkView = Backbone.View.extend({
 		'click .bookmark-star': 'starBookmark',
 		'dragstart .select-bookmark': 'dragStartEvent',
 		'keypress .bookmark-title': 'updateBookmark',
+		'click .add-tag': 'addTag',
+		'keyup .bookmark-tags': 'nameTag',
 		'click .bookmark-tags': 'tagClicked',
 		'click .bookmark-delete': 'clear',
 	},
@@ -108,6 +110,8 @@ var BookmarkView = Backbone.View.extend({
 		this.listenTo(this.model, 'dragHide', this.dragHide)
 		this.listenTo(this.model, 'hide', this.hideBookmarks);
 		this.listenTo(this.model, 'destroy', this.remove);
+
+		this.listenTo(this.model, 'change', this.render);
 	},
 
 	render: function(bookmark) {
@@ -152,6 +156,24 @@ var BookmarkView = Backbone.View.extend({
 			} else {
 				this.$el.removeClass('hidden');
 			}
+	},
+
+	// Start tag creating flow
+	// ! These functions will be here untill the tags functionality is ready
+	addTag: function() {
+		this.model.set({tag: ' '})
+		this.$('.bookmark-tags').attr('contenteditable', 'true')
+		this.$('.bookmark-tags').focus();
+	},
+
+	nameTag: function(e) {
+		if (e.which === ENTER_KEY) {
+			this.$('.bookmark-tags').blur();
+			var tag = this.$('.bookmark-tags').text();
+			this.$('.bookmark-tags').removeAttr('contenteditable');
+			this.model.save({tag: tag}, tokenHeader);
+			return false;
+		}
 	},
 
     tagClicked: function() {

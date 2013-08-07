@@ -33,22 +33,20 @@ var SidebarView = Backbone.View.extend({
 	addButton: function() {
 		lastGroup = $('.group-wrap').last();
 		$newGroupButton.insertAfter(lastGroup);
-		lastGroupName = $('.bookmarks-group-name').last();
-		lastGroupName.empty().focus();
 	},
 
 	// Create new group.
 	// Due to bug when saving new BookmarkCollection object, it's attributes are set manually.
 	createGroup: function() {
 		var newGroup = new BookmarkCollection();
-		data = {title: 'Group', background: '#EB4040'};
+		data = {title: ' ', background: '#EB4040'};
 		newGroup.url = 'api/collections/';
 		newGroup.set(data);
 		globalBookmarkCollections.add(newGroup);
-
 		newGroup.save(data, { headers: { 'Authorization': 'Token ' + token }, success: function(){
 			globalBookmarkCollections.trigger('new');
 			newGroup.url = 'api/collections/' + newGroup.id;
+			this.$('.bookmarks-group-name').focus();
 		}});
 
 		$('.group-add').remove();
@@ -210,7 +208,12 @@ var BookmarkCollectionView = Backbone.View.extend({
 		if (e.which === ENTER_KEY) {
 			this.$('.bookmarks-group-name').blur();
 			var newval = this.$('.bookmarks-group-name').text();
-			this.saveGroup(newval);
+			console.log(newval.length)
+			if (newval.length <= 1) {
+				this.clear();
+			} else {
+				this.saveGroup(newval);
+			}
 			return false;
 		}
 	},
