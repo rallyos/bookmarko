@@ -4,9 +4,26 @@
 	<meta charset="UTF-8">
 	<link href='http://fonts.googleapis.com/css?family=Roboto:300,100|Open+Sans:400,300' rel='stylesheet'>
 	<link href="{{ STATIC_URL }}css/main.css" rel="stylesheet">
+	<!--[if lte IE 8]>
+		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/ie.css" />
+	<![endif]-->
 	<title>Bookmarko 0.1 | Manage your bookmarks with style</title>
 </head>
 <body>
+	<div id="not-supported">
+		<h2 class="colorful-header">This is something hard to say but . . .</h2>
+		<h1 class="not-supported-header">Your browser is not supported</h1>
+		<p class="not-supported-text">Bookmarko was built with some of the latest technologies for better user experience, but your browser doesn't support them.
+		</p>
+		<p class="not-supported-text">This is not a big problem at all, you can update your browser, or you can try to use something new.</p>
+		<div class="browsers-box">
+			<a class="browser-icons" id="chrome" href="//google.com/intl/en/chrome/browser/"></a>
+			<a class="browser-icons" id="firefox" href="//www.mozilla.org/en-US/firefox/"></a>
+			<a class="browser-icons" id="opera" href="//opera.com/"></a>
+		</div>
+		<a class="not-supported-buttons" id="update-link"  href="//windows.microsoft.com/en-us/internet-explorer/download-ie" >I want to update my browser</a>
+		<span class="not-supported-buttons" id="continue-button">Continue</span>
+	</div>
 	<header class="header">
 		<img class="logo" width="144" height="40" src="{{ STATIC_URL }}images/logo_example.png">
 		<nav class="nav-block">
@@ -21,15 +38,15 @@
 	<section class="sign-section">
 			<h1 class="sign-header">Bookmark management made easy</h1>
 			<div class="sign-up-block">
-				<form class="sign-form" id="sign-up" method="POST" action="register_user">{% csrf_token %}
-					<input class="form-input" id="id_username" type="email" name="username" placeholder="Email address" maxlength="50" required>
-					<input class="form-input form-passwords" id="password" type="password" name="password1" placeholder="Password" required>
-					<input class="form-input form-passwords" id="confirm-password" type="password" name="password2" placeholder="Confirm password" required>
+				<form class="sign-form" id="sign-up">{% csrf_token %}
+					<input class="form-input" id="reg-user" type="email" name="username" placeholder="Email address" maxlength="50" required>
+					<input class="form-input form-passwords" id="reg-pass" type="password" name="password1" placeholder="Password" required>
+					<input class="form-input form-passwords" id="reg-confirm-pass" type="password" name="password2" placeholder="Confirm password" required>
 					<input class="form-submit" type="submit" value="Sign Up">
 				</form>
-				<form class="sign-form form-hide-right" id="sign-in" type="POST" action="login_user">{% csrf_token %}
-					<input class="form-input" type="email" name="username" placeholder="Email address">
-					<input class="form-input" type="password" name="password" placeholder="Password">
+				<form class="sign-form form-hide-right" id="sign-in">{% csrf_token %}
+					<input class="form-input" id="log-user" type="email" name="username" placeholder="Email address">
+					<input class="form-input" id="log-pass" type="password" name="password" placeholder="Password">
 					<input class="form-submit" id="sign-in-submit" type="submit" value="Login">
 					<span class="forgotten-password">Forgotten password</span>
 				</form>
@@ -86,7 +103,6 @@
 	<footer class="footer">
 		<span id="baker">Bookmarko is baked by <a id="portf" href="//dimitarralev.net" target="_blank">me</a> in BS, Bulgaria</span>
 	</footer>
-<script src="{{ STATIC_URL }}libraries/jquery-1.9.1.min.js"></script>
 <script src="{{ STATIC_URL }}js/index.js"></script>
 </body>
 </html>

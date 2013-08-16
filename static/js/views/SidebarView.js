@@ -3,25 +3,12 @@ var SidebarView = Backbone.View.extend({
 	el: '.sidebar',
 
 	initialize: function () {
-		$newGroupButton = $('<div class="group-add"><span>New Group</span></div>');
 
 		this.listenTo(globalBookmarkCollections, 'add', this.loadBookmarkCollection);
-		this.listenTo(globalBookmarkCollections, 'new', this.addButton);
 
-		globalBookmarkCollections.fetch({ success: function() {
-			this.$groupWrap = this.$('.group-wrap');
+		globalBookmarkCollections.fetch();
 
-			// Check if there are any groups. If not, the 'new group' button must be appended.
-			if ( this.$groupWrap.length == 0 ) {
-				$newGroupButton.appendTo(this.$el); 
-			}
-
-			// After loading groups from the server insert the 'new group' button
-			lastGroup = this.$groupWrap.last();
-			$newGroupButton.insertAfter(lastGroup);
-		}});
-
-
+		this.$groupsWrap = this.$('.groups-wrap');
 	},
 
 	events: {
@@ -29,12 +16,6 @@ var SidebarView = Backbone.View.extend({
 		'click .group-add': 'createGroup'
 	},
 	
-	// Get the last group, and append a 'new group' button after it.
-	addButton: function() {
-		lastGroup = $('.group-wrap').last();
-		$newGroupButton.insertAfter(lastGroup);
-	},
-
 	// Create new group.
 	// Due to bug when saving new BookmarkCollection object, it's attributes are set manually.
 	createGroup: function() {
@@ -47,11 +28,9 @@ var SidebarView = Backbone.View.extend({
 		newGroup.save(data, { headers: { 'Authorization': 'Token ' + token }, success: function(){
 			globalBookmarkCollections.trigger('new');
 			newGroup.url = 'api/collections/' + newGroup.id;
-			this.$('.bookmarks-group-name').focus();
 			newGroup.trigger('scale');
+			this.$('.bookmarks-group-name').focus();
 		}});
-
-		$('.group-add').remove();
 	},
 
 	// Back to home
@@ -61,7 +40,7 @@ var SidebarView = Backbone.View.extend({
 
 	loadBookmarkCollection: function(bookmarks_collection) {
 		var newBookmarkCollectionView = new BookmarkCollectionView({model: bookmarks_collection});
-		$(this.$el).append(newBookmarkCollectionView.el);
+		this.$groupsWrap.append(newBookmarkCollectionView.el);
 	}
 });
 
@@ -70,7 +49,7 @@ var sidebar = new SidebarView();
 
 var BookmarkCollectionView = Backbone.View.extend({
 	tagName: 'div',
-	className: 'group-wrap',
+	className: 'group-box',
 	model: BookmarkCollection,
 
 	template: _.template($('#group-template').html()),
@@ -226,15 +205,12 @@ var BookmarkCollectionView = Backbone.View.extend({
 	},
 
 	clear: function () {
-		this.$el.css({
-			right: '100%',
-		}, this.$el.one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', this.destrooy())
-		)
-
-	},
-
-	destrooy: function() {
-		this.model.destroy(tokenHeader);
+		model = this.model;
+		this.$el.css({ right: '100%' })
+		
+		this.$el.one('transitionend', function() {
+			model.destroy(tokenHeader);
+		})
 	},
 
 	render: function(bookmarks_collection) {

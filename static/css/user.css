@@ -39,6 +39,10 @@ a {
 	cursor: pointer;
 	z-index: 1;
 }
+.groups-wrap {
+	min-height: 1px;
+	margin-top: 51px;
+}
 .group {
 	width: 100%;
 	height: 100px;
@@ -48,7 +52,7 @@ a {
 	cursor: pointer;
 	overflow: hidden;
 }
-.group-wrap {
+.group-box {
 	position: relative;
 	-webkit-transition: 0.3s;
 	transition: 0.3s;
@@ -57,9 +61,6 @@ a {
 	-webkit-transform: scale(0);
 	-ms-transform: scale(0);
 	transform: scale(0);
-}
-.group-wrap:nth-child(2) {
-	margin-top: 51px;
 }
 .group-add {
 	width: 90px;
@@ -247,14 +248,23 @@ a {
 	background-repeat: no-repeat;
 	background-size: 20px;
 	background-position: 10px 5px;
+	-webkit-transition: 0.3s;
+	transition: 0.3s;
 }
 #list {
 	background-image: url(http://markedbyme.appspot.com/static/images/list.png);
 }
+#list:hover {
+	background-color: #fff;
+}
 #list-icons {
+	cursor: not-allowed;
+	opacity: 0.4;
 	background-image: url(http://markedbyme.appspot.com/static/images/list-icons.png);
 }
 #grid {
+	cursor: not-allowed;
+	opacity: 0.4;
 	background-image: url(http://markedbyme.appspot.com/static/images/grid.png);
 }
 #sign-out {

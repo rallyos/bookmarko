@@ -1,6 +1,6 @@
 import json
-from django.shortcuts import render
-from django.http import HttpResponse, HttpRequest, HttpResponseRedirect
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -11,76 +11,82 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authtoken.models import Token
-
-
 import datetime
 from django.utils.timezone import utc
 
-#import urllib2
-#from BeautifulSoup import BeautifulSoup
 
-
-
-# Index page
-# If the user is logged, he should see the user UI. If it's not he will see the index page
+# Check if user is logged, otherwise show index page
 def index(request):
 	if request.user.is_authenticated():
 		return render(request, 'user/index.html')
 	else:
 		return render(request, 'index.html')
 
-# Registration handling function
+
 def register_user(request):
 	if request.method == 'POST':
 		form = UserCreationForm(request.POST)
 		if form.is_valid():
-			form.save()
-			return HttpResponseRedirect('register_success')
-	return render(request, 'register/index.html')
+			user = form.save()
 
-# Successful registration
-def register_success(request):
-		return render(request, 'user/index.html')
+			# Login the user
+			username = request.POST['username']
+			password = request.POST['password1']
+			user = authenticate(username=username, password=password)
 
-# User UI
-def user(request):
-	if request.user.is_authenticated():
-		return render(request, 'user/index.html')
-	else:
-		return render(request, 'index.html')
+			# If authenticated 
+			if user is not None:
+				if user.is_active:
+					# Get or Create the token object for the logged user 
+					token = set_or_get_token(user)
 
+					# Login and set the token cookie
+					login(request, user)
+					success = HttpResponse(status=200)
+					success.set_cookie('Token', token, expires=365 * 24 * 60 * 60)
+					return success
 
-# Login
+		return HttpResponse(status=403)
+
 def login_user(request):
-	username = request.GET[ 'username' ]
-	password = request.GET[ 'password' ]
-	user = authenticate(username=username, password=password)
-	if user is not None:
-		if user.is_active:
-			# Get or Create the token object for the logged user 
-			token, created = Token.objects.get_or_create(user=user)
+	if request.method == 'GET':
+		username = request.GET[ 'username' ]
+		password = request.GET[ 'password' ]
+		user = authenticate(username=username, password=password)
+	
+		# If authenticated 
+		if user is not None:
+			if user.is_active:
+				# Get or Create the token object for the logged user 
+				token = set_or_get_token(user)
 
-			if not created:
-				# update the created time of the token to keep it valid
-				token.created = datetime.datetime.utcnow().replace(tzinfo=utc)
-				token.save()			
-
-			login(request, user)
-
-			# Create the token cookie
-			resp = HttpResponseRedirect('user')
-			resp.set_cookie('Token', token, expires=365 * 24 * 60 * 60)
-			return resp
+				# Login and set the token cookie
+				login(request, user)
+				login_success = HttpResponse(status=200)
+				login_success.set_cookie('Token', token, expires=365 * 24 * 60 * 60)
+				return login_success
+			else:
+				# Change this if you delete/deactivate user/user has deleted it's account
+				return redirect('/')
 		else:
-			return HttpResponse('login failed')
-	else:
-	# Return an 'invalid login' error message.
-		return HttpResponseRedirect('inv')
+		# Return an 'invalid login' error message.
+			return HttpResponse(status=404)
 
-# Logout
+# Create or get a token for the user and return it
+def set_or_get_token(user):
+	token, created = Token.objects.get_or_create(user=user)
+
+	if not created:
+		# update the created time of the token to keep it valid
+		token.created = datetime.datetime.utcnow().replace(tzinfo=utc)
+		token.save()	
+
+	return token
+
+
 def logout_user(request):
 	logout(request)
-	return HttpResponseRedirect('/')
+	return redirect('/')
 
 
 # API Class Views

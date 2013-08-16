@@ -10,8 +10,8 @@ import django.core.handlers.wsgi
 import django.core.signals
 import django.db
 import django.dispatch
-import sys
 sys.path.insert(0, 'libs')
+
 # Force Django to reload its settings.
 from django.conf import settings
 
@@ -33,4 +33,3 @@ signal.disconnect(django.db._rollback_on_exception,
                   django.core.signals.got_request_exception)
 
 application = django.core.handlers.wsgi.WSGIHandler()
-

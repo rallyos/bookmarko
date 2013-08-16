@@ -1,13 +1,11 @@
-from django.conf.urls import patterns, url, include
+from django.conf.urls import patterns, url
 from rest_framework import routers
 from rest_framework.urlpatterns import format_suffix_patterns
 from front import views
 
 urlpatterns = patterns('',
 	url(r'^$', views.index, name='index'),
-	url(r'^user', views.user, name='user'),
 	url(r'^register_user', views.register_user, name='register'),
-	url(r'^register_success', views.register_success, name='success'),
 	url(r'^login_user', views.login_user, name='login'),
 	url(r'^logout_user', views.logout_user, name='logout'),
 	url(r'^api/$', views.BookmarksList.as_view()),

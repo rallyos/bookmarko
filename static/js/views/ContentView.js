@@ -98,6 +98,7 @@ var BookmarkView = Backbone.View.extend({
 		'click .bookmark-star': 'starBookmark',
 		'dragstart .select-bookmark': 'dragStartEvent',
 		'dragend': 'dragEndEvent',
+		'click .bookmark-title': 'saveTitle',
 		'keypress .bookmark-title': 'updateBookmark',
 		'click .add-tag': 'addTag',
 		'keyup .bookmark-tags': 'nameTag',
@@ -220,11 +221,20 @@ var BookmarkView = Backbone.View.extend({
 		}
 	},
 
+	saveTitle: function() {
+		window.savedTitle = this.$('.bookmark-title').text();
+	},
+
 	updateBookmark: function(e) {
 		if (e.which === ENTER_KEY) {
 			this.$('.bookmark-title').blur();
 			var newval = this.$('.bookmark-title').text();
-			this.saveBookmark(newval);
+			if (newval.length == 0) {
+				console.log(newval.length)
+				this.$('.bookmark-title').text(window.savedTitle);
+			} else {
+				this.saveBookmark(newval);
+			}
 			return false;
 		}
 	},
@@ -234,13 +244,12 @@ var BookmarkView = Backbone.View.extend({
 	},
 
 	clear: function () {
-		this.$el.css({
-			right: '100%',
-		}, this.$el.one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', this.destrooy())
-		)
+		model = this.model;
+		this.$el.css({ right: '100%' })
+		
+		this.$el.one('transitionend', function() {
+			model.destroy(tokenHeader);
+		})
 	},
 
-	destrooy: function() {
-		this.model.destroy(tokenHeader);
-	}
 });

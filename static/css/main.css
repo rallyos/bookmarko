@@ -13,6 +13,9 @@ input {
 	-webkit-appearance: none;
 	-webkit-border-radius: 0;
 }
+#not-supported {
+	display: none;
+}
 .header {
 	position: fixed;
 	width: 100%;
@@ -66,7 +69,7 @@ input {
 }
 .sign-up-block {
 	max-width: 460px;
-	height: 280px;
+	height: 260px;
 	margin: 75px auto 10px;
 	position: relative;
 	background: rgba(255, 255, 255, 0.95);
@@ -79,8 +82,8 @@ input {
 	top: 0;
 	padding: 15px 30px;
 	font-family: Roboto, sans-serif;
-	transition: 0.2s;
 	-webkit-transition: 0.2s;
+	transition: 0.2s;
 }
 .form-hide-left {
 	-webkit-transform: translateX(-110%);
@@ -105,13 +108,15 @@ input {
 	border: solid 1px #D5D5D5;
 	border-radius: 3px;
 	outline: 0;
+	-webkit-transition: background 0.3s;
+	transition: background 0.3s;
 }
 .form-passwords {
 	width: 47%;
 	font-size: 1rem;
 	text-indent: 10px;
 }
-#confirm-password {
+#reg-confirm-pass {
 	float: right;
 }
 .form-input::-webkit-input-placeholder {
@@ -134,14 +139,17 @@ input {
 #sign-in-submit {
 	background: #668AE9;
 }
-.forgotten-password {
+.form-error {
 	display: block;
-	margin-top: 21px;
+	text-align: center;
+	color: red;
+}
+.forgotten-password {
+	display: none;
+	margin-top: 7px;
 	text-align: center;
 	color: #A7A7A7;
 	cursor: pointer;
-	-webkit-transition: 0.3s;
-	transition: 0.3s;
 }
 .forgotten-password:hover {
 	color: #343534;
