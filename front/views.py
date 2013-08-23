@@ -12,6 +12,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 import datetime
+from datetime import timedelta
 from django.utils.timezone import utc
 
 
@@ -43,6 +44,8 @@ def register_user(request):
 					# Login and set the token cookie
 					login(request, user)
 					success = HttpResponse(status=200)
+					mhm = datetime.datetime.utcnow().replace(tzinfo=utc) + timedelta(seconds=48)
+					success.set_cookie('new-user', 'true', expires=mhm)
 					success.set_cookie('Token', token, expires=365 * 24 * 60 * 60)
 					return success
 
@@ -78,6 +81,12 @@ def set_or_get_token(user):
 
 	if not created:
 		# update the created time of the token to keep it valid
+		token.created = datetime.datetime.utcnow().replace(tzinfo=utc)
+		token.save()	
+	
+	if token.created < datetime.datetime.utcnow().replace(tzinfo=utc) - timedelta(hours=48):
+		token.delete()
+		token = Token.objects.create(user=user)
 		token.created = datetime.datetime.utcnow().replace(tzinfo=utc)
 		token.save()	
 

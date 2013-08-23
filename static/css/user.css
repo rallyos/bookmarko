@@ -498,3 +498,40 @@ a {
 	background: #fff;
 	border: solid 2px #E4E4E4;
 }
+.new-user-text {
+	font-family: Helvetica;
+	font-size: 1.4rem;
+	font-weight: 400;
+	text-align: center;
+	color: #747474;
+}
+.thank-you {
+	font-size: 2rem;
+	margin: 20px;
+}
+.beta-warning {
+	font-weight: 300;
+}
+.new-user-bookmarko {
+	font-weight: 400;
+}
+.browser-extensions-box {
+	width: 573px;
+	margin: 70px auto 0;
+	overflow: hidden;
+}
+.get-extension-header {
+	margin: 20px 0;
+	font-weight: 300;
+}
+.browser-extensions-icon {
+	height: 62px;
+	margin: 0 20px;
+	float: left;
+	opacity: 0.7;
+	-webkit-transition: 0.3s;
+	transition: 0.3s;
+}
+.browser-extensions-icon:hover {
+	opacity: 1;
+}

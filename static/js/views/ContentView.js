@@ -6,17 +6,25 @@ var ContentView = Backbone.View.extend({
 
 	initialize: function() {
 		
-		this.listenTo(bookmarks,'add', this.addBookmark);
+		this.listenTo(bookmarks, 'add', this.addBookmark);
 
 		// This event is fired when the bookmarks are loaded
-		this.listenTo(bookmarks,'login', this.userEntered);
+		this.listenTo(bookmarks, 'login', this.userEntered);
 
 		// This event is fired when the user filters the bookmarks by collection, tag, etc.
-		this.listenTo(bookmarks,'filter', this.filterBy);
+		this.listenTo(bookmarks, 'filter', this.filterBy);
+
+		// This event is fired when the bookmarks collection is empty
+		this.listenTo(bookmarks, 'empty', this.showHelp)
 
 		// Load bookmarks, and trigger the filtering function
 		bookmarks.fetch({success: function() {
 			bookmarks.trigger('login');
+	
+			if ( bookmarks.length == 0 ) {
+				bookmarks.trigger('empty')
+			}
+
 		}});
 
 		this.$searchInput = this.$('.input-search');
@@ -80,7 +88,26 @@ var ContentView = Backbone.View.extend({
 	addBookmark: function(bookmark) {
 		var newBookmarkView = new BookmarkView({ model: bookmark });
 		$('.bookmarks-list').append(newBookmarkView.render().el);
+	},
+
+	showHelp: function() {
+		var newUserTemplate = $('<img class="help-arrows" src="http://markedbyme.appspot.com/static/images/newtest.png">')
+			newUserTemplate.appendTo($('.bookmarks-section') );
+
+		if (new_user == 'true') {
+    		var newUserTemplate = $('<h1 class="new-user-text thank-you">Thank you for signing up!</h1><p class="new-user-text beta-warning"><span class="new-user-bookmarko">Bookmarko</span> is still in early beta so everything can brake, and <br> your user experience may not be so good.</p>')
+    			newUserTemplate.insertAfter('.help-arrows');
+	
+			var getExtensionTemplate = $('<div class="browser-extensions-box"><h1 class="new-user-text get-extension-header">Get the extension and start saving bookmarks</h1><img class="browser-extensions-icon" src="http://markedbyme.appspot.com/static/images/webstorex124.png"></img><img class="browser-extensions-icon" src="http://markedbyme.appspot.com/static/images/firefoxx124.png"></img><img class="browser-extensions-icon" src="http://markedbyme.appspot.com/static/images/operax124.png"></img><img class="browser-extensions-icon" src="http://markedbyme.appspot.com/static/images/safarix124.png"></img></div>')
+				getExtensionTemplate.insertAfter('.beta-warning')
+		} else {
+			var getExtensionTemplate = $('<div class="browser-extensions-box"><h1 class="new-user-text get-extension-header">Get the extension and start saving bookmarks</h1><img class="browser-extensions-icon" src="http://markedbyme.appspot.com/static/images/webstorex124.png"></img><img class="browser-extensions-icon" src="http://markedbyme.appspot.com/static/images/firefoxx124.png"></img><img class="browser-extensions-icon" src="http://markedbyme.appspot.com/static/images/operax124.png"></img><img class="browser-extensions-icon" src="http://markedbyme.appspot.com/static/images/safarix124.png"></img></div>')
+				getExtensionTemplate.insertAfter('.help-arrows')
+		}
+
+
 	}
+
 });
 
 // Initialize the view

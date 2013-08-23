@@ -1,0 +1,73 @@
+#not-supported {
+	width: 600px;
+	height: 400px;
+	display: block;
+	position: absolute;
+	top: 100px;
+	left: 50%;
+	margin-left: -302px;
+	font-family: Helvetica, Verdana;
+	font-size: 1em;
+	color: #343534;
+	background: white;
+	border: solid 2px #4E4E4E;
+	z-index: 1;
+}
+.colorful-header {
+	font-weight: 300;
+	font-size: 1.1em;
+	text-align: center;
+	color: #fff;
+	background: #ff3100;
+	margin: 0;
+	padding: 5px 0;
+}
+.not-supported-header {
+	margin: 25px 35px;
+	font-size: 1.6em;
+	font-weight: 400;
+	text-align: center;
+}
+.not-supported-text {
+	margin: 12px 40px;
+}
+.browsers-box {
+	width: 255px;
+	margin: 40px auto;
+	overflow: hidden;
+}
+.browser-icons {
+	display: block;
+	width: 55px;
+	height: 55px;
+	margin: 0 15px;
+	float: left;
+}
+#chrome {
+	background: url(//markedbyme.appspot.com/static/images/chromex55.png);
+}
+#firefox {
+	background: url(//markedbyme.appspot.com/static/images/firefoxx55.png);
+}
+#opera {
+	background: url(//markedbyme.appspot.com/static/images/operax55.png);	
+}
+.not-supported-buttons {
+	display: inline-block;
+	padding: 7px 20px;
+	color: #fff;
+	text-align: center;
+	font-weight: 300;
+	text-decoration: none;
+}
+#update-link {
+	background: #3F96FF;
+	float: left;
+	margin-left: 70px; 
+}
+#continue-button {
+	background: #FF3102;
+	float: right;
+	margin-right: 70px; 
+	cursor: pointer;
+}

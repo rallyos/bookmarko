@@ -1,3 +1,10 @@
+
+if (navigator.appName == 'Microsoft Internet Explorer') {
+	var continueButton = document.getElementById('continue-button')
+
+	continueButton.attachEvent('onclick', closeWindow)
+}
+
 // Store elements
 var formToggle = document.getElementById('form-toggle');
 var featuresScroll = document.getElementById('features-scroll');
@@ -116,7 +123,7 @@ signUpForm.onsubmit = function() {
 		location.reload()
 	} else if ( xhr.status ==  403) {
 		formBlock.style.height = '280px'
-		var message = 'You failed to impress me'
+		var message = 'Your email or password is invalid'
 		var form = formSubmit[0];
 		showError(message, signUpForm, form)
 	}

@@ -288,3 +288,97 @@ input {
 #portf:hover {
 	text-decoration: underline;
 }
+.page-not-found-wrap {
+	width: 80%;
+	margin: 0 auto;
+	font-family: Roboto, sans-serif;
+	font-weight: 300;
+	color: #444544;
+	text-align: center;
+}
+.page-not-found-first-header {
+	margin: 20px 0 0;
+	font-size:2.3rem;
+	font-weight: inherit;
+}
+.page-not-found-second-header {
+	font-size: 13rem;
+	font-weight: 100;
+}
+.oops {
+	color: #eb3d00;
+}
+.page-not-found-text {
+	width: 80%;
+	display: inline-block;
+	font-size: 1.25rem;
+}
+.support-link {
+	color: #444544;
+	text-decoration: underline;
+}
+.page-not-found-third-header {
+	font-size: 1.5rem;
+	font-weight: inherit;
+}
+.saved-today {
+	height: 140px;
+	margin: 40px 0 0 4%;
+	float: left;
+	text-align: right;
+	text-transform: uppercase;
+}
+.saved-today-header {
+	margin: 0 0 10px;
+	font-size: 1.5rem;
+	font-weight: inherit;
+}
+.saved-today-count {
+	font-size: 2rem;
+}
+.most-saved {
+	height: 140px;
+	margin: 40px 4% 0 0;
+	float: right;
+	text-align: right;
+	text-transform: uppercase;
+}
+.most-saved-header {
+	margin: 0 0 20px;
+	font-size: 1.5rem;
+	font-weight: inherit;
+}
+.most-saved-title {
+	font-weight: 400;
+	font-size: 1.18rem;
+}
+.page-not-found-button {
+	width: 365px;
+	height: 45px;
+	display: block;
+	font-size: 1.3rem;
+	text-align: center;
+	text-decoration: none;
+	line-height: 45px;
+	color: #fff;
+	background: #5c5e5d;
+	border-bottom: solid 5px #343534;
+	-webkit-transition: 0.1s;
+	transition: 0.1s;
+}
+.page-not-found-button:hover {
+	background: #eb3d00;
+	border-bottom: solid 5px #B14141;
+}
+.page-not-found-button:active {
+	border: 0;
+}
+#button-left {
+	float: left;
+	clear: right;
+	cursor: pointer;
+}
+#button-right {
+	float: right;
+	clear: right;
+}

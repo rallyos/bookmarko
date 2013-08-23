@@ -16,8 +16,11 @@ function getCookie(name) {
     return cookieValue;
 }
 var token = getCookie('Token');
+var new_user = getCookie('new-user');
+
 // Used after every request to the server
 var tokenHeader = { headers: { 'Authorization': 'Token ' + token } };
+
 
 var dragIcon = new Image();
 dragIcon.src = '//markedbyme.appspot.com/static/images/dragimg.png';
