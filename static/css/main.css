@@ -13,6 +13,10 @@ input {
 	-webkit-appearance: none;
 	-webkit-border-radius: 0;
 }
+a {
+	text-decoration: none;
+	color: inherit;
+}
 #not-supported {
 	display: none;
 }
@@ -53,14 +57,14 @@ input {
 }
 .sign-section {
 	max-width: 100%;
-	height: 600px;
+	height: 710px;
 	background-image: url(http://markedbyme.appspot.com/static/images/screen.png);
 	background-size: 100%;
 	border-bottom: solid 1px #ECECEC;
 	overflow: hidden;
 }
 .sign-header {
-	margin-top: 130px;
+	margin-top: 100px;
 	font-family: Roboto, sans-serif;
 	font-size: 2.5rem;
 	font-weight: 100;
@@ -70,9 +74,9 @@ input {
 .sign-up-block {
 	max-width: 460px;
 	height: 260px;
-	margin: 75px auto 10px;
+	margin: 145px auto 10px;
 	position: relative;
-	background: rgba(255, 255, 255, 0.95);
+	background: rgba(255, 255, 255, 0.98);
 	border-radius: 4px;
 	box-shadow: 0 1px 3px #B8B8B8;
 	overflow: hidden;
@@ -158,122 +162,113 @@ input {
 	width: 100%;
 	max-width: 1140px;
 	margin: 0 auto;
-}
-.features-block {
-	width: 100%;
-	overflow: hidden;
+	font-family: 'Roboto', sans-serif;
+	color: #5E5E5E;
 }
 .features-top-header {
-	margin: 40px 0;
-	text-align: center;
-	font-weight: 300;
-	text-transform: uppercase;
-}
-.feature {
-	width: 40%;
-	margin: 30px 6% 30px 4%;
-	float: left;
-}
-.feature-title {
-	width: 100%;
-	padding: 5px 0;
-	font-size: 1rem;
-	font-weight: 300;
-	text-align: center;
-	text-transform: uppercase;
-}
-.feature-image-left {
-	max-width: 141px;
-	margin: 25px 0 25px 9%;
-	float: left;
-	display: block;
-}
-.feature-image-right {
-	max-width: 141px;
-	margin: 25px 9% 25px 0;
-	float: right;
-	display: block;
-}
-#devices {
-	max-width: 302px;
-	margin: 25px auto;
-	display: block;
-	float: none;
-}
-.feature-text {
-	width: 100%;
-	float: left;
-}
-#title-top-left {
-	color: #fff;
-	background: #7568CE;
-}
-#title-top-right {
-	color: #fff;
-	background: #4CBDD3;
-}
-#title-bottom-left {
-	color: #fff;
-	background: #979797;
-}
-#title-bottom-right {
-	color: #fff;
-	background: #50BB66;
-}
-.feature-view-image {
-	max-width: 130px;
-	margin: 40.5px 21px;
-	display: block;
-	float: left;
-}
-.bottom-features-block {
-	width: 100%;
-	margin: 40px 0 60px;
-	overflow: hidden;
-}
-.bottom-feature {
-	max-width: 300px;
-	margin: 0 40px;
-	float: left;
-}
-.bottom-feature-circle {
-	display: block;
-	width: 150px;
-	height: 150px;
-	margin: 15px auto;
-	border-radius: 150px;
-}
-#feature-beta-circle {
-	text-align: center;
-	color: #fff;
-	background: #eb3d00;
-	overflow: hidden;
-}
-#feature-beta-span {
-	line-height: 150px;
-	font-size: 2.3rem;
+	margin: 40px 0 120px;
 	font-family: 'Roboto', sans-serif;
-	font-weight: 200;
-	text-transform: uppercase;
+	font-size: 1.7rem;
+	font-weight: 300;
+	text-align: center;
 }
-#feature-cloud-circle {
-	background: #4285f4;
+.features-top {
+	margin-top: 50px;
 }
-#feature-cloud-img {
+.features-top-feature-block {
+	width: 29%;
+	max-width: 330px;
+	margin: 0 0 70px 4%;
+	float: left;
+}
+.features-top-feature-image {
 	display: block;
-	padding: 45px 25px;
+	max-width: 240px;
+	margin: 0 auto;
+}
+.features-top-feature-header {
+	font-weight: 400;
+	text-align: center;
+}
+.features-top-feature-text {
+	width: 90%;
+	padding: 0 5%;
+}
+.feature-apps {
+	margin: 20px 0 70px;
+	text-align: center;
+}
+.feature-apps-header {
+	color: #4AB84A;
+	font-weight: 400;
+}
+.feature-apps-text {
+	width: 94%;
+	margin: 15px auto 30px;
+	color: #343534;
+}
+.feature-devices {
+	margin: 20px 0 70px;
+	text-align: center;
+}
+.devices-header {
+	font-weight: 400;
+	color: #2E8EFF;
+}
+.devices-text {
+	width: 94%;
+	margin: 15px auto 30px;
+	color: #343534;
+}
+.devices-image {
+	max-width: 451px;
+	display: block;
+	margin: 0 auto;
+}
+.bottom-features {
+	margin-bottom: 40px;
+	overflow: hidden;
+}
+.bottom-feature-box {
+	width: 20%;
+	margin: 0 2.5%;
+	float: left;
+}
+.bottom-feature-image {
+	height: 100px;
+	margin: 0 auto 20px;
+	display: block;
 }
 .bottom-feature-text {
-	width: 100%;
-	font-size: 1.2rem;
+	width: 93%;
+	margin: 0 auto;
+}
+#bottom-feature-beta {
+	margin: 0 auto 20px;
+	line-height: 100px;
+	font-size: 3rem;
+	font-family: 'Roboto', sans-serif;
+	font-weight: 200;
+	color: #eb3d00;
+	text-transform: uppercase;
 	text-align: center;
-	overflow: hidden;
 }
 .footer {
 	width: 100%;
 	height: 40px;
 	border-top: solid 1px #ced1d1;
 	overflow: hidden;
+}
+.footer-links {
+	float: left;
+	font-size: 0.9rem;
+	list-style: none;
+}
+.footer-links-item {
+	height: 20px;
+	margin: 10px 0 10px 25px;
+	float: left;
+	cursor: pointer;
 }
 #baker {
 	margin-right: 25px;
@@ -381,4 +376,124 @@ input {
 #button-right {
 	float: right;
 	clear: right;
+}
+.terms-block {
+	position: fixed;
+	top: 8%;
+	left: 8%;
+	width: 80%;
+	height: 80%;
+	padding: 2%;
+	background: #fff;
+	border: solid 2px #ACACAC;
+	box-shadow: 0 0 15px #AFB3AF;
+	display: none;
+	overflow: scroll;
+}
+.terms-top-header {
+	margin: 20px 0;
+	font-weight: 400;
+	text-align: center;
+}
+.terms-header {
+	margin: 20px 0 5px;
+	font-weight: 400;
+}
+#terms-close-button {
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	width: 30px;
+	height: 30px;
+	float: left;
+	color: #fff;
+	text-align: center;
+	line-height: 30px;
+	border-radius: 30px;
+	background: #F06363;
+	cursor: pointer;
+}
+#privacy-close-button {
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	width: 30px;
+	height: 30px;
+	float: left;
+	color: #fff;
+	text-align: center;
+	line-height: 30px;
+	border-radius: 30px;
+	background: #F06363;
+	cursor: pointer;
+}
+.about-wrap {
+	max-width: 1100px;
+	margin: 0 auto;
+	padding: 0 20px;
+	font-family: 'Lora', serif;
+	font-size: 1.2rem;
+}
+.about-section {
+	float: left;
+	margin-top: 50px;
+}
+.about-logo {
+	display: block;
+	width: 100px;
+	margin: 30px auto;
+}
+.about-top-header {
+	margin: 0 0 45px;
+	font-weight: 400;
+	text-align: center;
+	text-transform: uppercase;
+}
+.about-text {
+	margin-bottom: 25px;
+}
+.about-article {
+	width: 46%;
+	float: left;
+}
+#about-article-right {
+	margin-left: 4%;
+}
+.about-article-header {
+	font-size: 1.7rem;
+	margin: 0 0 20px;
+	font-weight: 400;
+}
+.dr {
+	width: 120px;
+	float: left;
+	margin: 20px 20px 0 0;
+}
+.behind {
+	width: 84%;
+	float: left;
+}
+#last {
+	margin-bottom: 50px;
+}
+.blog-wrap {
+	max-width: 840px;
+	margin: 0 auto;
+	padding-top: 80px;
+	font-family: 'Open Sans', serif;
+}
+.blog-post {
+	margin: 30px 0;
+	border-bottom: solid 3px #dedede;
+}
+.post-title {
+	font-size: 1.8rem;
+}
+.post-date {
+	margin: 5px 0 10px;
+	font-size: 0.9rem;
+	font-weight: 600;
+}
+.post-text {
+	margin: 27px 0;
 }

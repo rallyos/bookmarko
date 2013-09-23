@@ -14,7 +14,14 @@ class BookmarkCollection(models.Model):
 class Bookmark(models.Model):
 	title = models.CharField(max_length=250)
 	url = models.URLField(max_length=250)
+	description = models.CharField(max_length=250, blank=True, null=True)
 	tag = models.CharField(max_length=30, blank=True, null=True)
 	collection = models.ForeignKey(BookmarkCollection, blank=True, null=True)
 	user = models.ForeignKey(User)
 	starred = models.BooleanField()
+	image = models.CharField(max_length=400, blank=True, null=True)
+
+class Post(models.Model):
+	title = models.CharField(max_length=200)
+	body = models.TextField()
+	date = models.DateField(auto_now=True)

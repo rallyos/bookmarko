@@ -8,6 +8,10 @@ var ContentView = Backbone.View.extend({
 		
 		this.listenTo(bookmarks, 'add', this.addBookmark);
 
+		this.listenTo(bookmarks, 'reset', this.addAll);
+
+		this.listenTo(bookmarks, 'reset', this.testva);
+
 		// This event is fired when the bookmarks are loaded
 		this.listenTo(bookmarks, 'login', this.userEntered);
 
@@ -15,26 +19,74 @@ var ContentView = Backbone.View.extend({
 		this.listenTo(bookmarks, 'filter', this.filterBy);
 
 		// This event is fired when the bookmarks collection is empty
-		this.listenTo(bookmarks, 'empty', this.showHelp)
+		this.listenTo(bookmarks, 'empty', this.showHelp);
 
 		// Load bookmarks, and trigger the filtering function
-		bookmarks.fetch({success: function() {
-			bookmarks.trigger('login');
-	
-			if ( bookmarks.length == 0 ) {
-				bookmarks.trigger('empty')
-			}
 
-		}});
 
 		this.$searchInput = this.$('.input-search');
 		this.$starButton = this.$('.starred');
+		settingsBlock = $('.settings-block');
 	},
 
 	events: {
 		'keyup .input-search': 'searchBookmarks',
 		'click .starred': 'showStarred',
-		'click #settings': 'openSettings'
+		'click #settings': 'openSettings',
+		'click #grid': 'changeTemplateGrid',
+		'click #list': 'changeTemplateList'
+	},
+
+	testva: function() {
+		if ( location.pathname.match('collections') ) {
+			var num = location.pathname.replace( /^\D+/g, '');
+			pageRouter.showCollection(num)
+		} else {
+			bookmarks.trigger('login');
+		}
+	
+		if ( bookmarks.length == 0 ) {
+			bookmarks.trigger('empty')
+		}
+			//remove
+		$('.bookmark').attr('draggable', 'true')
+
+		if ( user_template == 'list' ) {
+		    $('.bookmark').removeClass('grid-tmpl').addClass('list-tmpl')
+		} else if ( user_template == 'grid' ) {
+		    $('.bookmark').removeClass('list-tmpl').addClass('grid-tmpl')
+		}
+
+	},
+
+	changeTemplateGrid: function() {
+		user_template = 'grid'
+        rightTemplate = '#grid-template';
+		bookmarks.fetch({reset: true})
+		this.setTemplateCookie(user_template)
+	},
+
+	changeTemplateList: function() {
+		user_template = 'list'
+        rightTemplate = '#list-template';
+		bookmarks.fetch({reset: true})
+		this.setTemplateCookie(user_template)
+	},
+	// MAKE THEM IN ONE FUNCTION
+
+	setBookmarkClass: function() {
+		if ( user_template == 'list' ) {
+		    $('.bookmark').removeClass('grid-tmpl').addClass('list-tmpl')
+		} else if ( user_template == 'grid' ) {
+		    $('.bookmark').removeClass('list-tmpl').addClass('grid-tmpl')
+		}
+	},
+
+	setTemplateCookie: function(user_template) {
+		year = new Date()
+		nextYear = year.getFullYear() + 1
+		year.setYear(nextYear)
+		document.cookie ='template='+ user_template +'; expires='+ year +'; path=/'
 	},
 
 	// Show bookmarks based on their collection
@@ -82,7 +134,13 @@ var ContentView = Backbone.View.extend({
 	},
 
 	openSettings: function() {
-	    $('.settings-block').toggleClass("settings-hidden");
+		settingsBlock.toggleClass("settings-hidden");
+
+		$('html').one('click', function() {
+		    settingsBlock.toggleClass("settings-hidden");
+		});
+
+		event.stopPropagation();
 	},
 
 	addBookmark: function(bookmark) {
@@ -104,10 +162,17 @@ var ContentView = Backbone.View.extend({
 			var getExtensionTemplate = $('<div class="browser-extensions-box"><h1 class="new-user-text get-extension-header">Get the extension and start saving bookmarks</h1><img class="browser-extensions-icon" src="http://markedbyme.appspot.com/static/images/webstorex124.png"></img><img class="browser-extensions-icon" src="http://markedbyme.appspot.com/static/images/firefoxx124.png"></img><img class="browser-extensions-icon" src="http://markedbyme.appspot.com/static/images/operax124.png"></img><img class="browser-extensions-icon" src="http://markedbyme.appspot.com/static/images/safarix124.png"></img></div>')
 				getExtensionTemplate.insertAfter('.help-arrows')
 		}
+	},
 
+	addAll: function () {
+		this.$('.bookmarks-list').html('');
+		bookmarks.each(this.addBookmark, this);
+		this.setBookmarkClass();
+	},
 
+	sortGroups: function() {
+		console.log('hey hey hey')
 	}
-
 });
 
 // Initialize the view
@@ -119,14 +184,17 @@ var BookmarkView = Backbone.View.extend({
 	tagName: 'li',
 	className: 'bookmark',
 
-	template: _.template($('#bookmark-template').html()),
+	//template: _.template($(rightTemplate).html()),
 
 	events: {
 		'click .bookmark-star': 'starBookmark',
-		'dragstart .select-bookmark': 'dragStartEvent',
+		'dragstart': 'dragStartEvent',
 		'dragend': 'dragEndEvent',
 		'click .bookmark-title': 'saveTitle',
 		'keypress .bookmark-title': 'updateBookmark',
+		'click .bookmark-menu-wrap': 'showMenu',
+		'click .edit-bookmark': 'editBookmark',
+		'click .copy-link': 'copyToClipboard',
 		'click .add-tag': 'addTag',
 		'keyup .bookmark-tags': 'nameTag',
 		'click .bookmark-tags': 'tagClicked',
@@ -142,11 +210,36 @@ var BookmarkView = Backbone.View.extend({
 		this.listenTo(this.model, 'destroy', this.remove);
 
 		this.listenTo(this.model, 'change', this.render);
+
+		var bkid = this.model.get('collection_id')
+		if ( bkid != null ) {
+			globalBookmarkCollections.get(bkid).bookmarkCollections.add(this.model)
+		}
+
+		this.template = _.template($(rightTemplate).html())
 	},
 
 	render: function(bookmark) {
 		this.$el.html(this.template(this.model.toJSON()));
 		return this;
+	},
+
+	showMenu: function(e) {
+		bookmarkMenu = this.$('.bookmark-menu');
+
+		bookmarkMenu.toggle();
+
+		$('html').one('click', function() {
+			bookmarkMenu.toggle();
+		});
+
+		event.stopPropagation();
+	},
+
+	// Very basic add new interface
+	copyToClipboard: function() {
+		bookmark_url = this.model.get('url')
+		window.prompt ("Copy to clipboard:", bookmark_url);
 	},
 
 	dragStartEvent: function (e) {
@@ -160,12 +253,16 @@ var BookmarkView = Backbone.View.extend({
 		
 		// Set the drag icon when moving bookmarks.
 		// The image is 'preloaded' in main.js		
-		e.originalEvent.dataTransfer.setDragImage(dragIcon, 10, 17);
-
+		console.log(e)
 		e.originalEvent.dataTransfer.effectAllowed = 'move';
 		e.originalEvent.dataTransfer.setData('model', data);
+	
 
-		this.$el.addClass('being-moved');
+		this.$el.clone().addClass('being-moved').css({
+		   'transform': 'rotate(-10deg)',
+		   '-moz-transform': 'rotate(-10deg)',
+		   '-webkit-transform': 'rotate(-10deg)'
+		});
 	},
 
 	dragEndEvent: function() {
@@ -174,6 +271,7 @@ var BookmarkView = Backbone.View.extend({
 
 	dragHide: function(draggedModel) {
 		this.$el.addClass('hidden');
+		this.$el.css('opacity', '1');
 	},
 
 	starBookmark: function(bookmark) {
@@ -252,9 +350,13 @@ var BookmarkView = Backbone.View.extend({
 		window.savedTitle = this.$('.bookmark-title').text();
 	},
 
+	editBookmark: function() {
+		this.$('.bookmark-title').attr('contenteditable', 'true').focus()
+	},
+
 	updateBookmark: function(e) {
 		if (e.which === ENTER_KEY) {
-			this.$('.bookmark-title').blur();
+			this.$('.bookmark-title').blur().attr('contenteditable', 'true');
 			var newval = this.$('.bookmark-title').text();
 			if (newval.length == 0) {
 				console.log(newval.length)
@@ -262,6 +364,8 @@ var BookmarkView = Backbone.View.extend({
 			} else {
 				this.saveBookmark(newval);
 			}
+
+
 			return false;
 		}
 	},
@@ -272,11 +376,60 @@ var BookmarkView = Backbone.View.extend({
 
 	clear: function () {
 		model = this.model;
-		this.$el.css({ right: '100%' })
-		
+		if ( user_template == 'list' ) {
+			this.$el.css({ right: '100%' })
+		} else {
+			this.$el.css({
+				'-webkit-transform': 'scale(0)',
+				'-ms-transform': 'scale(0)',
+				'transform': 'scale(0)'
+			});
+		}	
 		this.$el.one('transitionend', function() {
 			model.destroy(tokenHeader);
 		})
 	},
 
 });
+
+var SettingsView = Backbone.View.extend({
+	el: '.settings-block',
+
+	initialize: function() {
+
+	},
+
+	events: {
+		'change .settings-form-select': 'changeBookmarkTemplate',
+		'change .settings-import-button': 'sendBookmarks'
+	},
+
+	changeBookmarkTemplate: function() {
+	    if ( $('.settings-form-option:selected').val() == 'title' ) {
+	            globalBookmarkCollections.order_by_title();
+	    } else if ( $('.settings-form-option:selected').val() == 'date' ) {
+	            globalBookmarkCollections.order_by_date();
+	    } else if ( $('.settings-form-option:selected').val() == 'size' ) {
+	            globalBookmarkCollections.order_by_size();
+	    }
+
+	    globalBookmarkCollections.trigger('reset');
+	},
+
+	sendBookmarks: function() {
+		mda = document.getElementsByClassName('settings-import-button')[0]
+	    var formData = new FormData();
+	    formData.append("thefile", mda.files[0]);
+	    var xhr = new XMLHttpRequest();
+	    xhr.open('POST', 'http://markedbyme.appspot.com/da', true);
+	    xhr.send(formData);
+
+	    console.log(xhr.status)
+
+	    if (xhr.status == 201) {
+	        location.reload()
+	    }
+	}
+});
+
+var settingsView = new SettingsView();

@@ -30,83 +30,25 @@
 		<nav class="nav-block">
 			<ul class="menu">
 				<li class="menu-item" id="form-toggle">Sign In</li>
-				<li class="menu-item" id="features-scroll">Features</li>
+				<li class="menu-item"><a href="/">Features</a></li>
 				<li class="menu-item"><a href="about">About</a></li>
 				<li class="menu-item"><a href="blog">Blog</a></li>
 			</ul>
 		</nav>
 	</header>
-	<section class="sign-section">
-			<h1 class="sign-header">Bookmark management made easy</h1>
-			<div class="sign-up-block">
-				<form class="sign-form" id="sign-up">{% csrf_token %}
-					<input class="form-input" id="reg-user" type="email" name="username" placeholder="Email address" maxlength="50" required>
-					<input class="form-input form-passwords" id="reg-pass" type="password" name="password1" placeholder="Password" required>
-					<input class="form-input form-passwords" id="reg-confirm-pass" type="password" name="password2" placeholder="Confirm password" required>
-					<input class="form-submit" type="submit" value="Sign Up">
-				</form>
-				<form class="sign-form form-hide-right" id="sign-in">{% csrf_token %}
-					<input class="form-input" id="log-user" type="email" name="username" placeholder="Email address">
-					<input class="form-input" id="log-pass" type="password" name="password" placeholder="Password">
-					<input class="form-submit" id="sign-in-submit" type="submit" value="Login">
-					<span class="forgotten-password">Forgotten password</span>
-				</form>
-			</div>
-	</section>
-	<div class="features-wrap">
-		<h1 class="features-top-header">Your new place for keeping bookmarks</h1>
-		<section class="features-top">
-			<div class="features-top-feature-block">
-				<img class="features-top-feature-image" src="{{ STATIC_URL }}images/store_bookmarks.png">
-				<h2 class="features-top-feature-header">Store bookmarks online</h2>
-				<p class="features-top-feature-text">
-					Stop the emails full with links and start saving your collection of bookmarks safely in the cloud.
-				</p>
-			</div>
-			<div class="features-top-feature-block">
-				<img class="features-top-feature-image" src="{{ STATIC_URL }}images/organize.png">
-				<h2 class="features-top-feature-header">Manage them easy</h2>
-				<p class="features-top-feature-text">
-					Group your saved sites by type, and add tags for better search experience.
-			</div>
-			<div class="features-top-feature-block">
-				<img class="features-top-feature-image" src="{{ STATIC_URL }}images/fast_search.png">
-				<h2 class="features-top-feature-header">Search fast</h2>
-				<p class="features-top-feature-text">
-					Finding the site that you saved months before is a joy.
-					The search bar offers fast and smart way to look through your collection.
-				</p>
-			</div>
-		</section>
-		<section class="feature-apps">
-			<h1 class="feature-apps-header">Connect with the apps you use</h1>
-			<p class="feature-apps-text">Bookmarko will be integrated with your other favourite bookmarking sites, so you don't have to lose data.</p>
-			<img class="devices-image" src="{{ STATIC_URL }}images/apps.png">
-		</section>
-		<section class="feature-devices">
-			<h1 class="devices-header">Available on most devices</h1>
-			<p class="devices-text">Bookmarko was made with responsive design in mind. It was build to support wide range of devices. The site is optimized for touch input, so you can access and use it from your mobile device.</p>
-			<img class="devices-image" src="{{ STATIC_URL }}images/devices.png">
-		</section>
-		<section class="bottom-features">
-			<div class="bottom-feature-box">
-				<img class="bottom-feature-image" src="{{ STATIC_URL }}images/cloud_platform.png">
-				<p class="bottom-feature-text">The site is using Google App Engine for back-end, which offers us scalability and other cool things.</p>
-			</div>
-			<div class="bottom-feature-box">
-				<h1 id="bottom-feature-beta">Beta</h1>
-				<p class="bottom-feature-text">Bookmarko is still in beta and will be a always developing project. There are still many things to come.</p>
-			</div>
-			<div class="bottom-feature-box">
-				<img class="bottom-feature-image" src="{{ STATIC_URL }}images/test1.png">
-				<p class="bottom-feature-text">You can download your full library in any format, if you want to migrate to other services.</p>
-			</div>
-			<div class="bottom-feature-box">
-				<img class="bottom-feature-image" src="{{ STATIC_URL }}images/test2.png">
-				<p class="bottom-feature-text">Built for speed and good user experience.</p>
-			</div>
-		</section>
+
+	<div class="blog-wrap">
+            {% for post in posts %}
+            <article class="blog-post">
+            	<h1 class="post-title">{{ post.title }}</h1>
+            	<h5 class="post-date">{{ post.date }}</h5>
+				{% autoescape off %}
+				{{ post.body }}
+				{% endautoescape %}
+            </article>
+            {% endfor %}
 	</div>
+
 	<footer class="footer">
 		<ul class="footer-links">
 			<li class="footer-links-item"><a href="about">About</a></li>

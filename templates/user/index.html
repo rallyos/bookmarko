@@ -3,24 +3,41 @@
 <head>
 	<meta charset="UTF-8">
 	<link href='http://fonts.googleapis.com/css?family=Roboto:100,300|Open+Sans:400,300' rel='stylesheet'>
+	<link rel="icon" type="image/ico" href="{{ STATIC_URL }}images/favicon.ico"></link> 
 	<link href="{{ STATIC_URL }}css/user.css" rel="stylesheet">	
-	<title>Bookmarko 0.1 | Manage your bookmarks with style</title>
+	<title>Bookmarko Beta - Manage your bookmarks with style</title>
 </head>
 <body>
 	<div class="wrap">
 		<div class="settings-block settings-hidden">
 			<h1 class="settings-header">Settings</h1>
 			<form action="user-settings-form">
+				<h2 class="settings-type">App preferences</h2>
+				<div class="settings-form-section">
+					<label class="settings-form-label label-medium" for="testda">Order collections</label>
+					<select class="settings-form-select">
+						<option class="settings-form-option" value="title">By name</option>
+						<option class="settings-form-option" value="date">By date created</option>
+						<option class="settings-form-option" value="size">By size</option>
+					</select>
+				</div>
+				<h2 class="settings-type">Account</h2>
 				<div class="settings-form-section">
 					<label class="settings-form-label" for="testda">New password</label>
 					<input class="settings-form-input" type="text" name="testda">
 				</div>
-				<input class="apply-settings settings-form-button" type="submit" value="Apply">
-				<button class="cancel-settings settings-form-button">Cancel</button>
+				<h2 class="settings-type">Data</h2>
+				<div class="settings-form-section">
+					<label class="settings-form-label label-medium" for="testda">Import bookmarks</label>
+					<input class="settings-import-button" type="file" value="Select file">
+				</div>
 			</form>
 		</div>
 		<div class="sidebar">
-				<div class="home-button"><span>Home</span></div>
+				<div class="home-wrap">
+					<img class="home-button" src="{{ STATIC_URL }}images/home.png">
+					<span class="search-icon"></span>
+				</div>
 				<div class="groups-wrap"></div>
 				<div class="group-add"><span>New Group</span></div>
 		</div>
@@ -31,8 +48,7 @@
 					<span class="content-actions-button with-icon starred" data-pressed="no"></span>
 					<div class="content-actions-button content-actions-view-settings">
 						<span class="change-view-button" id="list"></span>
-						<span class="change-view-button" id="list-icons" title="Not available yet"></span>
-						<span class="change-view-button" id="grid" title="Not available yet"></span>
+						<span class="change-view-button" id="grid"></span>
 					</div>
 					<span class="content-actions-button with-icon" id="settings"></span>
 					<a href="logout_user" class="content-actions-button" id="sign-out">Sign out</a>
@@ -43,16 +59,29 @@
 			</div>
 		</div>
 	</div>
-	<script type="text/template" id="bookmark-template">
-	<div class="bookmark-val-block">
-		<span class="select-bookmark" draggable="true"></span>
-		<span class="bookmark-star <%= starred ? 'bookmark-starred' : '' %>"></span>
-		<span class="bookmark-title" contenteditable="true" title="<%= title %>"><%= title %></span>
+
+
+	<script type="text/template" id="list-template">
+	<div class="lst-bookmark-val-block">
+		<span class="select-bookmark lst-select-bookmark"></span>
+		<span class="bookmark-star lst-bookmark-star <%= starred ? 'bookmark-starred' : '' %>"></span>
+		<div class="bookmark-menu-wrap lst-bookmark-menu-wrap">
+			<div class="bookmark-menu-line lst-bookmark-menu-line"></div>
+			<div class="bookmark-menu-line lst-bookmark-menu-line"></div>
+			<div class="bookmark-menu-line lst-bookmark-menu-line"></div>
+		</div>
+		<div class="bookmark-menu lst-bookmark-menu">
+			<ul class="bookmark-menu-list">
+				<li class="bookmark-menu-list-item edit-title">Rename Title</li>
+				<li class="bookmark-menu-list-item copy-link">Copy Link</li>
+			</ul>
+		</div>
+		<span class="bookmark-title lst-bookmark-title" title="<%= title %>"><%= title %></span>
 	</div>
-	<div class="bookmark-val-block">
-		<a class="bookmark-url" href="<%= url %>" target="_blank"><%= url %></a>
+	<div class="lst-bookmark-val-block">
+		<a class="lst-bookmark-url" href="<%= url %>" target="_blank"><%= url %></a>
 	</div>	
-	<div class="bookmark-val-block" id="tags-block">
+	<div class="lst-bookmark-val-block" id="tags-block">
 		<span class="add-tag" title="Add new tag">+</span>
 		<% if (tag) { %>
 			<div class="bookmark-tags-wrap">
@@ -60,9 +89,50 @@
 				<span class="tag-delete">x</span>
 			</div>
 		<% } %>
-		<span class="bookmark-delete">X</span>
+		<span class="bookmark-delete lst-bookmark-delete">X</span>
 	</div>
 	</script>
+
+
+	<script type="text/template" id="grid-template">
+		<span class="select-bookmark grd-select-bookmark"></span>
+		<a class="grd-bookmark-link" href="<%= url %>" target="_blank">
+		<% if ( image ) {%>
+			<img class="grd-bookmark-image" src="<%= image %>">
+		<% } else {%>
+			<h2 class="grd-bookmark-title-big"><%= title %></h2>
+			<p class="grd-bookmark-descr"><%= description %></p>
+		<% } %>
+		</a>
+		<div class="grd-bookmark-content
+		 <% if ( image ) {%> 
+			grd-bookmark-content-w-title
+			<%} else {%>
+			grd-bookmark-content-wo-title
+			<%}%> "
+		>
+			<% if ( image ) {%>
+			<span class="bookmark-title grd-bookmark-title" title="<%= title %>"><%= title %></span>
+			<% } %>
+			<div class="grd-bookmark-settings">
+				<div class="bookmark-menu-wrap grd-bookmark-menu-wrap">
+					<div class="bookmark-menu-line grd-bookmark-menu-line"></div>
+					<div class="bookmark-menu-line grd-bookmark-menu-line"></div>
+					<div class="bookmark-menu-line grd-bookmark-menu-line"></div>
+				</div>
+				<div class="bookmark-menu grd-bookmark-menu">
+					<ul class="bookmark-menu-list">
+						<li class="bookmark-menu-list-item edit-title">Rename Title</li>
+						<li class="bookmark-menu-list-item copy-link">Copy Link</li>
+					</ul>
+				</div>
+				<span class="bookmark-star grd-bookmark-star <%= starred ? 'bookmark-starred' : '' %>"></span>
+				<span class="bookmark-delete grd-bookmark-delete"></span>
+			</div>
+		</div>
+	</script>
+
+
 	<script type="text/template" id="group-template">
 		<div class="group">
 			<div class="bookmarks-group-nav">
@@ -85,6 +155,7 @@
 			<span class="bookmarks-group-color palette-color-grey"></span>
 		</div>
 	</script>
+
 <script src="{{ STATIC_URL }}libraries/underscore-min.js"></script>
 <script src="{{ STATIC_URL }}libraries/jquery-1.9.1.min.js"></script>
 <script src="{{ STATIC_URL }}libraries/backbone-min.js"></script>
@@ -94,5 +165,14 @@
 <script src="{{ STATIC_URL }}js/views/SidebarView.js"></script>
 <script src="{{ STATIC_URL }}js/views/ContentView.js"></script>
 <script src="{{ STATIC_URL }}js/routers/router.js"></script>
+	<script>
+		var json2 = '{{BookmarkCollections|escapejs}}'
+		var parsons2 = JSON.parse(json2)
+		globalBookmarkCollections.reset(parsons2)
+
+	    var json = "{{bookmarks|escapejs}}"
+		var parsons = JSON.parse(json)
+		bookmarks.reset(parsons)
+	</script>
 </body>
 </html>

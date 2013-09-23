@@ -5,8 +5,7 @@ var BookmarkModel = Backbone.Model.extend();
 var BookmarkCollection = Backbone.Model.extend({
 	
 	// Create subcollection on initialize
-    initialize: function(){
+    initialize: function() {
 		this.bookmarkCollections = new BookmarkCollections();
-		this.bookmarkCollections.url = 'api/collections/' + this.id;
 	}	
 });

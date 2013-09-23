@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<link href='http://fonts.googleapis.com/css?family=Roboto:300,100|Open+Sans:400,300' rel='stylesheet'>
+	<link href='http://fonts.googleapis.com/css?family=Roboto:300,100|Open+Sans:400,300|Lora' rel='stylesheet'>
 	<link href="{{ STATIC_URL }}css/main.css" rel="stylesheet">
 	<link rel="icon" type="image/ico" href="{{ STATIC_URL }}images/favicon.ico"></link> 
 	<!--[if lte IE 8]>
@@ -30,83 +30,49 @@
 		<nav class="nav-block">
 			<ul class="menu">
 				<li class="menu-item" id="form-toggle">Sign In</li>
-				<li class="menu-item" id="features-scroll">Features</li>
+				<li class="menu-item"><a href="/">Features</a></li>
 				<li class="menu-item"><a href="about">About</a></li>
 				<li class="menu-item"><a href="blog">Blog</a></li>
 			</ul>
 		</nav>
 	</header>
-	<section class="sign-section">
-			<h1 class="sign-header">Bookmark management made easy</h1>
-			<div class="sign-up-block">
-				<form class="sign-form" id="sign-up">{% csrf_token %}
-					<input class="form-input" id="reg-user" type="email" name="username" placeholder="Email address" maxlength="50" required>
-					<input class="form-input form-passwords" id="reg-pass" type="password" name="password1" placeholder="Password" required>
-					<input class="form-input form-passwords" id="reg-confirm-pass" type="password" name="password2" placeholder="Confirm password" required>
-					<input class="form-submit" type="submit" value="Sign Up">
-				</form>
-				<form class="sign-form form-hide-right" id="sign-in">{% csrf_token %}
-					<input class="form-input" id="log-user" type="email" name="username" placeholder="Email address">
-					<input class="form-input" id="log-pass" type="password" name="password" placeholder="Password">
-					<input class="form-submit" id="sign-in-submit" type="submit" value="Login">
-					<span class="forgotten-password">Forgotten password</span>
-				</form>
-			</div>
-	</section>
-	<div class="features-wrap">
-		<h1 class="features-top-header">Your new place for keeping bookmarks</h1>
-		<section class="features-top">
-			<div class="features-top-feature-block">
-				<img class="features-top-feature-image" src="{{ STATIC_URL }}images/store_bookmarks.png">
-				<h2 class="features-top-feature-header">Store bookmarks online</h2>
-				<p class="features-top-feature-text">
-					Stop the emails full with links and start saving your collection of bookmarks safely in the cloud.
-				</p>
-			</div>
-			<div class="features-top-feature-block">
-				<img class="features-top-feature-image" src="{{ STATIC_URL }}images/organize.png">
-				<h2 class="features-top-feature-header">Manage them easy</h2>
-				<p class="features-top-feature-text">
-					Group your saved sites by type, and add tags for better search experience.
-			</div>
-			<div class="features-top-feature-block">
-				<img class="features-top-feature-image" src="{{ STATIC_URL }}images/fast_search.png">
-				<h2 class="features-top-feature-header">Search fast</h2>
-				<p class="features-top-feature-text">
-					Finding the site that you saved months before is a joy.
-					The search bar offers fast and smart way to look through your collection.
-				</p>
-			</div>
+
+	<div class="about-wrap">
+		<section class="about-section">
+			<img class="about-logo" src="{{ STATIC_URL }}images/about-logo.png">
+			<h1 class="about-top-header">About Bookmarko</h1>
+			<p class="about-text">
+				If you live in the internet, you will often find an interesting sites that you want to save somewhere and visit them later, without the need to remember their address.</p>
+			<p class="about-text">
+				Maybe in the most use cases people are saving their sites using the bookmarks manager of their favourite browser, or great services like kippt, delicious and other. And maybe there are some people like me that are using their email for these things and this is the worst of all.</p>
+			<p class="about-text">
+				But Most browsers don't offer good experience for managing bookmarks without some extension ( Opera and Safari are doing some good work though ), and the other services i tried are focusing too much on social features, or recommending me more sites that i don't need.</p>
+			<p class="about-text">
+				This is where Bookmarko is trying to step up. Focusing just on your content, trying to ease the process of saving, managing, and finding the sites you saved.</p>
+			</p>
 		</section>
-		<section class="feature-apps">
-			<h1 class="feature-apps-header">Connect with the apps you use</h1>
-			<p class="feature-apps-text">Bookmarko will be integrated with your other favourite bookmarking sites, so you don't have to lose data.</p>
-			<img class="devices-image" src="{{ STATIC_URL }}images/apps.png">
+		<section class="about-section">
+			<article class="about-article">
+				<h1 class="about-article-header">What's next?</h1>
+				<p>Bookmarko will be in a long period of beta until the site is stable, and i add all the features that i think are important for good user experience.</p>
+			</article>
+			<article class="about-article" id="about-article-right">
+				<h1 class="about-article-header">What's the goal</h1>
+				<p>I want to offer an alternative to the current ways of saving bookmarks - focusing on content, simple interface and useful features.</p>
+			</article>
 		</section>
-		<section class="feature-devices">
-			<h1 class="devices-header">Available on most devices</h1>
-			<p class="devices-text">Bookmarko was made with responsive design in mind. It was build to support wide range of devices. The site is optimized for touch input, so you can access and use it from your mobile device.</p>
-			<img class="devices-image" src="{{ STATIC_URL }}images/devices.png">
-		</section>
-		<section class="bottom-features">
-			<div class="bottom-feature-box">
-				<img class="bottom-feature-image" src="{{ STATIC_URL }}images/cloud_platform.png">
-				<p class="bottom-feature-text">The site is using Google App Engine for back-end, which offers us scalability and other cool things.</p>
-			</div>
-			<div class="bottom-feature-box">
-				<h1 id="bottom-feature-beta">Beta</h1>
-				<p class="bottom-feature-text">Bookmarko is still in beta and will be a always developing project. There are still many things to come.</p>
-			</div>
-			<div class="bottom-feature-box">
-				<img class="bottom-feature-image" src="{{ STATIC_URL }}images/test1.png">
-				<p class="bottom-feature-text">You can download your full library in any format, if you want to migrate to other services.</p>
-			</div>
-			<div class="bottom-feature-box">
-				<img class="bottom-feature-image" src="{{ STATIC_URL }}images/test2.png">
-				<p class="bottom-feature-text">Built for speed and good user experience.</p>
-			</div>
+		<section class="about-section" id="last">
+			<img class="dr" src="{{ STATIC_URL }}images/dr.png">
+			<article class="behind">
+				<h1 class="about-article-header">Who is behind it</h1>
+				<p>My name is Dimitar Ralev and I made Bookmarko. This is a side ( but very serious ) project which I had as an idea at the time when I was looking to make some big project to exercise my programming skills, and learn something new. To find some inside stories about the project and how was built, check the case study I've wrote on my portfolio.</p>
+			</article>
 		</section>
 	</div>
+
+	
+
+
 	<footer class="footer">
 		<ul class="footer-links">
 			<li class="footer-links-item"><a href="about">About</a></li>

@@ -17,11 +17,13 @@ function getCookie(name) {
 }
 var token = getCookie('Token');
 var new_user = getCookie('new-user');
+var user_template = getCookie('template');
 
 // Used after every request to the server
 var tokenHeader = { headers: { 'Authorization': 'Token ' + token } };
 
-
-var dragIcon = new Image();
-dragIcon.src = '//markedbyme.appspot.com/static/images/dragimg.png';
-dragIcon.width = 50;
+if ( user_template == 'list' ) {
+    rightTemplate = '#list-template';
+} else if ( user_template == 'grid' ) {
+    rightTemplate = '#grid-template';
+}

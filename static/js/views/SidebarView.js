@@ -6,7 +6,7 @@ var SidebarView = Backbone.View.extend({
 
 		this.listenTo(globalBookmarkCollections, 'add', this.loadBookmarkCollection);
 
-		globalBookmarkCollections.fetch();
+		this.listenTo(globalBookmarkCollections, 'reset', this.getAll);
 
 		this.$groupsWrap = this.$('.groups-wrap');
 	},
@@ -40,7 +40,12 @@ var SidebarView = Backbone.View.extend({
 
 	loadBookmarkCollection: function(bookmarks_collection) {
 		var newBookmarkCollectionView = new BookmarkCollectionView({model: bookmarks_collection});
-		this.$groupsWrap.append(newBookmarkCollectionView.el);
+		this.$groupsWrap.append(newBookmarkCollectionView.render().el);
+	},
+
+	getAll: function() {
+		this.$('.groups-wrap').html('');
+		globalBookmarkCollections.each(this.loadBookmarkCollection, this);
 	}
 });
 
@@ -65,7 +70,7 @@ var BookmarkCollectionView = Backbone.View.extend({
 		this.listenTo(this.model, 'destroy', this.remove);
 		this.listenTo(this.model, 'scale', this.animateGroup);
 
-		this.model.bookmarkCollections.fetch();
+		// this.model.bookmarkCollections.fetch();
 	},
 
 	events: {

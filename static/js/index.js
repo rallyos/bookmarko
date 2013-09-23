@@ -11,12 +11,19 @@ var featuresScroll = document.getElementById('features-scroll');
 var signUpForm = document.getElementById('sign-up');
 var signInForm = document.getElementById('sign-in');
 var formBlock = document.getElementsByClassName('sign-up-block')[0]
+var termsLink = document.getElementsByClassName('footer-links-item')[2]
+var privacyLink = document.getElementsByClassName('footer-links-item')[3]
+var termsBlock = document.getElementsByClassName('terms-block')[0];
+var closeTermsButton = document.getElementById('terms-close-button');
+var privacyBlock = document.getElementsByClassName('terms-block')[1];
+var closePrivacyButton = document.getElementById('privacy-close-button');
+
 //
 var formSubmit = document.getElementsByClassName('form-submit');
 
 //
-var featuresBlock = document.getElementsByClassName('features-block')[0];
-var FeaturesBlockHeight = featuresBlock.scrollHeight - 45;
+var featuresBlock = document.getElementsByClassName('features-wrap')[0];
+var featuresBlock = featuresBlock.offsetTop - 65;
 
 var continueButton = document.getElementById('continue-button')
 
@@ -24,21 +31,48 @@ var continueButton = document.getElementById('continue-button')
 formToggle.addEventListener('click', checkThis)
 featuresScroll.addEventListener('click', scrollPage)
 continueButton.addEventListener('click', closeWindow)
+termsLink.addEventListener('click', showTerms)
+closeTermsButton.addEventListener('click', showTerms)
+privacyLink.addEventListener('click', showPrivacy)
+closePrivacyButton.addEventListener('click', showPrivacy)
 
-var smoothScrollTo = (function () {
+function showTerms() {
+	display = termsBlock.style.display
+
+	if ( display == 'block' ) {
+		termsBlock.style.display = 'none';
+	} else {
+		termsBlock.style.display = 'block';
+	}
+
+}
+
+function showPrivacy() {
+	display = privacyBlock.style.display
+
+	if ( display == 'block' ) {
+		privacyBlock.style.display = 'none';
+	} else {
+		privacyBlock.style.display = 'block';
+	}
+}
+
+var smoothScrollTo = ( function () {
 	var timer, start, factor;
 
-	return function (target, duration) {
+return function (target, duration) {
+
 		var offset = window.pageYOffset,
-		delta  = target - window.pageYOffset; // Y-offset difference
-		duration = duration || 400;              // default 1 sec animation
-		start = Date.now();                       // get start time
+		delta  = target - window.pageYOffset; 	// Y-offset difference
+		duration = duration || 400;             // default 1 sec animation
+		start = Date.now();                     // get start time
 		factor = 0;
 
-		if( timer ) {
-			clearInterval(timer); // stop any running animation
+		if ( timer ) {
+			clearInterval(timer); 				// stop any running animation
 		}
 
+		// The function that is been executed by the setInterval
 		function step() {
 			var y;
 			factor = (Date.now() - start) / duration; // get interpolation factor
@@ -52,46 +86,41 @@ var smoothScrollTo = (function () {
 			window.scrollBy(0, y - window.pageYOffset);
 		}
 
-		timer = setInterval(step, 10);
-		return timer; // return the interval timer, so you can clear it elsewhere
+		timer = setInterval(step, 5);
+		return timer; 					// return the interval timer, so you can clear it elsewhere
 	  
-	  };
+	};
 }());
 
 // Test function name, change it
 function checkThis() {
 
-		if ( formToggle.innerText == 'Sign In' ) {
+		if ( formToggle.textContent == 'Sign In' ) {
 		
 			if ( window.scrollY > 300 ) {
 				smoothScrollTo(0);
 			}
 
 			// Scroll to top
-			formToggle.innerText = 'Sign Up';
+			formToggle.textContent = 'Sign Up';
 			toggleClasses();
-		} else if ( formToggle.innerText == 'Sign Up' ) {
+		} else if ( formToggle.textContent == 'Sign Up' ) {
 			
 			if ( window.scrollY > 300 ) {
 				smoothScrollTo(0);
 			}
 
-			formToggle.innerText = 'Sign In';
+			formToggle.textContent = 'Sign In';
 			toggleClasses();
 		}
 
 }
 
 function scrollPage() {
-	smoothScrollTo(FeaturesBlockHeight)
+	smoothScrollTo(featuresBlock)
 }
 
 function toggleClasses() {
-
-	//IE. . .
-	// if ( navigator.appName == 'Microsoft Internet Explorer' ) {
-		// if ( signUpForm )
-	// }
 
 	if ( signUpForm.className == 'sign-form' ) {
 		signUpForm.className = signUpForm.className + ' form-hide-left';
@@ -168,7 +197,7 @@ function showError(message, theform, form) {
 
 	var error = document.createElement('span')
 	error.className = 'form-error';
-	error.innerText = message;
+	error.textContent = message;
 	var error = theform.insertBefore(error, form)
 }
 

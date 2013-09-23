@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from front.models import Bookmark, BookmarkCollection
+from front.models import Bookmark, BookmarkCollection, Post
 from front.serializers import BookmarkSerializer, BookmarkCollectionSerializer
 from django.http import Http404
 from rest_framework.views import APIView
@@ -15,14 +15,30 @@ import datetime
 from datetime import timedelta
 from django.utils.timezone import utc
 
+import json
 
 # Check if user is logged, otherwise show index page
 def index(request):
 	if request.user.is_authenticated():
-		return render(request, 'user/index.html')
+		user_id = request.user.id
+		bookmarks = Bookmark.objects.filter(user_id__exact=user_id)
+		serializedBookmarks = BookmarkSerializer(bookmarks, many=True)
+
+		collection = BookmarkCollection.objects.filter(user_id__exact=user_id)
+		serializedBookmarkCollections = BookmarkCollectionSerializer(collection, many=True)
+
+		bootstrapped_data = {'bookmarks': json.dumps(serializedBookmarks.data), 'BookmarkCollections': json.dumps(serializedBookmarkCollections.data)}
+
+		return render(request, 'user/index.html', bootstrapped_data)
 	else:
 		return render(request, 'index.html')
+		
+def about(request):
+	return render(request, 'about.html')
 
+def blog(request):
+	posts = Post.objects.all()
+	return render(request, 'blog.html', {'posts': posts})
 
 def register_user(request):
 	if request.method == 'POST':
@@ -47,6 +63,7 @@ def register_user(request):
 					mhm = datetime.datetime.utcnow().replace(tzinfo=utc) + timedelta(seconds=48)
 					success.set_cookie('new-user', 'true', expires=mhm)
 					success.set_cookie('Token', token, expires=365 * 24 * 60 * 60)
+					success.set_cookie('template', 'grid', expires=365 * 24 * 60 * 60)
 					return success
 
 		return HttpResponse(status=403)
@@ -67,6 +84,8 @@ def login_user(request):
 				login(request, user)
 				login_success = HttpResponse(status=200)
 				login_success.set_cookie('Token', token, expires=365 * 24 * 60 * 60)
+				if request.COOKIES.get('template', 'none') == 'none':
+					login_success.set_cookie('template', 'grid', expires=365 * 24 * 60 * 60)
 				return login_success
 			else:
 				# Change this if you delete/deactivate user/user has deleted it's account
@@ -185,3 +204,80 @@ class BookmarkCollectionDetail(APIView):
 		collection = self.get_object(pk)
 		collection.delete()
 		return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+from django.views.decorators.csrf import csrf_exempt
+import re
+import urllib2
+from bs4 import BeautifulSoup
+from google.appengine.api.images import Image
+import urlparse
+from urlparse import urljoin
+import mimetypes
+from google.appengine.api import taskqueue
+
+@csrf_exempt
+def dam(request):
+	if request.method == 'POST':
+		file = request.FILES['thefile']
+		test = file.read()
+
+		taskqueue.add(url='/upload',payload=test)
+	return HttpResponse(status=200)
+
+@csrf_exempt
+def upload_file(test):
+
+		hmm = re.findall(r'href=[\'"]?([^\'" >]+)', str(test), flags=re.IGNORECASE)
+		for sait in hmm:
+
+			if sait.endswith('.gif') or sait.endswith('.png') or sait.endswith('.jpeg'):
+				Bookmark.objects.create(title=sait, url=sait, image=sait, user_id=2)
+			
+			else:
+				try:
+					source = urllib2.urlopen(sait)
+					BS = BeautifulSoup(source)
+
+					links = BS.findAll('img', src=True)
+					i = 0
+				except urllib2.HTTPError, err:
+					if err.code == 403:
+						pass
+		   			else:
+						pass
+				except urllib2.URLError:
+					pass
+
+				for link in links:
+					i+= 1
+					thelink = urlparse.urljoin(sait, link['src'])
+					try:
+						imgdata = urllib2.urlopen(thelink)
+						img_data = imgdata.open()
+						img_type = imgdata.info().getheader('Content-Type')
+					except urllib2.HTTPError, err:
+						if err.code == 403:
+							pass
+						else:
+							pass
+					except urllib2.URLError:
+						pass
+
+					if img_type == 'image/png' or img_type == 'image/jpeg' or img_type == 'image/gif':
+						#therealimage = Image(image_data=img_data)
+									
+						if img_data.width > 400 and img_data.height > 400:
+							url = sait
+							title = BS.find('title').text
+							Bookmark.objects.create(title=title, url=url, image=thelink, user_id=2)
+							img_data.close()
+							break
+						if i > 1 and img_data.width < 400 and img_data.height < 400:
+							url = sait
+							title = BS.find('title').text
+							Bookmark.objects.create(title=title, url=url, user_id=2)
+							break
+
+		#file.close()
+		return HttpResponse(status=201)
