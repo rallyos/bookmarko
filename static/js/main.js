@@ -22,8 +22,9 @@ var user_template = getCookie('template');
 // Used after every request to the server
 var tokenHeader = { headers: { 'Authorization': 'Token ' + token } };
 
+
 if ( user_template == 'list' ) {
-    rightTemplate = '#list-template';
+    Template = '#list-template';
 } else if ( user_template == 'grid' ) {
-    rightTemplate = '#grid-template';
+    Template = '#grid-template';
 }

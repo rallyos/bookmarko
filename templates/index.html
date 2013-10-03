@@ -1,49 +1,12 @@
-<!doctype html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<link href='http://fonts.googleapis.com/css?family=Roboto:300,100|Open+Sans:400,300' rel='stylesheet'>
-	<link href="{{ STATIC_URL }}css/main.css" rel="stylesheet">
-	<link rel="icon" type="image/ico" href="{{ STATIC_URL }}images/favicon.ico"></link> 
-	<!--[if lte IE 8]>
-		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/ie.css" />
-	<![endif]-->
-	<title>Bookmarko Beta - Manage your bookmarks with style</title>
-</head>
-<body>
-	<div id="not-supported">
-		<h2 class="colorful-header">This is something hard to say but . . .</h2>
-		<h1 class="not-supported-header">Your browser is not supported</h1>
-		<p class="not-supported-text">Bookmarko was built with some of the latest technologies for better user experience, but your browser doesn't support them.
-		</p>
-		<p class="not-supported-text">This is not a big problem at all, you can update your browser, or you can try to use something new.</p>
-		<div class="browsers-box">
-			<a class="browser-icons" id="chrome" href="//google.com/intl/en/chrome/browser/"></a>
-			<a class="browser-icons" id="firefox" href="//www.mozilla.org/en-US/firefox/"></a>
-			<a class="browser-icons" id="opera" href="//opera.com/"></a>
-		</div>
-		<a class="not-supported-buttons" id="update-link"  href="//windows.microsoft.com/en-us/internet-explorer/download-ie" >I want to update my browser</a>
-		<span class="not-supported-buttons" id="continue-button">Continue</span>
-	</div>
-	<header class="header">
-		<a href="/"><img class="logo" width="144" height="40" src="{{ STATIC_URL }}images/logo_example.png"></a>
-		<nav class="nav-block">
-			<ul class="menu">
-				<li class="menu-item" id="form-toggle">Sign In</li>
-				<li class="menu-item" id="features-scroll">Features</li>
-				<li class="menu-item"><a href="about">About</a></li>
-				<li class="menu-item"><a href="blog">Blog</a></li>
-			</ul>
-		</nav>
-	</header>
+	{% include "header.html" %}
 	<section class="sign-section">
-			<h1 class="sign-header">Bookmark management made easy</h1>
 			<div class="sign-up-block">
 				<form class="sign-form" id="sign-up">{% csrf_token %}
 					<input class="form-input" id="reg-user" type="email" name="username" placeholder="Email address" maxlength="50" required>
 					<input class="form-input form-passwords" id="reg-pass" type="password" name="password1" placeholder="Password" required>
 					<input class="form-input form-passwords" id="reg-confirm-pass" type="password" name="password2" placeholder="Confirm password" required>
 					<input class="form-submit" type="submit" value="Sign Up">
+					<p class="form-text">By creating account you agree to the <span class="undrl">Terms</span> and <span class="undrl">Privacy policy</span></p>
 				</form>
 				<form class="sign-form form-hide-right" id="sign-in">{% csrf_token %}
 					<input class="form-input" id="log-user" type="email" name="username" placeholder="Email address">
@@ -57,20 +20,20 @@
 		<h1 class="features-top-header">Your new place for keeping bookmarks</h1>
 		<section class="features-top">
 			<div class="features-top-feature-block">
-				<img class="features-top-feature-image" src="{{ STATIC_URL }}images/store_bookmarks.png">
+				<img class="features-top-feature-image" src="{{ STATIC_URL }}images/store_bookmarks.png" width="240" height="150" alt="Store bookmarks online">
 				<h2 class="features-top-feature-header">Store bookmarks online</h2>
 				<p class="features-top-feature-text">
 					Stop the emails full with links and start saving your collection of bookmarks safely in the cloud.
 				</p>
 			</div>
 			<div class="features-top-feature-block">
-				<img class="features-top-feature-image" src="{{ STATIC_URL }}images/organize.png">
+				<img class="features-top-feature-image" src="{{ STATIC_URL }}images/organize.png" width="240" height="150" alt="Manage them easy">
 				<h2 class="features-top-feature-header">Manage them easy</h2>
 				<p class="features-top-feature-text">
 					Group your saved sites by type, and add tags for better search experience.
 			</div>
 			<div class="features-top-feature-block">
-				<img class="features-top-feature-image" src="{{ STATIC_URL }}images/fast_search.png">
+				<img class="features-top-feature-image" src="{{ STATIC_URL }}images/fast_search.png" width="240" height="150" alt="Search fast">
 				<h2 class="features-top-feature-header">Search fast</h2>
 				<p class="features-top-feature-text">
 					Finding the site that you saved months before is a joy.
@@ -78,19 +41,19 @@
 				</p>
 			</div>
 		</section>
-		<section class="feature-apps">
+		<section class="main-feature">
 			<h1 class="feature-apps-header">Connect with the apps you use</h1>
-			<p class="feature-apps-text">Bookmarko will be integrated with your other favourite bookmarking sites, so you don't have to lose data.</p>
-			<img class="devices-image" src="{{ STATIC_URL }}images/apps.png">
+			<p class="main-feature-text">Bookmarko will be integrated with your other favourite bookmarking sites, so you don't have to lose data.</p>
+			<img class="main-feature-image" src="{{ STATIC_URL }}images/apps.png" alt="Connect with the apps you use">
 		</section>
-		<section class="feature-devices">
+		<section class="main-feature">
 			<h1 class="devices-header">Available on most devices</h1>
-			<p class="devices-text">Bookmarko was made with responsive design in mind. It was build to support wide range of devices. The site is optimized for touch input, so you can access and use it from your mobile device.</p>
-			<img class="devices-image" src="{{ STATIC_URL }}images/devices.png">
+			<p class="main-feature-text">Bookmarko was made with responsive design in mind. It was build to support wide range of devices. The site is optimized for touch input, so you can access and use it from your mobile device.</p>
+			<img class="main-feature-image" src="{{ STATIC_URL }}images/devices.png" alt="Available on most devices">
 		</section>
 		<section class="bottom-features">
 			<div class="bottom-feature-box">
-				<img class="bottom-feature-image" src="{{ STATIC_URL }}images/cloud_platform.png">
+				<img class="bottom-feature-image" src="{{ STATIC_URL }}images/cloud_platform.png" width="138" height="100" alt="App engine">
 				<p class="bottom-feature-text">The site is using Google App Engine for back-end, which offers us scalability and other cool things.</p>
 			</div>
 			<div class="bottom-feature-box">
@@ -98,87 +61,13 @@
 				<p class="bottom-feature-text">Bookmarko is still in beta and will be a always developing project. There are still many things to come.</p>
 			</div>
 			<div class="bottom-feature-box">
-				<img class="bottom-feature-image" src="{{ STATIC_URL }}images/test1.png">
+				<img class="bottom-feature-image" src="{{ STATIC_URL }}images/test1.png" width="100" height="100" alt="Download your library">
 				<p class="bottom-feature-text">You can download your full library in any format, if you want to migrate to other services.</p>
 			</div>
 			<div class="bottom-feature-box">
-				<img class="bottom-feature-image" src="{{ STATIC_URL }}images/test2.png">
-				<p class="bottom-feature-text">Built for speed and good user experience.</p>
+				<img class="bottom-feature-image" src="{{ STATIC_URL }}images/test2.png" width="100" height="100" alt="Built for speed">
+				<p class="bottom-feature-text">Built for speed and good user experience with the power of the modern web.</p>
 			</div>
 		</section>
 	</div>
-	<footer class="footer">
-		<ul class="footer-links">
-			<li class="footer-links-item"><a href="about">About</a></li>
-			<li class="footer-links-item"><a href="blog">Blog</a></li>
-			<li class="footer-links-item">Terms</li>
-			<li class="footer-links-item">Privacy</li>
-			<li class="footer-links-item"><a href="mailto:hey@hey.hey">Contact</a></li>
-			<li class="footer-links-item"><a href="//twitter.com/bookmarko">@bookmarko</a></li>
-		</ul>
-		<span id="baker">Bookmarko is baked by <a id="portf" href="//dimitarralev.net" target="_blank">me</a> in BS, Bulgaria</span>
-	</footer>
-	<div class="terms-block">
-		<span id="terms-close-button">X</span>
-		<h1 class="terms-top-header">Bookmarko Terms and Conditions ("Agreement")</h1>
-		<p>This Agreement was last modified on September 10, 2013.</p>
-
-		<p>Please read these Terms and Conditions ("Agreement", "Terms and Conditions") carefully before using bookmarkoapp.com ("the Site") operated by Bookmarko ("us", "we", or "our"). This Agreement sets forth the legally binding terms and conditions for your use of the Site at bookmarkoapp.com.</p>
-		<p>By accessing or using the Site in any manner, including, but not limited to, visiting or browsing the Site or contributing content or other materials to the Site, you agree to be bound by these Terms and Conditions. Capitalized terms are defined in this Agreement.</p>
-
-		<h4 class="terms-header">Intellectual Property</h4>
-		<p>The Site and its original content, features and functionality are owned by Bookmarko and are protected by international copyright, trademark, patent, trade secret and other intellectual property or proprietary rights laws.</p>
-
-		<h4 class="terms-header">Termination</h4>
-		<p>We may terminate your access to the Site, without cause or notice, which may result in the forfeiture and destruction of all information associated with you. All provisions of this Agreement that by their nature should survive termination shall survive termination, including, without limitation, ownership provisions, warranty disclaimers, indemnity, and limitations of liability.</p>
-
-		<h4 class="terms-header">Links To Other Sites</h4>
-		<p>Our Site may contain links to third-party sites that are not owned or controlled by Bookmarko.</p>
-		Bookmarko has no control over, and assumes no responsibility for, the content, privacy policies, or practices of any third party sites or services. We strongly advise you to read the terms and conditions and privacy policy of any third-party site that you visit.</p>
-
-		<h4 class="terms-header">Governing Law</h4>
-		<p>This Agreement (and any further rules, polices, or guidelines incorporated by reference) shall be governed and construed in accordance with the laws of Bulgaria, without giving effect to any principles of conflicts of law.</p>
-
-		<h4 class="terms-header">Changes To This Agreement</h4>
-		<p>We reserve the right, at our sole discretion, to modify or replace these Terms and Conditions by posting the updated terms on the Site. Your continued use of the Site after any such changes constitutes your acceptance of the new Terms and Conditions.</p>
-		<p>Please review this Agreement periodically for changes. If you do not agree to any of this Agreement or any changes to this Agreement, do not use, access or continue to access the Site or discontinue any use of the Site immediately.</p>
-
-		<h4 class="terms-header">Contact Us</h4>
-		<p>If you have any questions about this Agreement, please contact us.</p>
-		<p style="font-size: 85%; color: #999;">Published and generated with permission from <a href="http://termsfeed.com/terms-conditions/generator/" style="color: #999; text-decoration: none;">www.termsfeed.com</a>.</p>
-	</div>
-	<div class="terms-block">
-		<span id="privacy-close-button">X</span>
-		<h1 class="terms-top-header">Bookmarko Privacy Policy</h1>
-		<p>This Privacy Policy was last modified on September 10, 2013.</p>
-
-		<p>Bookmarko ("us", "we", or "our") operates bookmarkoapp.com (the "Site"). This page informs you of our policies regarding the collection, use and disclosure of Personal Information we receive from users of the Site.</p>
-		<p>We use your Personal Information only for providing and improving the Site. By using the Site, you agree to the collection and use of information in accordance with this policy. Unless otherwise defined in this Privacy Policy, terms used in this Privacy Policy have the same meanings as in our Terms and Conditions, accessible at bookmarkoapp.com.</p>
-
-		<h4 class="terms-header">Information Collection And Use</h4>
-		<p>While using our Site, we may ask you to provide us with certain personally identifiable information that can be used to contact or identify you. Personally identifiable information may include, but is not limited to, your name, email address, postal address and phone number ("Personal Information").</p>
-
-		<h4 class="terms-header">Log Data</h4>
-		<p>Like many site operators, we collect information that your browser sends whenever you visit our Site ("Log Data"). This Log Data may include information such as your computer's Internet Protocol ("IP") address, browser type, browser version, the pages of our Site that you visit, the time and date of your visit, the time spent on those pages and other statistics.</p>
-
-		<h4 class="terms-header">Cookies</h4>
-		<p>Cookies are files with small amount of data, which may include an anonymous unique identifier. Cookies are sent to your browser from a web site and stored on your computer's hard drive.</p>
-		<p>Like many sites, we use "cookies" to collect information. You can instruct your browser to refuse all cookies or to indicate when a cookie is being sent. However, if you do not accept cookies, you may not be able to use some portions of our Site.</p>
-
-		<h4 class="terms-header">Security</h4>
-		<p>The security of your Personal Information is important to us, but remember that no method of transmission over the Internet, or method of electronic storage, is 100% secure. While we strive to use commercially acceptable means to protect your Personal Information, we cannot guarantee its absolute security.</p>
-
-		<h4 class="terms-header">Links To Other Sites</h4>
-		<p>Our Site may contain links to other sites that are not operated by us. If you click on a third party link, you will be directed to that third party's site. We strongly advise you to review the Privacy Policy of every site you visit.</p>
-		<p>Bookmarko has no control over, and assumes no responsibility for, the content, privacy policies, or practices of any third party sites or services.</p>
-
-		<h4 class="terms-header">Changes To This Privacy Policy</h4>
-		<p>Bookmarko may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on the Site. You are advised to review this Privacy Policy periodically for any changes.</p>
-
-		<h4 class="terms-header">Contact Us</h4>
-		<p>If you have any questions about this Privacy Policy, please contact us.</p>
-		<p><a href="http://termsfeed.com/privacy-policy/generator/" title="TermsFeed"><img src="http://termsfeed.com/seals/ts-pp-authenticity.png" alt="TermsFeed" /></a></p>
-	</div>
-<script src="{{ STATIC_URL }}js/index.js"></script>
-</body>
-</html>
+	{% include "footer.html" %}

@@ -13,6 +13,11 @@ var signInForm = document.getElementById('sign-in');
 var formBlock = document.getElementsByClassName('sign-up-block')[0]
 var termsLink = document.getElementsByClassName('footer-links-item')[2]
 var privacyLink = document.getElementsByClassName('footer-links-item')[3]
+
+var termsLinkForm = document.getElementsByClassName('undrl')[0]
+var privacyLinkForm = document.getElementsByClassName('undrl')[1]
+html = document.getElementsByTagName('html')[0]
+
 var termsBlock = document.getElementsByClassName('terms-block')[0];
 var closeTermsButton = document.getElementById('terms-close-button');
 var privacyBlock = document.getElementsByClassName('terms-block')[1];
@@ -33,22 +38,41 @@ featuresScroll.addEventListener('click', scrollPage)
 continueButton.addEventListener('click', closeWindow)
 termsLink.addEventListener('click', showTerms)
 closeTermsButton.addEventListener('click', showTerms)
+termsLinkForm.addEventListener('click', showTerms)
+
 privacyLink.addEventListener('click', showPrivacy)
 closePrivacyButton.addEventListener('click', showPrivacy)
+privacyLinkForm.addEventListener('click', showPrivacy)
+
+
+
+function hideWindow(e) {
+	html.removeEventListener('keyup', hideWindow)
+	if ( e.keyCode == 27 && privacyBlock.style.display == 'block' ) {
+		html.removeEventListener('keyup', hideWindow)
+		showPrivacy();
+	} else if ( e.keyCode == 27 && termsBlock.style.display == 'block' ) {
+		html.removeEventListener('keyup', hideWindow)
+		showTerms();
+	}
+}
 
 function showTerms() {
 	display = termsBlock.style.display
+	
+	html.addEventListener('keyup', hideWindow)
 
 	if ( display == 'block' ) {
 		termsBlock.style.display = 'none';
 	} else {
 		termsBlock.style.display = 'block';
 	}
-
 }
 
 function showPrivacy() {
 	display = privacyBlock.style.display
+
+	html.addEventListener('keyup', hideWindow)
 
 	if ( display == 'block' ) {
 		privacyBlock.style.display = 'none';
@@ -151,7 +175,6 @@ signUpForm.onsubmit = function() {
 	if ( xhr.status == 200) {
 		location.reload()
 	} else if ( xhr.status ==  403) {
-		formBlock.style.height = '280px'
 		var message = 'Your email or password is invalid'
 		var form = formSubmit[0];
 		showError(message, signUpForm, form)
@@ -177,8 +200,6 @@ signInForm.onsubmit = function() {
 		formSubmit[1].style.backgroundColor = '#46DD70';
 		location.reload()
 	} else if ( xhr.status == 404) {
-		formBlock.style.height = '280px'
-		formSubmit[1].style.margin = '10px auto 0';
 		passwordRecover = document.getElementsByClassName('forgotten-password')[0]
 		passwordRecover.style.display = 'block';
 		message = 'Wrong username or password'
@@ -203,4 +224,5 @@ function showError(message, theform, form) {
 
 function closeWindow() {
 	document.getElementById('not-supported').style.display = 'none';
+
 }

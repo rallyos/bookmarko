@@ -1,51 +1,39 @@
-// Sidebar View
 var SidebarView = Backbone.View.extend({
 	el: '.sidebar',
 
 	initialize: function () {
 
-		this.listenTo(globalBookmarkCollections, 'add', this.loadBookmarkCollection);
-
-		this.listenTo(globalBookmarkCollections, 'reset', this.getAll);
+		this.listenTo(globalBookmarkCollections, 'add', this.addNew);
+		this.listenTo(globalBookmarkCollections, 'reset', this.addAll);
 
 		this.$groupsWrap = this.$('.groups-wrap');
+
+		colors = ['#EB4040', '#4ABB3E', '#343534', '#33A3C0', '#863825', '#3E45BB', '#eb6d20', '#A3A3A3']
 	},
 
 	events: {
-		'click .home-button': 'navHome',
 		'click .group-add': 'createGroup'
 	},
 	
 	// Create new group.
-	// Due to bug when saving new BookmarkCollection object, it's attributes are set manually.
 	createGroup: function() {
-		var newGroup = new BookmarkCollection();
-		data = {title: ' ', background: '#EB4040'};
-		newGroup.url = 'api/collections/';
-		newGroup.set(data);
-		globalBookmarkCollections.add(newGroup);
-		newGroup.trigger('scale');
-		newGroup.save(data, { headers: { 'Authorization': 'Token ' + token }, success: function(){
-			globalBookmarkCollections.trigger('new');
-			newGroup.url = 'api/collections/' + newGroup.id;
-			newGroup.trigger('scale');
-			this.$('.bookmarks-group-name').focus();
-		}});
+		var group = new BookmarkCollection({
+			title: ' ',
+			background: colors[Math.floor(Math.random() * 7)]
+		});
+		globalBookmarkCollections.add(group)
+		group.trigger('scale');
+		this.$('.bookmarks-group-name').focus();
 	},
 
-	// Back to home
-	navHome: function() {
-		pageRouter.navigate('', true);
-	},
-
-	loadBookmarkCollection: function(bookmarks_collection) {
+	addNew: function(bookmarks_collection) {
 		var newBookmarkCollectionView = new BookmarkCollectionView({model: bookmarks_collection});
 		this.$groupsWrap.append(newBookmarkCollectionView.render().el);
 	},
 
-	getAll: function() {
+	addAll: function() {
 		this.$('.groups-wrap').html('');
-		globalBookmarkCollections.each(this.loadBookmarkCollection, this);
+		globalBookmarkCollections.each(this.addNew, this);
 	}
 });
 
@@ -59,23 +47,17 @@ var BookmarkCollectionView = Backbone.View.extend({
 
 	template: _.template($('#group-template').html()),
 
-	initialize: function() {		
-		
-		// if you see bugs check the previous version of the constructor 
-		// bitbucket.org/dmralev/bookmarko/commits/72867507d8194528a3fd269ac7eff5bd601122e9#Lstatic/js/views/SidebarView.jsF89
-		// Listen for add and remove. Render if bookmark is added or removed from collection
-		// If the listener is for 'all' events, the collection renders at least 2 times, which is not good 
-		this.listenTo(this.model.bookmarkCollections, 'all', this.render);
-
+	initialize: function() {				
 		this.listenTo(this.model, 'destroy', this.remove);
 		this.listenTo(this.model, 'scale', this.animateGroup);
 
-		// this.model.bookmarkCollections.fetch();
+		this.listenTo(this.model.bookmarkCollections, 'all', this.render);
+
 	},
 
 	events: {
 		'click .bookmarks-group-nav': 'navigateToGroup',
-		'keypress .bookmarks-group-name': 'updateGroup',
+		'keypress .bookmarks-group-name': 'updateTitle',
 
 		'dragenter': 'dragEnterEvent',
 		'dragover': 'dragOverEvent',
@@ -88,7 +70,13 @@ var BookmarkCollectionView = Backbone.View.extend({
 	},
 
 	animateGroup: function() {
-		$(this.el).toggleClass('scale')
+		groupEl = $(this.el)
+		$(groupEl).toggleClass('scale')
+
+		// For now timeout is needed to kick the animation (toggling the transform class)
+		setTimeout(function() {
+			groupEl.toggleClass('scale')
+		}, 10);
 	},
 
 	dragEnterEvent: function(e) {
@@ -155,54 +143,35 @@ var BookmarkCollectionView = Backbone.View.extend({
 	},
 
 	changeGroupColor: function(click) {
-
-		var clickedElClass = click.target.classList[1];
-
+		var n = click.target.getAttribute('data-n');
 		// Since the colors in DOM are rgb we have to use alternative way of getting and setting the new color.
-		if (clickedElClass == 'palette-color-red') {
-			newBgColor = '#EB4040';
-		}
-
-		if (clickedElClass == 'palette-color-green') {
-			newBgColor = '#4ABB3E';
-		}
-
-		if (clickedElClass == 'palette-color-black') {
-			newBgColor = '#343534';
-		}
-
-		if (clickedElClass == 'palette-color-lightblue') {
-			newBgColor = '#33A3C0';
-		}
-
-		if (clickedElClass == 'palette-color-brown') {
-			newBgColor = '#863825';
-		}
-
-		if (clickedElClass == 'palette-color-blue') {
-			newBgColor = '#3E45BB';
-		}
-
-		if (clickedElClass == 'palette-color-orange') {
-			newBgColor = '#eb6d20';
-		}
-
-		if (clickedElClass == 'palette-color-grey') {
-			newBgColor = '#A3A3A3';
-		}
+		newBgColor = colors[n]
 
 		this.$el.css('background-color', newBgColor);
 		this.model.save('background', newBgColor, tokenHeader);
 	},
 
-	updateGroup: function(e) {
+	updateTitle: function(e) {
+		titleField = this.$('.bookmarks-group-name');
 		if (e.which === ENTER_KEY) {
-			this.$('.bookmarks-group-name').blur();
-			var newval = this.$('.bookmarks-group-name').text();
+			$('html').off('click')
+			titleField.blur();
+			var newval = titleField.text();
 			this.saveGroup(newval);
-		
+			
 			return false;
 		}
+		this.clickListener();
+	},
+
+	clickListener: function() {
+		$this = this
+		
+		$('html').off('click')
+		$('html').one('click', function() {
+			var newval = titleField.text();
+			$this.saveGroup(newval);
+		});
 	},
 
 	saveGroup: function(newval) {

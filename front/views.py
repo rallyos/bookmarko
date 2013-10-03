@@ -15,8 +15,6 @@ import datetime
 from datetime import timedelta
 from django.utils.timezone import utc
 
-import json
-
 # Check if user is logged, otherwise show index page
 def index(request):
 	if request.user.is_authenticated():
@@ -28,7 +26,6 @@ def index(request):
 		serializedBookmarkCollections = BookmarkCollectionSerializer(collection, many=True)
 
 		bootstrapped_data = {'bookmarks': json.dumps(serializedBookmarks.data), 'BookmarkCollections': json.dumps(serializedBookmarkCollections.data)}
-
 		return render(request, 'user/index.html', bootstrapped_data)
 	else:
 		return render(request, 'index.html')
@@ -263,6 +260,9 @@ def upload_file(test):
 							pass
 					except urllib2.URLError:
 						pass
+					except:
+						pass
+
 
 					if img_type == 'image/png' or img_type == 'image/jpeg' or img_type == 'image/gif':
 						#therealimage = Image(image_data=img_data)

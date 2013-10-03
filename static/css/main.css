@@ -24,7 +24,7 @@ a {
 	position: fixed;
 	width: 100%;
 	height: 50px;
-	background: rgba(255, 255, 255, 0.9);
+	background: rgba(255, 255, 255, 0.98);
 	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 	z-index: 1;
 }
@@ -49,32 +49,28 @@ a {
 .menu-item {
 	float: left;
 	margin: 0 10px;
-	font-size: 1.5rem;
-	font-family: Roboto, sans-serif;
+	font-size: 1.2rem;
+	font-family: 'Roboto', sans-serif;
 	font-weight: 300;
 	line-height: 40px;
+	color: #838383;
 	cursor: pointer;
 }
 .sign-section {
 	max-width: 100%;
-	height: 710px;
-	background-image: url(http://markedbyme.appspot.com/static/images/screen.png);
-	background-size: 100%;
+	height: 560px;
+	background-image: url(../images/screen.png);
+	background-color: #f67e7e;
+	background-size: 80%;
+	background-position: center 110px;
+	background-repeat: no-repeat;
 	border-bottom: solid 1px #ECECEC;
 	overflow: hidden;
 }
-.sign-header {
-	margin-top: 100px;
-	font-family: Roboto, sans-serif;
-	font-size: 2.5rem;
-	font-weight: 100;
-	color: #FFF;
-	text-align: center;
-}
 .sign-up-block {
 	max-width: 460px;
-	height: 260px;
-	margin: 145px auto 10px;
+	height: 290px;
+	margin: 210px auto 10px;
 	position: relative;
 	background: rgba(255, 255, 255, 0.98);
 	border-radius: 4px;
@@ -85,7 +81,7 @@ a {
 	position: absolute;
 	top: 0;
 	padding: 15px 30px;
-	font-family: Roboto, sans-serif;
+	font-family: 'Roboto', sans-serif;
 	-webkit-transition: 0.2s;
 	transition: 0.2s;
 }
@@ -103,6 +99,7 @@ a {
 	width: 100%;
 	height: 40px;
 	margin: 15px 0;
+	padding: 0;
 	text-indent: 17px;
 	font-family: inherit;
 	font-size: 1.3rem;
@@ -117,6 +114,8 @@ a {
 }
 .form-passwords {
 	width: 47%;
+	margin: 15px 0 30px;
+	float: left;
 	font-size: 1rem;
 	text-indent: 10px;
 }
@@ -126,16 +125,30 @@ a {
 .form-input::-webkit-input-placeholder {
 	font-weight: 300;
 }
+#log-pass {
+	margin-bottom: 25px;
+}
+.form-text {
+	display: block;
+	margin-top: 16px;
+	font-size: 0.8rem;
+	text-align: center;
+	color: #6D6E6D;
+}
+.undrl {
+	text-decoration: underline;
+	cursor: pointer;
+}
 .form-submit {
 	width: 50%;
-	display: block;
-	margin: 22px auto 0;
+	margin: 7px auto 0;
 	padding: 7px 20px;
-	background: #FA513E;
+	display: block;
 	font-family: inherit;
 	font-weight: 300;
 	font-size: 1.5rem;
 	color: #fff;
+	background: #FA513E;
 	border-radius: 4px;
 	border: 0;
 	cursor: pointer;
@@ -167,7 +180,7 @@ a {
 }
 .features-top-header {
 	margin: 40px 0 120px;
-	font-family: 'Roboto', sans-serif;
+	font-family: inherit;
 	font-size: 1.7rem;
 	font-weight: 300;
 	text-align: center;
@@ -177,7 +190,6 @@ a {
 }
 .features-top-feature-block {
 	width: 29%;
-	max-width: 330px;
 	margin: 0 0 70px 4%;
 	float: left;
 }
@@ -194,7 +206,7 @@ a {
 	width: 90%;
 	padding: 0 5%;
 }
-.feature-apps {
+.main-feature {
 	margin: 20px 0 70px;
 	text-align: center;
 }
@@ -202,26 +214,18 @@ a {
 	color: #4AB84A;
 	font-weight: 400;
 }
-.feature-apps-text {
+.main-feature-text {
 	width: 94%;
 	margin: 15px auto 30px;
 	color: #343534;
-}
-.feature-devices {
-	margin: 20px 0 70px;
-	text-align: center;
 }
 .devices-header {
 	font-weight: 400;
 	color: #2E8EFF;
 }
-.devices-text {
-	width: 94%;
-	margin: 15px auto 30px;
-	color: #343534;
-}
-.devices-image {
-	max-width: 451px;
+.main-feature-image {
+	max-width: 96%;
+	width: 451px;
 	display: block;
 	margin: 0 auto;
 }
@@ -496,4 +500,140 @@ a {
 }
 .post-text {
 	margin: 27px 0;
+}
+@media screen and (max-width: 980px) {
+	.sign-section {
+		background-size: cover;
+		background-position: center 110px;
+	}
+	.features-top-feature-block {
+		width: 32%;
+		margin: 0 0 70px 1%;
+		float: left;
+	}
+	.feature-apps {
+		clear: both;
+	}
+	.features-top-header {
+		margin: 40px 0 50px;
+	}
+}
+@media screen and (max-width: 780px) {
+	.features-top {
+		margin-bottom: 50px;
+	}
+	.features-top-feature-block {
+		width: 46%;
+		margin: 0 2%;
+		float: left;
+	}
+	.features-top-feature-block:nth-child(3) {
+		width: 50%;
+		margin: 0 auto;
+		float: none;
+	}
+	.bottom-feature-box {
+		width: 45%;
+		margin: 0 2.5% 50px;
+		float: left;
+	}
+	.footer {
+		height: auto;
+	}
+}
+@media screen and (max-width: 580px) {
+	.logo {
+		position: static;
+		margin: 5px auto 0;
+		float: none;
+	}
+	.header {
+		height: auto;
+	}
+	.features-top-feature-block {
+		width: 96%;
+		margin: 20px auto 40px;
+		float: none;
+	}
+	.features-top-feature-block:nth-child(3) {
+		width: 96%;
+	}
+	.bottom-feature-box {
+		width: 96%;
+		margin: 30px auto;
+		float: none;
+	}
+	.about-wrap {
+		width: 96%;
+		padding: 0;
+	}
+	.about-section {
+		margin-top: 30px;
+	}
+	.top-section {
+		margin-top: 100px;
+	}
+	.about-article {
+		width: 100%;
+		margin: 0 auto 30px;
+		float: none;
+	}
+	#about-article-right {
+		margin-left: 0;
+	}
+	.dr {
+		display: block;
+		margin: 0 auto 20px;
+		float: none;
+	}
+	.behind {
+		width: 100%;
+		float: none;
+	}
+}
+@media screen and (max-width: 480px) {
+	.form-passwords {
+		width: 100%;
+		margin: 15px 0;
+	}
+	.sign-up-block {
+		height: 360px;
+		margin: 160px auto 10px;
+	}
+	.features-top-header {
+		font-size: 1.5rem;
+	}
+	.footer-links {
+		width: 94%;
+		margin: 0 auto;
+		float: none;
+	}
+	.footer-links-item:nth-child(-n+2) {
+		display: none;
+	}
+	.footer-links-item {
+		margin: 10px 0 10px 15px;
+	}
+	#baker {
+		width: 100%;
+		display: block;
+		float: none;
+		margin-right: 0;
+		text-align: center;
+	}
+	.about-wrap {
+		font-size: 1rem;
+	}
+}
+@media screen and (min-width: 320px) and (max-width: 320px) {
+	.menu-item {
+		margin: 0 5px;
+	}
+	.form-text {
+		margin-top: 3px;
+	}
+	.form-submit {
+		width: 60%;
+		padding: 5px 20px;
+	}
 }

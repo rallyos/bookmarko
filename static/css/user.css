@@ -20,46 +20,28 @@ a {
 	text-decoration: none;
 	color: #343534;
 }
-.wrap {}
 .sidebar {
 	width: 103px;
 	height: 100%;
+	margin-top: 50px;
 	float: left;
 	position: fixed;
 	background: #fafafa;
 	overflow: scroll;
+	z-index: 1;
+	-webkit-transition: 0.3s;
+	transition: 0.3s;
 }
 .home-wrap {
-	width: 103px;
 	height: 50px;
-	position: fixed;
-	text-align: center;
-	font-size: 1.2rem;
-	line-height: 50px;
-	color: #faa1a1;
+	position: absolute;
 	background: #fff;
+	cursor: pointer;
 	z-index: 1;
 }
-.home-button {
-	width: 60px;
-	height: 50px;
+.sidebar-show-button {
 	float: left;
-	display: block;
-	cursor: pointer;
-}
-.search-icon {
-	width: 42px;
-	height: 50px;
-	float: left;
-	display: block;
-	background-image: url(http://markedbyme.appspot.com/static/images/search-icon.png);
-	background-size: 24px;
-	background-position: 11px 13px;
-	background-repeat: no-repeat;
-}
-.groups-wrap {
-	min-height: 1px;
-	margin-top: 50px;
+	display: none;
 }
 .group {
 	width: 100%;
@@ -71,14 +53,8 @@ a {
 	overflow: hidden;
 }
 .group-box {
-	position: relative;
 	-webkit-transition: 0.3s;
 	transition: 0.3s;
-}
-.scale {
-	-webkit-transform: scale(0);
-	-ms-transform: scale(0);
-	transform: scale(0);
 }
 .group-add {
 	width: 90px;
@@ -96,6 +72,11 @@ a {
 .group-add:hover {
 	color: #cbcdcd;
 	border: dashed 2px #cbcdcd;
+}
+.scale {
+	-webkit-transform: scale(0);
+	-ms-transform: scale(0);
+	transform: scale(0);
 }
 .bookmarks-group-nav {
 	width: 75%;
@@ -128,6 +109,12 @@ a {
 	color: #666;
 	background: rgba(255, 255, 255, 0.8);
 }
+.toggle-palette {
+	width: 17px;
+	height: 17px;
+	float: right;
+	margin: 32px 4px 0 0;
+}
 .bookmarks-group-color-palette {
 	width: 100%;
 	height: 0;
@@ -143,12 +130,6 @@ a {
 	height: 25px;
 	display: block;
 	float: left;
-}
-.toggle-palette {
-	width: 17px;
-	height: 17px;
-	float: right;
-	margin: 32px 4px 0 0;
 }
 .palette-color-red {
 	background: #EB4040;
@@ -180,7 +161,9 @@ a {
 	transform: translateX(0);
 }
 .dragover {
-	opacity: 0.6;
+	-ms-transform: scale(0.85);
+	-webkit-transform: scale(0.85);
+	transform: scale(0.85);
 }
 .bookmarks-group-name {
 	width: 100%;
@@ -191,19 +174,26 @@ a {
 	left: 0;
 	font-size: 0.8rem;
 	text-align: center;
-	background: rgba(255, 255, 255, 0.1);
+	-webkit-transition: background 0.3s;
+	transition: background 0.3s;
+}
+.group:hover .bookmarks-group-name {
+	background: rgba(255, 255, 255, 0.1)
 }
 .content {
-	margin-left: 104px;
-	overflow: hidden;
+	width: 100%;
+	float: left;
 }
 .content-header {
 	width: 100%;
 	position: fixed;
 	z-index: 1;
 	background: #fff;
-	border-bottom: solid 1px #f0eff1;
+	border-bottom: solid 1px #F0EFF1;
 	overflow: hidden;
+}
+.header-controls-wrap {
+	margin-left: 60px;
 }
 .input-search {
 	width: 56%;
@@ -213,92 +203,154 @@ a {
 	font-size: 1.3rem;
 	font-weight: 300;
 	color: #A9ABBE;
-	text-indent: 8px;
+	text-indent: 50px;
 	background: #fff;
 	border: 0;
 	outline: 0;
 	border-right: solid 1px #F0EFF1;
+	background-image: url(../images/user/search-icon.png);
+	background-size: 24px;
+	background-position: 11px 13px;
+	background-repeat: no-repeat;
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
 }
 .content-actions-block {
-	width: 36%;
+	width: 44%;
 	height: 50px;
 	float: left;
 }
+.content-actions-block-mobile {
+	display: none;
+}
 .content-actions-button {
-	background: #fff;
-	border: solid 1px #E5E6E8;
+	display: block;
+	width: 60px;
+	height: 20px;
+	float: left;
+	margin: 7px 0 10px 5%;
+	background-repeat: no-repeat;
+	background-size: 20px;
+	text-align: center;
 	border-radius: 2px;
 	cursor: pointer;
 }
-.with-icon {
+.vp-wide {
+	background-position: 20px;
+}
+.actions-button-text {
 	display: block;
-	width: 46px;
-	height: 30px;
-	float: left;
-	margin: 10px 0 10px 30px;
-	background-repeat: no-repeat;
-	background-size: 20px;
-	background-position: 13px 5px;	
+	margin-top: 22px;
+	font-size: 0.8rem;
 }
 .starred {
-	background-image: url(http://markedbyme.appspot.com/static/images/grey-star.png);
+	background-image: url(../images/user/star.png);
 }
 .yellow-star {
-	background-image: url(http://markedbyme.appspot.com/static/images/yellow-star.png);
+	background-image: url(../images/user/yellow-star.png);
 }
 #settings {
-	background-image: url(http://markedbyme.appspot.com/static/images/cog.png);
-}
-.content-actions-view-settings {
-	width: 88px;
-	float: left;
-	margin: 10px 0 10px 30px;
-}
-.change-view-button {
-	display: block;
-	width: 40px;
-	height: 30px;
-	float: left;
-	padding: 0 2px;
-	background-repeat: no-repeat;
-	background-size: 20px;
-	background-position: 10px 5px;
-	-webkit-transition: 0.3s;
-	transition: 0.3s;
+	background-image: url(../images/user/cog.png);
 }
 #list {
-	background-image: url(http://markedbyme.appspot.com/static/images/list.png);
-}
-#list:hover {
-	background-color: #fff;
+	background-image: url(../images/user/list.png);
 }
 #grid {
-	background-image: url(http://markedbyme.appspot.com/static/images/grid.png);
-}
-#grid:hover {
-	background-color: #fff;
+	background-image: url(../images/user/grid.png);
 }
 #sign-out {
-	float: right;
-	margin: 10px 30px 10px 30px;
-	padding: 0 10px;
-	font-weight: 300;
-	line-height: 30px;
-	color: #cbcccc;
+	display: block;
+	width: 80px;
+	margin: 20px auto;
+	padding: 6px 14px;
+	color: #343534;
+	font-size: 0.8rem;
+	font-weight: 400;
+	text-align: center;
+	text-transform: uppercase;
+	border-radius: 2px;
+	background: #DFDFDF;
 }
 .bookmarks-section {
-	width: 100%;
-	margin-top: 51px;
+	margin-left: 103px;
+	margin-top: 50px;
+	-webkit-transition: 0.3s;
+	transition: 0.3s;
 }
 .bookmarks-list {
 	width: 100%;
 }
-/* ------------------------------------------ */
-/* ------------------------------------------ */
-/* ------------------------------------------ */
+.select-bookmark {
+	display: block;
+	cursor:grab;
+	cursor:-moz-grab;
+	cursor:-webkit-grab;
+	background-repeat: no-repeat;
+}
+.bookmark-menu-line {
+	width: 100%;
+	height: 2px;
+	margin: 2px 0;
+	float: right;
+}
+.bookmark-title:focus {
+	cursor: text;
+}
+.bookmark-star {
+	display: block;
+	width: 20px;
+	height: 20px;
+	float: left;
+	background-size: 20px;
+	background-image: url(../images/user/not-starred.png);
+	cursor: pointer;
+}
+.bookmark-starred {
+	background-image: url(../images/user/starred.png);
+}
+.bookmark-menu-line:first-child {
+	width: 80%;
+}
+.bookmark-menu {
+	position: absolute;
+	width: 120px;
+	background: #fff;
+	box-shadow: 0 1px 2px #d1d1d1;
+	display: none;
+	z-index: 1;
+}
+.bookmark-menu-list {
+	display: block;
+	font-size: 0.8rem;
+	border-radius: 5px;
+	box-shadow: 0 0 8px #E9E9E9;
+}
+.bookmark-menu-list-item {
+	height: 18px;
+	padding: 4px 0 4px 30px;
+	line-height: initial;
+	background-position: 5px 6px;
+	background-size: 15px;
+	background-repeat: no-repeat;
+}
+.bookmark-menu-list-item:hover {
+	background-color: #fafafa;
+	cursor: pointer;
+}
+.being-moved {
+	opacity: 0.4;
+}
+.bookmark-delete {
+	float: right;
+	cursor: pointer;
+	-webkit-transition: 0.2s;
+	transition: 0.2s;
+	display: none;
+}
+.hidden {
+	display: none;
+}
 .list-tmpl {
 	position: relative;
 	height: 40px;
@@ -308,13 +360,6 @@ a {
 	-webkit-transition: 0.3s;
 	transition: 0.3s;
 }
-.select-bookmark {
-	display: block;
-	cursor:grab;
-	cursor:-moz-grab;
-	cursor:-webkit-grab;
-	background-repeat: no-repeat;
-}
 .lst-select-bookmark {
 	width: 20px;
 	height: 40px;
@@ -322,28 +367,18 @@ a {
 	background-size: 20px 40px;
 }
 .list-tmpl:hover .lst-select-bookmark {
-	background-image: url(http://markedbyme.appspot.com/static/images/dots.png);
+	background-image: url(../images/user/dots.png);
 }
 .lst-bookmark-star {
-	display: block;
-	width: 20px;
-	height: 20px;
 	margin: 10px 0 10px 7px;
-	float: left;
-	background-size: 20px;
-	background-image: url(http://markedbyme.appspot.com/static/images/not-starred.png);
-	cursor: pointer;
 }
 .lst-bookmark-menu-wrap {
-	width: 22px;
+	width: 20px;
 	float: left;
 	margin: 11px 0 11px 12px;
 	cursor: pointer;
 }
 .lst-bookmark-menu-line {
-	background: #fff;
-}
-.list-tmpl:hover .lst-bookmark-menu-line {
 	background: #343534;
 }
 .lst-bookmark-menu {
@@ -355,20 +390,13 @@ a {
 	height: 40px;
 	margin-right: 1%;
 	float: left;
-	overflow: hidden;
+	overflow-x: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
 .lst-bookmark-title {
 	margin-left: 12px;
 }
-.bookmark-title {
-	cursor: pointer;
-}
-.bookmark-title:focus {
-	cursor: text;
-}
-.lst-bookmark-url {}
 #tags-block {
 	width: 30%;
 	margin-right: 0;
@@ -379,7 +407,7 @@ a {
 	font-size: 1rem;
 	font-weight: 300;
 	cursor: pointer;
-	color: #fff;
+	color: #343534;
 }
 .bookmark-tags-wrap {
 	display: inline-block;
@@ -392,12 +420,12 @@ a {
 	float: left;
 	font-size: 0.7rem;
 	line-height: 20px;
-    border: solid 1px #CBCBCB;
-	background: #FFF;
+    border: solid 1px #cbcbcb;
+	background: #fff;
 	cursor: default;
 }
 .bookmark-tags:hover {
-	background: #FAFAFA;
+	background: #fafafa;
 }
 .bookmark-tags-wrap:hover .tag-delete {
 	display: inline-block;
@@ -416,38 +444,23 @@ a {
 	transition: 0.2s;
 }
 .tag-delete:hover {
-	background: #FF5757;
+	background: #ff5757;
 	-webkit-transition: 0.2s;
 	transition: 0.2s;
-}
-.bookmark:hover .add-tag {
-	color: #343534;
-}
-.bookmark-delete {
-	float: right;
-	cursor: pointer;
-	-webkit-transition: 0.2s;
-	transiton: 0.2s;
-	display: none;
-}
-.bookmark:hover .lst-bookmark-delete {
-	display: block;
-	color: #d5d4d5;
 }
 .lst-bookmark-delete:hover {
 	border: solid 1px #DFDFDF;
 }
 .lst-bookmark-delete {
+	display: block;
 	height: 20px;
 	margin: 10px 12px 10px 0;
 	padding: 0 5px;
+	color: #d5d4d5;
 	line-height: 20px;
 	border-radius: 2px;
 	border: solid 1px transparent;
 }
-/* ------------------------------------------ */
-/* ------------------------------------------ */
-/* ------------------------------------------ */
 .grid-tmpl {
 	width: 32%;
 	height: 240px;
@@ -511,72 +524,44 @@ a {
 	margin: 7px 5px 5px 5px;
 	cursor: pointer;
 }
-.bookmark-menu-line {
-	width: 100%;
-	height: 3px;
-	margin: 1.5px 0;
-	float: right;
-}
 .grd-bookmark-menu-line {
 	background: #343534;
-}
-.bookmark-menu-line:first-child {
-	width: 80%;
-}
-.bookmark-menu {
-	position: absolute;
-	width: 120px;
-	background: #fff;
-	box-shadow: 0 1px 2px #d1d1d1;
-	display: none;
-	z-index: 1;
-}
-.bookmark-menu-list {
-	display: block;
-	font-size: 0.8rem;
-	border-radius: 5px;
-	box-shadow: 0 0 8px #E9E9E9;
-}
-.bookmark-menu-list-item {
-	height: 18px;
-	padding: 4px 0 4px 30px;
-}
-.bookmark-menu-list-item:hover {
-	background-color: #fafafa;
-	cursor: pointer;
 }
 .grd-bookmark-menu {
 	bottom: 5px;
 	left: 30px;
 }
 .edit-title {
-	background-image: url(http://markedbyme.appspot.com/static/images/edit-icon.png);
-	background-position: 5px 6px;
-	background-size: 15px;
-	background-repeat: no-repeat;
+	background-image: url(../images/user/edit-icon.png);
 }
 .copy-link {
-	background-image: url(http://markedbyme.appspot.com/static/images/copy-icon.png);
-	background-position: 5px 6px;
-	background-size: 15px;
-	background-repeat: no-repeat;
+	background-image: url(../images/user/copy-icon.png);
+}
+.star-mobile {
+	background-image: url(../images/user/dark-star.png);
+	display: none;
+}
+.starred-mobile {
+	background-image: url(../images/user/yellow-star-lst.png);
+	display: none;
+}
+.delete-mobile {
+	background-image: url(../images/user/delete-button.png);
+	display: none;
+}
+.to-group {
+	background-image: url(../images/user/add-to-group.png);
+	display: none;
 }
 .grd-bookmark-star {
-	display: block;
-	width: 20px;
-	height: 20px;
-	float: left;
 	margin: 5px;
-	background-size: 20px;
-	background-image: url(http://markedbyme.appspot.com/static/images/not-starred.png);
-	cursor: pointer;
 }
 .grd-bookmark-delete {
 	display: block;
 	width: 20px;
 	height: 20px;
 	margin: 5px 5px 0 0;
-	background-image: url(http://markedbyme.appspot.com/static/images/delete-button.png);
+	background-image: url(../images/user/delete-button.png);
 	background-size: 20px;
 	background-repeat: no-repeat;
 	opacity: 0.5;
@@ -591,7 +576,7 @@ a {
 	background-size: 30px;
 }
 .grid-tmpl:hover .grd-select-bookmark {
-	background-image: url(http://markedbyme.appspot.com/static/images/grd-dots.png);
+	background-image: url(../images/user/grd-dots.png);
 }
 .grd-bookmark-settings {
 	position: absolute;
@@ -599,27 +584,9 @@ a {
 	width: 100%;
 	height: 30px;
 }
-/* ------------------------------------------ */
-/* ------------------------------------------ */
-/* ------------------------------------------ */
-.bookmark-starred {
-	background-image: url(http://markedbyme.appspot.com/static/images/starred.png);
-}
-.being-moved {
-	opacity: 0.4;
-}
-.hidden {
-	display: none;
-}
-[contenteditable="true"]:active,
-[contenteditable="true"]:focus {
-	outline: 0;
-	text-decoration: underline;
-}
 .settings-block {
 	position: fixed;
 	width: 400px;
-	height: 600px;
 	right: 0;
 	top: 50px;
 	background: #fff;
@@ -637,6 +604,9 @@ a {
 	-webkit-transform: translateX(0);
 	-ms-transform: translateX(0);
 	transform: translateX(0);
+}
+.user-settings-form {
+	clear: both;
 }
 .settings-header {
 	padding: 5px 0;
@@ -663,8 +633,8 @@ a {
 	width: 30%;
 	margin-left: 3%;
 	float: left;
-	line-height: 23px;
 	font-family: 'Roboto', sans-serif;
+	line-height: 23px;
 }
 .settings-form-input {
 	width: 60%;
@@ -680,9 +650,6 @@ a {
 }
 .settings-form-input:focus {
 	border: solid 2px #343534;
-}
-.settings-form-checkbox {
-
 }
 .label-medium {
 	width: 40%;
@@ -709,7 +676,7 @@ a {
 	float: right;
 }
 .new-user-text {
-	font-family: Helvetica;
+	font-family: Helvetica, sans-serif;
 	font-size: 1.4rem;
 	font-weight: 400;
 	text-align: center;
@@ -744,4 +711,146 @@ a {
 }
 .browser-extensions-icon:hover {
 	opacity: 1;
+}
+[contenteditable="true"]:active,
+[contenteditable="true"]:focus {
+	outline: 0;
+	text-decoration: underline;
+}
+@media screen and (max-width: 1023px) {
+
+	.content-header {
+		border: 0;
+		box-shadow: 0 1px 2px #C0C0C0;
+	}
+	.sidebar-show-button {
+		display: block;
+		padding-right: 1px;
+	}
+	.header-controls-wrap {
+		margin-left: 103px;
+	}
+	.sidebar {
+		-webkit-transform: translateX(-100%);
+		-ms-transform: translateX(-100%);
+		transform: translateX(-100%);
+	}
+	.sidebar-show {
+		-webkit-transform: translateX(0);
+		-ms-transform: translateX(0);
+		transform: translateX(0);
+	}
+	.bookmarks-section {
+		margin-left: 0;
+	}
+	.bookmarks-section-translate {
+		-webkit-transform: translateX(103px);
+		-ms-transform: translateX(103px);
+		transform: translateX(103px);
+	}
+	.input-search {
+		width: 41%;
+	}
+	.content-actions-block {
+		width: 59%;
+	}
+	.select-bookmark {
+		display: none;
+	}
+	#url-block {
+		display: none;
+	}
+	#title-block {
+		width: 68%;
+	}
+	.star-mobile {
+		display: none;
+	}
+	.delete-mobile {
+		display: none;
+	}
+
+}
+@media screen and (max-width: 800px) {
+	.grid-tmpl {
+		width: 48.5%;
+	}
+}
+@media screen and (max-width: 560px) {
+	.grid-tmpl {
+		width: 96%;
+		margin: 15px auto;
+		float: none;
+	}
+	.header-controls-wrap {
+		margin-left: 0;
+	}
+	.content-header {
+		overflow: visible;
+	}
+	.content-actions-block {
+		width: 100%;
+		position: fixed;
+		bottom: 0;
+		z-index: 3;
+		background: #FFF;
+		border-top: solid 1px #C0C0C0;
+		display: none;
+	}
+	.content-actions-block-mobile {
+		display: block;
+		height: 50px;
+		width: 100%;
+		position: fixed;
+		bottom: 0;
+		z-index: 3;
+		background: #FFF;
+		text-align: center;
+		border-top: solid 1px #C0C0C0;
+	}
+	.content-actions-button {
+		display: inline-block;
+		float: none;
+		width: 20px;
+		height: 20px;
+		margin: 15px 4%;
+	}
+	.input-search {
+		width: 100%;
+		margin-left: 103px;
+	}
+	.settings-block {
+		width: 100%;
+	}
+	.bookmarks-list {
+		float: left;
+		margin-bottom: 50px;
+	}
+	.lst-bookmark-menu-wrap {
+		margin: 11px 0 11px 7px;
+	}
+	.lst-bookmark-title {
+		margin-left: 10px;
+	}
+	.lst-bookmark-star {
+		display: none;
+	}
+	.star-mobile {
+		display: block;
+	}
+	.delete-mobile {
+		display: block;
+	}
+	.to-group {
+		display: block;
+	}
+	#title-block {
+		width: 98%;
+	}
+	#tags-block {
+		display: none;
+	}
+}
+@media screen and (min-width: 320px) and (max-width: 320px) {
+
 }

@@ -5,12 +5,10 @@ var ContentView = Backbone.View.extend({
 	el: '.content',
 
 	initialize: function() {
-		
+
 		this.listenTo(bookmarks, 'add', this.addBookmark);
-
 		this.listenTo(bookmarks, 'reset', this.addAll);
-
-		this.listenTo(bookmarks, 'reset', this.testva);
+		this.listenTo(bookmarks, 'reset', this.afterLoginSetup);
 
 		// This event is fired when the bookmarks are loaded
 		this.listenTo(bookmarks, 'login', this.userEntered);
@@ -21,8 +19,6 @@ var ContentView = Backbone.View.extend({
 		// This event is fired when the bookmarks collection is empty
 		this.listenTo(bookmarks, 'empty', this.showHelp);
 
-		// Load bookmarks, and trigger the filtering function
-
 
 		this.$searchInput = this.$('.input-search');
 		this.$starButton = this.$('.starred');
@@ -30,49 +26,59 @@ var ContentView = Backbone.View.extend({
 	},
 
 	events: {
+		'click .home-button': 'navHome',
+		'click .sidebar-show-button': 'toggleSidebar',
 		'keyup .input-search': 'searchBookmarks',
 		'click .starred': 'showStarred',
 		'click #settings': 'openSettings',
-		'click #grid': 'changeTemplateGrid',
-		'click #list': 'changeTemplateList'
+		'click .change-tmpl': 'changeTemplate'
 	},
 
-	testva: function() {
+	afterLoginSetup: function() {
+
+		// If the address contains 'collections' do the work and show him the desired collection
 		if ( location.pathname.match('collections') ) {
 			var num = location.pathname.replace( /^\D+/g, '');
 			pageRouter.showCollection(num)
 		} else {
 			bookmarks.trigger('login');
-		}
-	
+		} // Another else for tags?
+		
+		// Show welcome page
 		if ( bookmarks.length == 0 ) {
 			bookmarks.trigger('empty')
 		}
-			//remove
+		
 		$('.bookmark').attr('draggable', 'true')
 
-		if ( user_template == 'list' ) {
-		    $('.bookmark').removeClass('grid-tmpl').addClass('list-tmpl')
-		} else if ( user_template == 'grid' ) {
-		    $('.bookmark').removeClass('list-tmpl').addClass('grid-tmpl')
+		this.setBookmarkClass(); 
+	},
+
+	showHelp: function() {
+		var newUserTemplate = $('<img class="help-arrows" src="http://markedbyme.appspot.com/static/images/user/newtest.png">')
+			newUserTemplate.appendTo($('.bookmarks-section') );
+
+		if (new_user == 'true') {
+    		var newUserTemplate = $('<h1 class="new-user-text thank-you">Thank you for signing up!</h1><p class="new-user-text beta-warning"><span class="new-user-bookmarko">Bookmarko</span> is still in early beta so everything can brake, and <br> your user experience may not be so good.</p>')
+    			newUserTemplate.insertAfter('.help-arrows');
+	
+			var getExtensionTemplate = $('<div class="browser-extensions-box"><h1 class="new-user-text get-extension-header">Get the extension and start saving bookmarks</h1><img class="browser-extensions-icon" src="http://markedbyme.appspot.com/static/images/user/webstorex124.png"></img><img class="browser-extensions-icon" src="http://markedbyme.appspot.com/static/images/user/firefoxx124.png"></img><img class="browser-extensions-icon" src="http://markedbyme.appspot.com/static/images/user/operax124.png"></img><img class="browser-extensions-icon" src="http://markedbyme.appspot.com/static/images/user/safarix124.png"></img></div>')
+				getExtensionTemplate.insertAfter('.beta-warning')
+		} else {
+			var getExtensionTemplate = $('<div class="browser-extensions-box"><h1 class="new-user-text get-extension-header">Get the extension and start saving bookmarks</h1><img class="browser-extensions-icon" src="http://markedbyme.appspot.com/static/images/user/webstorex124.png"></img><img class="browser-extensions-icon" src="http://markedbyme.appspot.com/static/images/user/firefoxx124.png"></img><img class="browser-extensions-icon" src="http://markedbyme.appspot.com/static/images/user/operax124.png"></img><img class="browser-extensions-icon" src="http://markedbyme.appspot.com/static/images/user/safarix124.png"></img></div>')
+				getExtensionTemplate.insertAfter('.help-arrows')
 		}
-
 	},
 
-	changeTemplateGrid: function() {
-		user_template = 'grid'
-        rightTemplate = '#grid-template';
-		bookmarks.fetch({reset: true})
-		this.setTemplateCookie(user_template)
+	// Back to home
+	navHome: function() {
+		pageRouter.navigate('', true);
 	},
 
-	changeTemplateList: function() {
-		user_template = 'list'
-        rightTemplate = '#list-template';
-		bookmarks.fetch({reset: true})
-		this.setTemplateCookie(user_template)
+	toggleSidebar: function() {
+		$('.sidebar').toggleClass('sidebar-show');
+		$('.bookmarks-section').toggleClass('bookmarks-section-translate');
 	},
-	// MAKE THEM IN ONE FUNCTION
 
 	setBookmarkClass: function() {
 		if ( user_template == 'list' ) {
@@ -80,6 +86,20 @@ var ContentView = Backbone.View.extend({
 		} else if ( user_template == 'grid' ) {
 		    $('.bookmark').removeClass('list-tmpl').addClass('grid-tmpl')
 		}
+	},
+
+	changeTemplate: function(click) {
+
+		if ( click.target.id == 'list' ) {
+			user_template = 'list'
+	        Template = '#list-template';
+		} else if ( click.target.id == 'grid' ) {
+			user_template = 'grid'
+	        Template = '#grid-template';
+		}
+
+		bookmarks.fetch({reset: true})
+		this.setTemplateCookie(user_template)
 	},
 
 	setTemplateCookie: function(user_template) {
@@ -105,8 +125,8 @@ var ContentView = Backbone.View.extend({
 
 	// Uses the data attribute of the star button to know if the starred bookmarks are hidden or shown
 	showStarred: function() {
+
 		if (this.$starButton.data('pressed') == 'yes' ) {
-			
 			this.$starButton.toggleClass('yellow-star')
 			this.$starButton.data('pressed', 'no');
 
@@ -130,7 +150,7 @@ var ContentView = Backbone.View.extend({
 
 		bookmarks.forEach(function(bookmark) {
 			bookmark.trigger('search', bookmark, searchWord);
-		});	
+		});
 	},
 
 	openSettings: function() {
@@ -148,31 +168,11 @@ var ContentView = Backbone.View.extend({
 		$('.bookmarks-list').append(newBookmarkView.render().el);
 	},
 
-	showHelp: function() {
-		var newUserTemplate = $('<img class="help-arrows" src="http://markedbyme.appspot.com/static/images/newtest.png">')
-			newUserTemplate.appendTo($('.bookmarks-section') );
-
-		if (new_user == 'true') {
-    		var newUserTemplate = $('<h1 class="new-user-text thank-you">Thank you for signing up!</h1><p class="new-user-text beta-warning"><span class="new-user-bookmarko">Bookmarko</span> is still in early beta so everything can brake, and <br> your user experience may not be so good.</p>')
-    			newUserTemplate.insertAfter('.help-arrows');
-	
-			var getExtensionTemplate = $('<div class="browser-extensions-box"><h1 class="new-user-text get-extension-header">Get the extension and start saving bookmarks</h1><img class="browser-extensions-icon" src="http://markedbyme.appspot.com/static/images/webstorex124.png"></img><img class="browser-extensions-icon" src="http://markedbyme.appspot.com/static/images/firefoxx124.png"></img><img class="browser-extensions-icon" src="http://markedbyme.appspot.com/static/images/operax124.png"></img><img class="browser-extensions-icon" src="http://markedbyme.appspot.com/static/images/safarix124.png"></img></div>')
-				getExtensionTemplate.insertAfter('.beta-warning')
-		} else {
-			var getExtensionTemplate = $('<div class="browser-extensions-box"><h1 class="new-user-text get-extension-header">Get the extension and start saving bookmarks</h1><img class="browser-extensions-icon" src="http://markedbyme.appspot.com/static/images/webstorex124.png"></img><img class="browser-extensions-icon" src="http://markedbyme.appspot.com/static/images/firefoxx124.png"></img><img class="browser-extensions-icon" src="http://markedbyme.appspot.com/static/images/operax124.png"></img><img class="browser-extensions-icon" src="http://markedbyme.appspot.com/static/images/safarix124.png"></img></div>')
-				getExtensionTemplate.insertAfter('.help-arrows')
-		}
-	},
-
 	addAll: function () {
 		this.$('.bookmarks-list').html('');
 		bookmarks.each(this.addBookmark, this);
 		this.setBookmarkClass();
 	},
-
-	sortGroups: function() {
-		console.log('hey hey hey')
-	}
 });
 
 // Initialize the view
@@ -184,22 +184,23 @@ var BookmarkView = Backbone.View.extend({
 	tagName: 'li',
 	className: 'bookmark',
 
-	//template: _.template($(rightTemplate).html()),
-
 	events: {
 		'click .bookmark-star': 'starBookmark',
 		'dragstart': 'dragStartEvent',
 		'dragend': 'dragEndEvent',
-		'click .bookmark-title': 'saveTitle',
+		'click .edit-title': 'editBookmark',
+		'focus .bookmark-title': 'saveTitle',
 		'keypress .bookmark-title': 'updateBookmark',
 		'click .bookmark-menu-wrap': 'showMenu',
-		'click .edit-bookmark': 'editBookmark',
 		'click .copy-link': 'copyToClipboard',
 		'click .add-tag': 'addTag',
 		'keyup .bookmark-tags': 'nameTag',
 		'click .bookmark-tags': 'tagClicked',
 		'click .tag-delete': 'removeTag',
 		'click .bookmark-delete': 'clear',
+		//tests
+		'click .star-mobile': 'starBookmark',
+		'click .delete-mobile': 'clear'
 	},
 
 	initialize: function() {
@@ -208,15 +209,14 @@ var BookmarkView = Backbone.View.extend({
 		this.listenTo(this.model, 'dragHide', this.dragHide)
 		this.listenTo(this.model, 'hide', this.hideBookmarks);
 		this.listenTo(this.model, 'destroy', this.remove);
-
 		this.listenTo(this.model, 'change', this.render);
 
-		var bkid = this.model.get('collection_id')
-		if ( bkid != null ) {
-			globalBookmarkCollections.get(bkid).bookmarkCollections.add(this.model)
+		var bookmarkCollectionID = this.model.get('collection_id')
+		if ( bookmarkCollectionID != null ) {
+			globalBookmarkCollections.get(bookmarkCollectionID).bookmarkCollections.add(this.model)
 		}
 
-		this.template = _.template($(rightTemplate).html())
+		this.template = _.template($(Template).html())
 	},
 
 	render: function(bookmark) {
@@ -226,17 +226,14 @@ var BookmarkView = Backbone.View.extend({
 
 	showMenu: function(e) {
 		bookmarkMenu = this.$('.bookmark-menu');
-
 		bookmarkMenu.toggle();
-
 		$('html').one('click', function() {
-			bookmarkMenu.toggle();
+			bookmarkMenu.hide();
 		});
 
-		event.stopPropagation();
+		e.stopPropagation();
 	},
 
-	// Very basic add new interface
 	copyToClipboard: function() {
 		bookmark_url = this.model.get('url')
 		window.prompt ("Copy to clipboard:", bookmark_url);
@@ -250,19 +247,11 @@ var BookmarkView = Backbone.View.extend({
 			'collection_id': this.model.get('collection_id'),
 		};
 		var data = JSON.stringify(data)
-		
-		// Set the drag icon when moving bookmarks.
-		// The image is 'preloaded' in main.js		
-		console.log(e)
+				
 		e.originalEvent.dataTransfer.effectAllowed = 'move';
 		e.originalEvent.dataTransfer.setData('model', data);
 	
-
-		this.$el.clone().addClass('being-moved').css({
-		   'transform': 'rotate(-10deg)',
-		   '-moz-transform': 'rotate(-10deg)',
-		   '-webkit-transform': 'rotate(-10deg)'
-		});
+		this.$el.addClass('being-moved');
 	},
 
 	dragEndEvent: function() {
@@ -296,18 +285,33 @@ var BookmarkView = Backbone.View.extend({
 	// ! These functions will be here untill the tags functionality is ready
 	addTag: function() {
 		this.model.set({tag: ' '})
-		this.$('.bookmark-tags').attr('contenteditable', 'true')
-		this.$('.bookmark-tags').focus();
+		tagField = this.$('.bookmark-tags');
+		tagField.attr('contenteditable', 'true')
+		tagField.focus();
 	},
 
 	nameTag: function(e) {
 		if (e.which === ENTER_KEY) {
-			this.$('.bookmark-tags').blur();
-			var tag = this.$('.bookmark-tags').text();
-			this.$('.bookmark-tags').removeAttr('contenteditable');
+			$('html').off('click')
+			tagField.blur();
+			var tag = tagField.text();
+			tagField.removeAttr('contenteditable');
 			this.model.save({tag: tag}, tokenHeader);
 			return false;
 		}
+
+		this.tagClickListener()
+	},
+
+	tagClickListener: function() {
+		$this = this
+
+		$('html').off('click')
+		$('html').one('click', function() {
+			var tag = tagField.text()
+			tagField.removeAttr('contenteditable');
+			$this.model.save({tag: tag}, tokenHeader);
+		});
 	},
 
     tagClicked: function() {
@@ -324,7 +328,7 @@ var BookmarkView = Backbone.View.extend({
 		url = bookmark.get('url').toLowerCase();
 		searchWord = searchWord.toLowerCase();
 
-		//tag = bookmark.get('tag').toLowerCase();
+		tag = bookmark.get('tag').toLowerCase();
 
 		if ( title.match(searchWord) || url.match(searchWord)/* || tag.match(searchWord)*/ ) {
 			this.$el.removeClass('hidden');
@@ -351,31 +355,46 @@ var BookmarkView = Backbone.View.extend({
 	},
 
 	editBookmark: function() {
-		this.$('.bookmark-title').attr('contenteditable', 'true').focus()
+		titleField = this.$('.bookmark-title');
+		titleField.attr('contenteditable', 'true').focus()
 	},
 
 	updateBookmark: function(e) {
 		if (e.which === ENTER_KEY) {
-			this.$('.bookmark-title').blur().attr('contenteditable', 'true');
-			var newval = this.$('.bookmark-title').text();
+			$('html').off('click')
+			titleField.blur();
+			var newval = titleField.text();
 			if (newval.length == 0) {
 				console.log(newval.length)
-				this.$('.bookmark-title').text(window.savedTitle);
+				titleField.text(window.savedTitle);
 			} else {
 				this.saveBookmark(newval);
 			}
 
-
 			return false;
 		}
+
+		this.clickListener();
+	},
+
+	clickListener: function() {
+		$this = this
+		
+		$('html').off('click')
+		$('html').one('click', function() {
+			var newval = titleField.text();
+			$this.saveBookmark(newval);
+		});
 	},
 
 	saveBookmark: function(newval) {
+		titleField.removeAttr('contenteditable');
 		this.model.save({ 'title': newval}, tokenHeader);
 	},
 
-	clear: function () {
+	clear: function() {
 		model = this.model;
+
 		if ( user_template == 'list' ) {
 			this.$el.css({ right: '100%' })
 		} else {

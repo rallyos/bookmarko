@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<link href='http://fonts.googleapis.com/css?family=Roboto:300,100|Open+Sans:400,300' rel='stylesheet'>
+	{% if request.path == '/about' %}
+	<link href='http://fonts.googleapis.com/css?family=Lora' rel='stylesheet'>
+	{% endif %}
+	<link href="{{ STATIC_URL }}css/main.css" rel="stylesheet">
+	<link rel="icon" type="image/ico" href="{{ STATIC_URL }}images/favicon.ico">
+	<!--[if lte IE 8]>
+		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/ie.css" />
+	<![endif]-->
+	<title>Bookmarko Beta - Manage your bookmarks with style</title>
+</head>
+<body>
+	<div id="not-supported">
+		<h2 class="colorful-header">This is something hard to say but . . .</h2>
+		<h1 class="not-supported-header">Your browser is not supported</h1>
+		<p class="not-supported-text">Bookmarko was built with some of the latest technologies for better user experience, but your browser doesn't support them.
+		</p>
+		<p class="not-supported-text">This is not a big problem at all, you can update your browser, or you can try to use something new.</p>
+		<div class="browsers-box">
+			<a class="browser-icons" id="chrome" href="//google.com/intl/en/chrome/browser/"></a>
+			<a class="browser-icons" id="firefox" href="//www.mozilla.org/en-US/firefox/"></a>
+			<a class="browser-icons" id="opera" href="//opera.com/"></a>
+		</div>
+		<a class="not-supported-buttons" id="update-link"  href="//windows.microsoft.com/en-us/internet-explorer/download-ie" >I want to update my browser</a>
+		<span class="not-supported-buttons" id="continue-button">Continue</span>
+	</div>
+	<header class="header">
+		<a href="/"><img class="logo" src="{{ STATIC_URL }}images/logo_example.png" width="144" height="40" alt="Bookmarko"></a>
+		<nav class="nav-block">
+			<ul class="menu">
+				<li class="menu-item" id="form-toggle">Sign In</li>
+				{% if request.path != '/' %}
+				<li class="menu-item"><a href="/">Features</a></li>
+				{% else %}
+				<li class="menu-item" id="features-scroll">Features</li>
+				{% endif %}
+				<li class="menu-item"><a href="about">About</a></li>
+				<li class="menu-item"><a href="blog">Blog</a></li>
+			</ul>
+		</nav>
+	</header>

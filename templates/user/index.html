@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 	<link href='http://fonts.googleapis.com/css?family=Roboto:100,300|Open+Sans:400,300' rel='stylesheet'>
 	<link rel="icon" type="image/ico" href="{{ STATIC_URL }}images/favicon.ico"></link> 
 	<link href="{{ STATIC_URL }}css/user.css" rel="stylesheet">	
@@ -11,7 +12,8 @@
 	<div class="wrap">
 		<div class="settings-block settings-hidden">
 			<h1 class="settings-header">Settings</h1>
-			<form action="user-settings-form">
+			<a href="logout_user" id="sign-out">Sign out</a>
+			<form class="user-settings-form">
 				<h2 class="settings-type">App preferences</h2>
 				<div class="settings-form-section">
 					<label class="settings-form-label label-medium" for="testda">Order collections</label>
@@ -33,36 +35,50 @@
 				</div>
 			</form>
 		</div>
-		<div class="sidebar">
-				<div class="home-wrap">
-					<img class="home-button" src="{{ STATIC_URL }}images/home.png">
-					<span class="search-icon"></span>
-				</div>
-				<div class="groups-wrap"></div>
-				<div class="group-add"><span>New Group</span></div>
-		</div>
 		<div class="content">
 			<div class="content-header">
-				<input type="text" class="input-search" placeholder="Search . . .">
-				<div class="content-actions-block">
-					<span class="content-actions-button with-icon starred" data-pressed="no"></span>
-					<div class="content-actions-button content-actions-view-settings">
-						<span class="change-view-button" id="list"></span>
-						<span class="change-view-button" id="grid"></span>
+				<div class="home-wrap">
+					<img class="sidebar-show-button" src="{{ STATIC_URL }}images/user/open_sidebar.png" width="42" height="50">
+					<img class="home-button" src="{{ STATIC_URL }}images/user/home.png" width="60" height="50">
+				</div>
+				<div class="header-controls-wrap">
+					<input type="text" class="input-search" placeholder="Search . . .">
+					<div class="content-actions-block">
+						<div class="content-actions-button vp-wide starred" data-pressed="no">
+							<span class="actions-button-text">Starred</span>
+						</div>
+							<div class="content-actions-button change-tmpl vp-wide" id="list">
+								<span class="actions-button-text">List</span>
+							</div>
+							<div class="content-actions-button change-tmpl vp-wide" id="grid">
+								<span class="actions-button-text">Grid</span>
+							</div>
+						<div class="content-actions-button vp-wide" id="settings">
+							<span class="actions-button-text">Settings</span>
+						</div>
 					</div>
-					<span class="content-actions-button with-icon" id="settings"></span>
-					<a href="logout_user" class="content-actions-button" id="sign-out">Sign out</a>
+				</div>
+				</div>
+				<div class="content-actions-block-mobile">
+					<span class="content-actions-button starred" data-pressed="no"></span>
+						<span class="content-actions-button change-tmpl" id="list"></span>
+						<span class="content-actions-button change-tmpl" id="grid"></span>
+					<span class="content-actions-button" id="settings"></span>
+				</div>
+				<div class="sidebar">
+						<div class="groups-wrap"></div>
+						<div class="group-add"><span>New Group</span></div>
+				</div>
+				<div class="bookmarks-section">
+					<ul class="bookmarks-list"></ul>
 				</div>
 			</div>
-			<div class="bookmarks-section">
-				<ul class="bookmarks-list"></ul>
-			</div>
 		</div>
-	</div>
+</div>
 
 
 	<script type="text/template" id="list-template">
-	<div class="lst-bookmark-val-block">
+	<div class="lst-bookmark-val-block" id="title-block">
 		<span class="select-bookmark lst-select-bookmark"></span>
 		<span class="bookmark-star lst-bookmark-star <%= starred ? 'bookmark-starred' : '' %>"></span>
 		<div class="bookmark-menu-wrap lst-bookmark-menu-wrap">
@@ -72,13 +88,16 @@
 		</div>
 		<div class="bookmark-menu lst-bookmark-menu">
 			<ul class="bookmark-menu-list">
+				<li class="bookmark-menu-list-item to-group">Add to group</li>
 				<li class="bookmark-menu-list-item edit-title">Rename Title</li>
 				<li class="bookmark-menu-list-item copy-link">Copy Link</li>
+				<li class="bookmark-menu-list-item star-mobile <%= starred ? 'starred-mobile' : '' %>"><%= starred ? 'Starred' : 'Star' %></li>
+				<li class="bookmark-menu-list-item delete-mobile">Delete</li>
 			</ul>
 		</div>
 		<span class="bookmark-title lst-bookmark-title" title="<%= title %>"><%= title %></span>
 	</div>
-	<div class="lst-bookmark-val-block">
+	<div class="lst-bookmark-val-block" id="url-block">
 		<a class="lst-bookmark-url" href="<%= url %>" target="_blank"><%= url %></a>
 	</div>	
 	<div class="lst-bookmark-val-block" id="tags-block">
@@ -140,24 +159,24 @@
 			</div>
 			<div class="bookmarks-group-actions">
 				<span class="bookmarks-group-delete">X</span>
-				<img class="toggle-palette" src="{{ STATIC_URL }}images/toggle_palette.png">
+				<img class="toggle-palette" src="{{ STATIC_URL }}images/user/toggle_palette.png" width="17" height="17">
 			</div>
 			<span class="bookmarks-group-name" contenteditable="true"><%= title %></span>
 		</div>
 		<div class="bookmarks-group-color-palette">
-			<span class="bookmarks-group-color palette-color-red"></span>
-			<span class="bookmarks-group-color palette-color-green"></span>
-			<span class="bookmarks-group-color palette-color-black"></span>
-			<span class="bookmarks-group-color palette-color-lightblue"></span>
-			<span class="bookmarks-group-color palette-color-brown"></span>
-			<span class="bookmarks-group-color palette-color-blue"></span>
-			<span class="bookmarks-group-color palette-color-orange"></span>
-			<span class="bookmarks-group-color palette-color-grey"></span>
+			<span class="bookmarks-group-color palette-color-red" data-n="0"></span>
+			<span class="bookmarks-group-color palette-color-green" data-n="1"></span>
+			<span class="bookmarks-group-color palette-color-black" data-n="2"></span>
+			<span class="bookmarks-group-color palette-color-lightblue" data-n="3"></span>
+			<span class="bookmarks-group-color palette-color-brown" data-n="4"></span>
+			<span class="bookmarks-group-color palette-color-blue" data-n="5"></span>
+			<span class="bookmarks-group-color palette-color-orange" data-n="6"></span>
+			<span class="bookmarks-group-color palette-color-grey" data-n="7"></span>
 		</div>
 	</script>
 
 <script src="{{ STATIC_URL }}libraries/underscore-min.js"></script>
-<script src="{{ STATIC_URL }}libraries/jquery-1.9.1.min.js"></script>
+<script src="{{ STATIC_URL }}libraries/jquery-min.js"></script>
 <script src="{{ STATIC_URL }}libraries/backbone-min.js"></script>
 <script src="{{ STATIC_URL }}js/main.js"></script>
 <script src="{{ STATIC_URL }}js/models/models.js"></script>
