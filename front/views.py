@@ -57,8 +57,8 @@ def register_user(request):
 					# Login and set the token cookie
 					login(request, user)
 					success = HttpResponse(status=200)
-					mhm = datetime.datetime.utcnow().replace(tzinfo=utc) + timedelta(seconds=48)
-					success.set_cookie('new-user', 'true', expires=mhm)
+					new_user_time = datetime.datetime.utcnow().replace(tzinfo=utc) + timedelta(seconds=48)
+					success.set_cookie('new-user', 'true', expires=new_user_time)
 					success.set_cookie('Token', token, expires=365 * 24 * 60 * 60)
 					success.set_cookie('template', 'grid', expires=365 * 24 * 60 * 60)
 					return success

@@ -190,17 +190,22 @@ var BookmarkView = Backbone.View.extend({
 		'dragend': 'dragEndEvent',
 		'click .edit-title': 'editBookmark',
 		'focus .bookmark-title': 'saveTitle',
-		'keypress .bookmark-title': 'updateBookmark',
+		'keypress .bookmark-title': 'onEnter',
 		'click .bookmark-menu-wrap': 'showMenu',
 		'click .copy-link': 'copyToClipboard',
 		'click .add-tag': 'addTag',
-		'keyup .bookmark-tags': 'nameTag',
+
+		'focus .bookmark-tags': 'tagFocus',
+		'keyup .bookmark-tags': 'onEnterTag',
+		'blur .bookmark-tags': 'updateTag',
 		'click .bookmark-tags': 'tagClicked',
 		'click .tag-delete': 'removeTag',
+
 		'click .bookmark-delete': 'clear',
 		//tests
 		'click .star-mobile': 'starBookmark',
-		'click .delete-mobile': 'clear'
+		'click .delete-mobile': 'clear',
+		'blur .bookmark-title': 'updateBookmark',
 	},
 
 	initialize: function() {
@@ -290,28 +295,25 @@ var BookmarkView = Backbone.View.extend({
 		tagField.focus();
 	},
 
-	nameTag: function(e) {
-		if (e.which === ENTER_KEY) {
-			$('html').off('click')
-			tagField.blur();
-			var tag = tagField.text();
-			tagField.removeAttr('contenteditable');
-			this.model.save({tag: tag}, tokenHeader);
-			return false;
-		}
-
-		this.tagClickListener()
+	tagFocus: function() {
+		tagField = this.$('.bookmark-tags');
 	},
 
-	tagClickListener: function() {
-		$this = this
+	onEnterTag: function(e) {
+		if (e.which === ENTER_KEY) {
+			tagField.blur();
+			return false;
+		}
+	},
 
-		$('html').off('click')
-		$('html').one('click', function() {
-			var tag = tagField.text()
+	updateTag: function() {
+			var tag = tagField.text();
 			tagField.removeAttr('contenteditable');
-			$this.model.save({tag: tag}, tokenHeader);
-		});
+			this.tagSave(tag)
+	},
+
+	tagSave: function(tag) {
+			this.model.save({tag: tag}, tokenHeader);
 	},
 
     tagClicked: function() {
@@ -354,42 +356,34 @@ var BookmarkView = Backbone.View.extend({
 		window.savedTitle = this.$('.bookmark-title').text();
 	},
 
-	editBookmark: function() {
+	editBookmark: function(e) {
+		this.$el.removeAttr('draggable')
 		titleField = this.$('.bookmark-title');
 		titleField.attr('contenteditable', 'true').focus()
 	},
 
-	updateBookmark: function(e) {
+	onEnter: function(e) {
 		if (e.which === ENTER_KEY) {
-			$('html').off('click')
-			titleField.blur();
-			var newval = titleField.text();
-			if (newval.length == 0) {
-				console.log(newval.length)
-				titleField.text(window.savedTitle);
-			} else {
-				this.saveBookmark(newval);
-			}
-
+			titleField.blur()
 			return false;
 		}
-
-		this.clickListener();
 	},
 
-	clickListener: function() {
-		$this = this
-		
-		$('html').off('click')
-		$('html').one('click', function() {
-			var newval = titleField.text();
-			$this.saveBookmark(newval);
-		});
-	},
-
-	saveBookmark: function(newval) {
+	updateBookmark: function() {
+		this.$el.attr('draggable', 'true')
 		titleField.removeAttr('contenteditable');
-		this.model.save({ 'title': newval}, tokenHeader);
+
+		newval = titleField.text()
+
+		if (newval.length == 0) {
+			titleField.text(window.savedTitle);
+		} else {		
+			this.saveBookmark();
+		}
+	},
+
+	saveBookmark: function() {
+			this.model.save({ 'title': newval}, tokenHeader);
 	},
 
 	clear: function() {
