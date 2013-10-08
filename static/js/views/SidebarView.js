@@ -166,7 +166,11 @@ var BookmarkCollectionView = Backbone.View.extend({
 
 	updateTitle: function() {
 		newval = titleField.text()
-		this.saveGroup(newval);
+		this.model.set({title: newval})
+
+		if ( this.model.hasChanged('title') ) {
+			this.saveGroup(newval)
+		}
 	},
 
 	saveGroup: function(newval) {

@@ -28,8 +28,8 @@
 					<label class="settings-form-label" for="testda">New password</label>
 					<input class="settings-form-input" type="text" name="testda">
 				</div>
-				<h2 class="settings-type">Data</h2>
-				<div class="settings-form-section">
+				<h2 class="settings-type import-data">Data</h2>
+				<div class="settings-form-section import-data">
 					<label class="settings-form-label label-medium" for="testda">Import bookmarks</label>
 					<input class="settings-import-button" type="file" value="Select file">
 				</div>
@@ -90,6 +90,7 @@
 			<ul class="bookmark-menu-list">
 				<li class="bookmark-menu-list-item to-group">Add to group</li>
 				<li class="bookmark-menu-list-item edit-title">Rename Title</li>
+				<li class="bookmark-menu-list-item add-tag">Add tag</li>
 				<li class="bookmark-menu-list-item copy-link">Copy Link</li>
 				<li class="bookmark-menu-list-item star-mobile <%= starred ? 'starred-mobile' : '' %>"><%= starred ? 'Starred' : 'Star' %></li>
 				<li class="bookmark-menu-list-item delete-mobile">Delete</li>
@@ -101,7 +102,6 @@
 		<a class="lst-bookmark-url" href="<%= url %>" target="_blank"><%= url %></a>
 	</div>	
 	<div class="lst-bookmark-val-block" id="tags-block">
-		<span class="add-tag" title="Add new tag">+</span>
 		<% if (tag) { %>
 			<div class="bookmark-tags-wrap">
 				<span class="bookmark-tags"> <%= tag %> </span>
@@ -132,7 +132,7 @@
 		>
 			<% if ( image ) {%>
 			<span class="bookmark-title grd-bookmark-title" title="<%= title %>"><%= title %></span>
-			<% } %>
+			<% } %>	
 			<div class="grd-bookmark-settings">
 				<div class="bookmark-menu-wrap grd-bookmark-menu-wrap">
 					<div class="bookmark-menu-line grd-bookmark-menu-line"></div>
@@ -142,10 +142,17 @@
 				<div class="bookmark-menu grd-bookmark-menu">
 					<ul class="bookmark-menu-list">
 						<li class="bookmark-menu-list-item edit-title">Rename Title</li>
+						<li class="bookmark-menu-list-item add-tag">Add tag</li>
 						<li class="bookmark-menu-list-item copy-link">Copy Link</li>
 					</ul>
 				</div>
 				<span class="bookmark-star grd-bookmark-star <%= starred ? 'bookmark-starred' : '' %>"></span>
+				<% if (tag) { %>
+					<div class="bookmark-tags-wrap grd-bookmark-tags-wrap">
+						<span class="bookmark-tags"> <%= tag %> </span>
+						<span class="tag-delete">x</span>
+					</div>
+				<% } %>		
 				<span class="bookmark-delete grd-bookmark-delete"></span>
 			</div>
 		</div>

@@ -188,9 +188,11 @@ var BookmarkView = Backbone.View.extend({
 		'click .bookmark-star': 'starBookmark',
 		'dragstart': 'dragStartEvent',
 		'dragend': 'dragEndEvent',
+
 		'click .edit-title': 'editBookmark',
 		'focus .bookmark-title': 'saveTitle',
 		'keypress .bookmark-title': 'onEnter',
+
 		'click .bookmark-menu-wrap': 'showMenu',
 		'click .copy-link': 'copyToClipboard',
 		'click .add-tag': 'addTag',
@@ -330,7 +332,7 @@ var BookmarkView = Backbone.View.extend({
 		url = bookmark.get('url').toLowerCase();
 		searchWord = searchWord.toLowerCase();
 
-		tag = bookmark.get('tag').toLowerCase();
+		//tag = bookmark.get('tag').toLowerCase();
 
 		if ( title.match(searchWord) || url.match(searchWord)/* || tag.match(searchWord)*/ ) {
 			this.$el.removeClass('hidden');
@@ -374,10 +376,11 @@ var BookmarkView = Backbone.View.extend({
 		titleField.removeAttr('contenteditable');
 
 		newval = titleField.text()
+		this.model.set({title: newval})
 
 		if (newval.length == 0) {
 			titleField.text(window.savedTitle);
-		} else {		
+		} else if ( this.model.hasChanged('title') ) {		
 			this.saveBookmark();
 		}
 	},
