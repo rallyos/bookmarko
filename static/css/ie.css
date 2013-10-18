@@ -44,13 +44,13 @@
 	float: left;
 }
 #chrome {
-	background: url(//markedbyme.appspot.com/static/images/chromex55.png);
+	background: url(../static/images/chromex55.png);
 }
 #firefox {
-	background: url(//markedbyme.appspot.com/static/images/firefoxx55.png);
+	background: url(../static/images/firefoxx55.png);
 }
 #opera {
-	background: url(//markedbyme.appspot.com/static/images/operax55.png);	
+	background: url(../static/images/operax55.png);	
 }
 .not-supported-buttons {
 	display: inline-block;

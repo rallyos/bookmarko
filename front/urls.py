@@ -11,13 +11,17 @@ urlpatterns = patterns('',
 	url(r'^register_user', views.register_user, name='register'),
 	url(r'^login_user', views.login_user, name='login'),
 	url(r'^logout_user', views.logout_user, name='logout'),
+	url(r'^password_change', views.password_change),
+	url(r'^forgotten_password', views.forgotten_password),
+	url(r'^report_bug', views.report_bug),
+	url(r'^recover', views.recover_password, ),
 	url(r'^api/$', views.BookmarksList.as_view()),
 	url(r'^api/(?P<pk>[0-9]+)$', views.BookmarkDetail.as_view()),
 	url(r'^api/collections/$', views.BookmarkCollectionList.as_view()),
 	url(r'^api/collections/(?P<pk>[0-9]+)$', views.BookmarkCollectionDetail.as_view()),
     url(r'^api/auth/', 'rest_framework.authtoken.views.obtain_auth_token'),
-	url(r'^upload', views.upload_file, name='upload'),
-	url(r'^da', views.dam, name='dam')
+	#url(r'^upload', views.upload_file, name='upload'),
+	#url(r'^da', views.dam, name='dam')
 )
 
 urlpatterns = format_suffix_patterns(urlpatterns)

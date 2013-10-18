@@ -6,36 +6,60 @@
 	<link href='http://fonts.googleapis.com/css?family=Roboto:100,300|Open+Sans:400,300' rel='stylesheet'>
 	<link rel="icon" type="image/ico" href="{{ STATIC_URL }}images/favicon.ico"></link> 
 	<link href="{{ STATIC_URL }}css/user.css" rel="stylesheet">	
-	<title>Bookmarko Beta - Manage your bookmarks with style</title>
+	<title>Bookmarko Beta</title>
 </head>
 <body>
 	<div class="wrap">
 		<div class="settings-block settings-hidden">
 			<h1 class="settings-header">Settings</h1>
 			<a href="logout_user" id="sign-out">Sign out</a>
-			<form class="user-settings-form">
 				<h2 class="settings-type">App preferences</h2>
 				<div class="settings-form-section">
-					<label class="settings-form-label label-medium" for="testda">Order collections</label>
+					<label class="settings-form-label label-medium">Order collections</label>
 					<select class="settings-form-select">
 						<option class="settings-form-option" value="title">By name</option>
 						<option class="settings-form-option" value="date">By date created</option>
 						<option class="settings-form-option" value="size">By size</option>
 					</select>
+					<label class="settings-form-label label-long">Bookmarks appearance</label>
+					<ul class="settings-change-tmpl">
+						<li>
+							<div class="content-actions-button change-tmpl vp-wide" id="list">
+								<span class="actions-button-text">List</span>
+							</div>
+						</li>
+						<li>
+							<div class="content-actions-button change-tmpl vp-wide" id="grid">
+								<span class="actions-button-text">Grid</span>
+							</div>
+						</li>
+					</ul>
 				</div>
 				<h2 class="settings-type">Account</h2>
 				<div class="settings-form-section">
-					<label class="settings-form-label" for="testda">New password</label>
-					<input class="settings-form-input" type="text" name="testda">
+					<label class="settings-form-label" for="password-field">New password</label>
+					<input class="settings-form-input new-pass-input" id="password-field" type="password">
+					<span class="change-pass-message hidden">message</span>
+					<input class="confirm-pass-change hidden" type="button" value="Confirm">
 				</div>
+				<!-- Doesn't work well yet
 				<h2 class="settings-type import-data">Data</h2>
 				<div class="settings-form-section import-data">
-					<label class="settings-form-label label-medium" for="testda">Import bookmarks</label>
+					<label class="settings-form-label label-medium">Import bookmarks</label>
 					<input class="settings-import-button" type="file" value="Select file">
 				</div>
-			</form>
+				-->
 		</div>
 		<div class="content">
+			<div class="report-block hidden">
+				<div class="say-thanks">
+					<h1 class="thanks">Thank you!</h1>
+					<h2 class="smile">:)</h2>
+				</div>
+				<p class="report-text">As you may know, Bookmarko is in early beta and there is a high chance that something will brake. Please report if it does, and it will be fixed.</p>
+				<textarea class="report-message" rows="10"></textarea>
+				<input type="submit" class="report-send" value="Send">
+			</div>
 			<div class="content-header">
 				<div class="home-wrap">
 					<img class="sidebar-show-button" src="{{ STATIC_URL }}images/user/open_sidebar.png" width="42" height="50">
@@ -47,23 +71,19 @@
 						<div class="content-actions-button vp-wide starred" data-pressed="no">
 							<span class="actions-button-text">Starred</span>
 						</div>
-							<div class="content-actions-button change-tmpl vp-wide" id="list">
-								<span class="actions-button-text">List</span>
-							</div>
-							<div class="content-actions-button change-tmpl vp-wide" id="grid">
-								<span class="actions-button-text">Grid</span>
-							</div>
 						<div class="content-actions-button vp-wide" id="settings">
 							<span class="actions-button-text">Settings</span>
+						</div>
+						<div class="content-actions-button vp-wide" id="report">
+							<span class="actions-button-text">Report</span>
 						</div>
 					</div>
 				</div>
 				</div>
 				<div class="content-actions-block-mobile">
 					<span class="content-actions-button starred" data-pressed="no"></span>
-						<span class="content-actions-button change-tmpl" id="list"></span>
-						<span class="content-actions-button change-tmpl" id="grid"></span>
 					<span class="content-actions-button" id="settings"></span>
+					<div class="content-actions-button" id="report"></div>
 				</div>
 				<div class="sidebar">
 						<div class="groups-wrap"></div>
@@ -90,13 +110,13 @@
 			<ul class="bookmark-menu-list">
 				<li class="bookmark-menu-list-item to-group">Add to group</li>
 				<li class="bookmark-menu-list-item edit-title">Rename Title</li>
-				<li class="bookmark-menu-list-item add-tag">Add tag</li>
+				<li class="bookmark-menu-list-item add-tag">add Label</li>
 				<li class="bookmark-menu-list-item copy-link">Copy Link</li>
 				<li class="bookmark-menu-list-item star-mobile <%= starred ? 'starred-mobile' : '' %>"><%= starred ? 'Starred' : 'Star' %></li>
 				<li class="bookmark-menu-list-item delete-mobile">Delete</li>
 			</ul>
 		</div>
-		<span class="bookmark-title lst-bookmark-title" title="<%= title %>"><%= title %></span>
+		<a href="<%= url %>" class="bookmark-title lst-bookmark-title" title="<%= title %>" target="_blank"><%= title %></a>
 	</div>
 	<div class="lst-bookmark-val-block" id="url-block">
 		<a class="lst-bookmark-url" href="<%= url %>" target="_blank"><%= url %></a>
@@ -120,7 +140,6 @@
 			<img class="grd-bookmark-image" src="<%= image %>">
 		<% } else {%>
 			<h2 class="grd-bookmark-title-big"><%= title %></h2>
-			<p class="grd-bookmark-descr"><%= description %></p>
 		<% } %>
 		</a>
 		<div class="grd-bookmark-content
@@ -142,7 +161,7 @@
 				<div class="bookmark-menu grd-bookmark-menu">
 					<ul class="bookmark-menu-list">
 						<li class="bookmark-menu-list-item edit-title">Rename Title</li>
-						<li class="bookmark-menu-list-item add-tag">Add tag</li>
+						<li class="bookmark-menu-list-item add-tag">add Label</li>
 						<li class="bookmark-menu-list-item copy-link">Copy Link</li>
 					</ul>
 				</div>
@@ -199,6 +218,8 @@
 	    var json = "{{bookmarks|escapejs}}"
 		var parsons = JSON.parse(json)
 		bookmarks.reset(parsons)
+
+		var testing = "{{testing|escapejs}}"
 	</script>
 </body>
 </html>

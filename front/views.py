@@ -1,10 +1,10 @@
 import json
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, PasswordResetForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from front.models import Bookmark, BookmarkCollection, Post
+from front.models import Bookmark, BookmarkCollection, Post, Recover
 from front.serializers import BookmarkSerializer, BookmarkCollectionSerializer
 from django.http import Http404
 from rest_framework.views import APIView
@@ -14,6 +14,9 @@ from rest_framework.authtoken.models import Token
 import datetime
 from datetime import timedelta
 from django.utils.timezone import utc
+from google.appengine.api import mail
+from django.core.signing import Signer
+from django.core.exceptions import ObjectDoesNotExist
 
 # Check if user is logged, otherwise show index page
 def index(request):
@@ -108,6 +111,82 @@ def set_or_get_token(user):
 
 	return token
 
+def password_change(request):
+	if request.method == 'POST':
+		user = request.user
+		password = request.POST['data']
+		user.set_password(password)
+		user.save()
+
+		return HttpResponse(status=200)
+
+def forgotten_password(request):
+	if request.method == 'POST':
+		email = request.POST['username']
+		user = User.objects.get(username=email)
+		key = User.objects.make_random_password(length=32)
+
+		mail.send_mail(sender="Bookmarko support <dimitar@bookmarkoapp.com>",
+		              to="<"+ email +">",
+		              subject="New password requested for Bookmarko",
+		              body= """
+							Hello %s
+							This message is generate atomatically please don't reply. :)
+							<a href="http://bookmarkoapp.com/recover?key=%s">Change password</a>
+							""" % (email, key), html="""
+							Hello %s <br>
+							Someone requested password change for your account, if that's you, use the link below.<br>
+							<br>
+							<a href="http://bookmarkoapp.com/recover?key=%s">Change password</a><br>
+							<br>
+							This message is generated automatically.
+							""" % (email, key) )
+
+		signer = Signer()
+		signed_key = signer.sign(key)
+
+		token_key = Recover.objects.create(user_id=user.id, key=signed_key)
+		token_key.save()
+
+		return HttpResponse(status=200)
+
+def recover_password(request):
+	
+	key = request.GET['key']
+	
+	signer = Signer()
+	signed_key = signer.sign(key)
+	
+	try:
+		recover = Recover.objects.get(key=signed_key)
+		user = User.objects.get(id=recover.user_id)
+
+		user.backend = 'django.contrib.auth.backends.ModelBackend'
+		login(request, user)
+		
+		recover.delete()
+
+		success = redirect('/')
+		
+		new_user_time = datetime.datetime.utcnow().replace(tzinfo=utc) + timedelta(seconds=48)
+		success.set_cookie('recover', 'true', expires=new_user_time)
+
+		return success
+
+	except ObjectDoesNotExist:
+		return HttpResponse('Key already used, or does not exists.',status=404)
+
+def report_bug(request):
+	if request.method == 'POST':
+		email = request.user.username
+		message = request.POST['message']
+
+		mail.send_mail(sender="<"+ email +">",
+			              to="Dimitar Ralev <dimitar@bookmarkoapp.com>",
+			              subject="User Feedback",
+			              body=message)
+
+		return HttpResponse(status=200)
 
 def logout_user(request):
 	logout(request)
@@ -202,7 +281,7 @@ class BookmarkCollectionDetail(APIView):
 		collection.delete()
 		return Response(status=status.HTTP_204_NO_CONTENT)
 
-
+"""
 from django.views.decorators.csrf import csrf_exempt
 import re
 import urllib2
@@ -213,7 +292,6 @@ from urlparse import urljoin
 import mimetypes
 from google.appengine.api import taskqueue
 
-@csrf_exempt
 def dam(request):
 	if request.method == 'POST':
 		file = request.FILES['thefile']
@@ -222,14 +300,13 @@ def dam(request):
 		taskqueue.add(url='/upload',payload=test)
 	return HttpResponse(status=200)
 
-@csrf_exempt
 def upload_file(test):
 
 		hmm = re.findall(r'href=[\'"]?([^\'" >]+)', str(test), flags=re.IGNORECASE)
 		for sait in hmm:
 
 			if sait.endswith('.gif') or sait.endswith('.png') or sait.endswith('.jpeg'):
-				Bookmark.objects.create(title=sait, url=sait, image=sait, user_id=2)
+				Bookmark.objects.create(title=sait, url=sait, image=sait, user_id=1)
 			
 			else:
 				try:
@@ -253,6 +330,21 @@ def upload_file(test):
 						imgdata = urllib2.urlopen(thelink)
 						img_data = imgdata.open()
 						img_type = imgdata.info().getheader('Content-Type')
+						
+						if img_type == 'image/png' or img_type == 'image/jpeg' or img_type == 'image/gif':
+							#therealimage = Image(image_data=img_data)
+										
+							if img_data.width > 400 and img_data.height > 300:
+								url = sait
+								title = BS.find('title').text
+								Bookmark.objects.create(title=title, url=url, image=thelink, user_id=2)
+								img_data.close()
+								break
+							if i > 1 and img_data.width < 400 and img_data.height < 300:
+								url = sait
+								title = BS.find('title').text
+								Bookmark.objects.create(title=title, url=url, user_id=2)
+								break
 					except urllib2.HTTPError, err:
 						if err.code == 403:
 							pass
@@ -263,21 +355,6 @@ def upload_file(test):
 					except:
 						pass
 
-
-					if img_type == 'image/png' or img_type == 'image/jpeg' or img_type == 'image/gif':
-						#therealimage = Image(image_data=img_data)
-									
-						if img_data.width > 400 and img_data.height > 400:
-							url = sait
-							title = BS.find('title').text
-							Bookmark.objects.create(title=title, url=url, image=thelink, user_id=2)
-							img_data.close()
-							break
-						if i > 1 and img_data.width < 400 and img_data.height < 400:
-							url = sait
-							title = BS.find('title').text
-							Bookmark.objects.create(title=title, url=url, user_id=2)
-							break
-
 		#file.close()
 		return HttpResponse(status=201)
+"""

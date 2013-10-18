@@ -25,3 +25,7 @@ class Post(models.Model):
 	title = models.CharField(max_length=200)
 	body = models.TextField()
 	date = models.DateField(auto_now=True)
+
+class Recover(models.Model):
+	user = models.ForeignKey(User)
+	key = models.CharField(max_length=132)

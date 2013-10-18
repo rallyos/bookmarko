@@ -1,7 +1,7 @@
 // Bookmarks collections 
 var BookmarkCollections = Backbone.Collection.extend({
 	model: BookmarkCollection,
-	url: 'http://markedbyme.appspot.com/api/collections/',
+	url: 'http://www.bookmarkoapp.com/api/collections/',
 	
 	initialize: function() {
         this._order_by_title = this.comparator;
@@ -42,7 +42,7 @@ var globalBookmarkCollections = new BookmarkCollections();
 // The collection of bookmarks for easy loading on login. (At least for now)
 var Bookmarks = Backbone.Collection.extend({
 	model: BookmarkModel,
-	url: 'http://markedbyme.appspot.com/api/'
+	url: 'http://www.bookmarkoapp.com/api/'
 });
 
 // Bookmarks instance

@@ -14,10 +14,19 @@
 					<input class="form-submit" id="sign-in-submit" type="submit" value="Login">
 					<span class="forgotten-password">Forgotten password</span>
 				</form>
+				<div class="forg-pass-block">
+					<div class="send-mail-success">
+						<h1 class="send-mail-headings">Thank you!</h1>
+						<h4 class="send-mail-headings">You will recieve email in a few minutes.</h4>
+					</div>
+					<h2 class="forg-pass-header">Fill your email to receive a new password</h2>
+					<input class="forg-pass-email" type="email">
+					<input class="forg-pass-send" type="button" value="Confirm">
+				</div>
 			</div>
 	</section>
 	<div class="features-wrap">
-		<h1 class="features-top-header">Your new place for keeping bookmarks</h1>
+		<h1 class="features-top-header">Keep your bookmarks in the cloud</h1>
 		<section class="features-top">
 			<div class="features-top-feature-block">
 				<img class="features-top-feature-image" src="{{ STATIC_URL }}images/store_bookmarks.png" width="240" height="150" alt="Store bookmarks online">
@@ -30,7 +39,8 @@
 				<img class="features-top-feature-image" src="{{ STATIC_URL }}images/organize.png" width="240" height="150" alt="Manage them easy">
 				<h2 class="features-top-feature-header">Manage them easy</h2>
 				<p class="features-top-feature-text">
-					Group your saved sites by type, and add tags for better search experience.
+					Use groups to 
+				</p>
 			</div>
 			<div class="features-top-feature-block">
 				<img class="features-top-feature-image" src="{{ STATIC_URL }}images/fast_search.png" width="240" height="150" alt="Search fast">
@@ -41,11 +51,13 @@
 				</p>
 			</div>
 		</section>
+		<!-- Not available yet
 		<section class="main-feature">
 			<h1 class="feature-apps-header">Connect with the apps you use</h1>
 			<p class="main-feature-text">Bookmarko will be integrated with your other favourite bookmarking sites, so you don't have to lose data.</p>
 			<img class="main-feature-image" src="{{ STATIC_URL }}images/apps.png" alt="Connect with the apps you use">
 		</section>
+		-->
 		<section class="main-feature">
 			<h1 class="devices-header">Available on most devices</h1>
 			<p class="main-feature-text">Bookmarko was made with responsive design in mind. It was build to support wide range of devices. The site is optimized for touch input, so you can access and use it from your mobile device.</p>

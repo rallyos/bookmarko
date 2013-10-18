@@ -171,6 +171,70 @@ a {
 .forgotten-password:hover {
 	color: #343534;
 }
+.forg-pass-block {
+	position: absolute;
+	bottom: 15px;
+	width: 100%;
+	text-align: center;
+	background: #fff;
+	opacity: 0;
+	display: none;
+	-webkit-transition: 0.5s;
+	transition: 0.5s;
+}
+.send-mail-success {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	background: #fff;
+	text-align: center;
+	-webkit-transition: 0.3s;
+	transition: 0.3s;
+	-webkit-transform: translateX(-100%);
+	-ms-transform: translateX(-100%);
+	transform: translateX(-100%);
+}
+.send-mail-headings {
+	margin: 30px 0 10px;
+	font-weight: 300;
+}
+.send-mail-success-show {
+		-webkit-transform: translateX(0);
+		-ms-transform: translateX(0);
+		transform: translateX(0);
+}
+.forg-pass-header {
+	font-size: 1.1rem;
+	font-weight: 400;
+}
+.forg-pass-email {
+	width: 70%;
+	margin: 40px 15% 10px;
+	padding: 5px 0;
+	font-size: 1.2rem;
+	display: block;
+	text-indent: 8px;
+	border: solid 2px #919191;
+	outline: 0;
+	-webkit-transition: 0.3s;
+	transition: 0.3s;
+}
+.forg-pass-email:focus {
+	border: solid 2px #343534;
+}
+.forg-pass-send {
+	width: 40%;
+	margin: 20px 0;
+	padding: 7px 15px;
+	font-size: 1rem;
+	font-family: 'Open Sans', sans-serif;
+	font-weight: 300;
+	color: #fff;
+	background: green;
+	border-radius: 2px;
+	border: 0;
+	cursor: pointer;
+}
 .features-wrap {
 	width: 100%;
 	max-width: 1140px;
@@ -309,6 +373,7 @@ a {
 }
 .page-not-found-text {
 	width: 80%;
+	margin-bottom: 60px;
 	display: inline-block;
 	font-size: 1.25rem;
 }
@@ -401,7 +466,7 @@ a {
 }
 .terms-header {
 	margin: 20px 0 5px;
-	font-weight: 400;
+	font-weight: 600;
 }
 #terms-close-button {
 	position: absolute;
@@ -477,6 +542,10 @@ a {
 	width: 84%;
 	float: left;
 }
+.case-study-link {
+	text-decoration: underline;
+	color: #FA513E;
+}
 #last {
 	margin-bottom: 50px;
 }
@@ -490,6 +559,11 @@ a {
 	margin: 30px 0;
 	border-bottom: solid 3px #dedede;
 }
+.post-img {
+	display: block;
+	max-width: 100%;
+	margin: 30px auto;
+}
 .post-title {
 	font-size: 1.8rem;
 }
@@ -500,6 +574,9 @@ a {
 }
 .post-text {
 	margin: 27px 0;
+}
+.post-paragraph {
+	margin: 20px 0;
 }
 @media screen and (max-width: 980px) {
 	.sign-section {
@@ -516,6 +593,9 @@ a {
 	}
 	.features-top-header {
 		margin: 40px 0 50px;
+	}
+	.logo {
+		margin: 5px 10px;
 	}
 }
 @media screen and (max-width: 780px) {

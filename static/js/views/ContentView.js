@@ -30,8 +30,10 @@ var ContentView = Backbone.View.extend({
 		'click .sidebar-show-button': 'toggleSidebar',
 		'keyup .input-search': 'searchBookmarks',
 		'click .starred': 'showStarred',
+		'click #report': 'showReportBlock',
 		'click #settings': 'openSettings',
-		'click .change-tmpl': 'changeTemplate'
+		'click .report-send': 'sendReport',
+		'click .recover-submit': 'forcePassChangeSubmit'
 	},
 
 	afterLoginSetup: function() {
@@ -55,17 +57,17 @@ var ContentView = Backbone.View.extend({
 	},
 
 	showHelp: function() {
-		var newUserTemplate = $('<img class="help-arrows" src="http://markedbyme.appspot.com/static/images/user/newtest.png">')
+		var newUserTemplate = $('<img class="help-arrows" src="http://bookmarkoapp.com/static/images/user/newtest.png">')
 			newUserTemplate.appendTo($('.bookmarks-section') );
 
 		if (new_user == 'true') {
     		var newUserTemplate = $('<h1 class="new-user-text thank-you">Thank you for signing up!</h1><p class="new-user-text beta-warning"><span class="new-user-bookmarko">Bookmarko</span> is still in early beta so everything can brake, and <br> your user experience may not be so good.</p>')
     			newUserTemplate.insertAfter('.help-arrows');
 	
-			var getExtensionTemplate = $('<div class="browser-extensions-box"><h1 class="new-user-text get-extension-header">Get the extension and start saving bookmarks</h1><img class="browser-extensions-icon" src="http://markedbyme.appspot.com/static/images/user/webstorex124.png"></img><img class="browser-extensions-icon" src="http://markedbyme.appspot.com/static/images/user/firefoxx124.png"></img><img class="browser-extensions-icon" src="http://markedbyme.appspot.com/static/images/user/operax124.png"></img><img class="browser-extensions-icon" src="http://markedbyme.appspot.com/static/images/user/safarix124.png"></img></div>')
+			var getExtensionTemplate = $('<div class="browser-extensions-box"><h1 class="new-user-text get-extension-header">Get the extension and start saving bookmarks</h1><a class="browser-extensions-link" href="https://chrome.google.com/webstore/detail/bookmarko/cjiadbbjgehkojjabcbegjmmlcfhgped" target="_blank"><img class="browser-extensions-icon" src="http://bookmarkoapp.com/static/images/user/webstorex124.png"></a></div>')
 				getExtensionTemplate.insertAfter('.beta-warning')
 		} else {
-			var getExtensionTemplate = $('<div class="browser-extensions-box"><h1 class="new-user-text get-extension-header">Get the extension and start saving bookmarks</h1><img class="browser-extensions-icon" src="http://markedbyme.appspot.com/static/images/user/webstorex124.png"></img><img class="browser-extensions-icon" src="http://markedbyme.appspot.com/static/images/user/firefoxx124.png"></img><img class="browser-extensions-icon" src="http://markedbyme.appspot.com/static/images/user/operax124.png"></img><img class="browser-extensions-icon" src="http://markedbyme.appspot.com/static/images/user/safarix124.png"></img></div>')
+			var getExtensionTemplate = $('<div class="browser-extensions-box"><h1 class="new-user-text get-extension-header">Get the extension and start saving bookmarks</h1><a class="browser-extensions-link" href="https://chrome.google.com/webstore/detail/bookmarko/cjiadbbjgehkojjabcbegjmmlcfhgped" target="_blank"><img class="browser-extensions-icon" src="http://bookmarkoapp.com/static/images/user/webstorex124.png"></a></div>')
 				getExtensionTemplate.insertAfter('.help-arrows')
 		}
 	},
@@ -86,27 +88,6 @@ var ContentView = Backbone.View.extend({
 		} else if ( user_template == 'grid' ) {
 		    $('.bookmark').removeClass('list-tmpl').addClass('grid-tmpl')
 		}
-	},
-
-	changeTemplate: function(click) {
-
-		if ( click.target.id == 'list' ) {
-			user_template = 'list'
-	        Template = '#list-template';
-		} else if ( click.target.id == 'grid' ) {
-			user_template = 'grid'
-	        Template = '#grid-template';
-		}
-
-		bookmarks.fetch({reset: true})
-		this.setTemplateCookie(user_template)
-	},
-
-	setTemplateCookie: function(user_template) {
-		year = new Date()
-		nextYear = year.getFullYear() + 1
-		year.setYear(nextYear)
-		document.cookie ='template='+ user_template +'; expires='+ year +'; path=/'
 	},
 
 	// Show bookmarks based on their collection
@@ -155,12 +136,62 @@ var ContentView = Backbone.View.extend({
 
 	openSettings: function() {
 		settingsBlock.toggleClass("settings-hidden");
+	},
 
-		$('html').one('click', function() {
-		    settingsBlock.toggleClass("settings-hidden");
-		});
+	showReportBlock: function() {
+		this.$('.report-block').toggleClass('hidden')
 
-		event.stopPropagation();
+		window.setTimeout(function(){
+			if ( window.innerWidth > 560 ) {
+				this.$('.report-block').toggleClass('an-block')
+			} else {
+				this.$('.report-block').toggleClass('an-block-mobile')
+			}
+		}, 100);
+	},
+
+	sendReport: function() {
+
+		message = this.$('.report-message').val()
+
+		if ( message.length > 0 ) {
+			$.ajax({
+				type: 'POST',
+				url: 'report_bug',
+				headers: {'Authorization': 'Token ' + token, 'X-CSRFToken': csrftoken},
+				data: {message: message}
+			}).done(function() {
+					$('.say-thanks').addClass('say-thanks-translate')
+				
+				window.setTimeout(function() {
+					$('.report-message').val('')
+					$('.say-thanks').removeClass('say-thanks-translate')
+				}, 2000)
+			})
+		}
+
+	},
+
+	forcePassChangeSubmit: function() {
+
+		newpass = this.$('.recover-input').val()
+
+		if ( newpass.length > 0 ) {
+			$.ajax({
+				type: 'POST',
+				url: 'password_change',
+				headers: {'Authorization': 'Token ' + token, 'X-CSRFToken': csrftoken},
+				data: {data: newpass}
+			}).done(function() {
+				$('.recover-message').addClass('recover-message-show')
+
+				window.setTimeout(function() {
+					$('.recover-box').remove();
+				}, 3000)
+			}).fail(function() {
+				this.$('.recover-input').css('border', 'solid 2px red')
+			})
+		}
 	},
 
 	addBookmark: function(bookmark) {
@@ -293,6 +324,7 @@ var BookmarkView = Backbone.View.extend({
 	addTag: function() {
 		this.model.set({tag: ' '})
 		tagField = this.$('.bookmark-tags');
+		this.$el.removeAttr('draggable')
 		tagField.attr('contenteditable', 'true')
 		tagField.focus();
 	},
@@ -311,6 +343,7 @@ var BookmarkView = Backbone.View.extend({
 	updateTag: function() {
 			var tag = tagField.text();
 			tagField.removeAttr('contenteditable');
+			this.$el.attr('draggable', 'true')
 			this.tagSave(tag)
 	},
 
@@ -413,11 +446,43 @@ var SettingsView = Backbone.View.extend({
 
 	initialize: function() {
 
+		if ( recover == 'true' ) {
+			this.forcePassChange();
+		}
+
+
+		passinput = this.$('.new-pass-input');
+		confirmButton = this.$('.confirm-pass-change');
 	},
 
 	events: {
+		'click .change-tmpl': 'changeTemplate',
 		'change .settings-form-select': 'changeBookmarkTemplate',
-		'change .settings-import-button': 'sendBookmarks'
+		'change .settings-import-button': 'sendBookmarks',
+		'focus .new-pass-input': 'showConfirmButton',
+		'keyup .new-pass-input': 'onEnterPass',
+		'click .confirm-pass-change': 'changePassword'
+	},
+
+	changeTemplate: function(click) {
+
+		if ( click.target.id == 'list' ) {
+			user_template = 'list'
+	        Template = '#list-template';
+		} else if ( click.target.id == 'grid' ) {
+			user_template = 'grid'
+	        Template = '#grid-template';
+		}
+
+		bookmarks.fetch({reset: true})
+		this.setTemplateCookie(user_template)
+	},
+
+	setTemplateCookie: function(user_template) {
+		year = new Date()
+		nextYear = year.getFullYear() + 1
+		year.setYear(nextYear)
+		document.cookie ='template='+ user_template +'; expires='+ year +'; path=/'
 	},
 
 	changeBookmarkTemplate: function() {
@@ -437,7 +502,7 @@ var SettingsView = Backbone.View.extend({
 	    var formData = new FormData();
 	    formData.append("thefile", mda.files[0]);
 	    var xhr = new XMLHttpRequest();
-	    xhr.open('POST', 'http://markedbyme.appspot.com/da', true);
+	    xhr.open('POST', 'http://bookmarkoapp.com/da', true);
 	    xhr.send(formData);
 
 	    console.log(xhr.status)
@@ -445,7 +510,66 @@ var SettingsView = Backbone.View.extend({
 	    if (xhr.status == 201) {
 	        location.reload()
 	    }
+	},
+
+	showConfirmButton: function() {
+		confirmButton.removeClass('hidden');
+	},
+
+	onEnterPass: function(e) {
+		if (e.which === ENTER_KEY) {
+			confirmButton.click()
+			return false;
+		}
+	},
+
+	changePassword: function() {
+		msgEl = this.$('.change-pass-message')
+		newpass = passinput.val()
+
+		if ( newpass.length > 0 ) {
+			$.ajax({
+				type: 'POST',
+				url: 'password_change',
+				headers: {'Authorization': 'Token ' + token, 'X-CSRFToken': csrftoken},
+				data: {data: newpass}
+			}).done(function() {
+				msgEl.removeClass('hidden')
+
+				window.setTimeout(function(){
+					msgEl.text('Password change successful!')
+					msgEl.css('opacity', '1')
+				}, 100)
+				window.setTimeout(function() {
+					msgEl.css('opacity', '0')
+					confirmButton.addClass('hidden')
+					msgEl.addClass('hidden')
+					passinput.val('')
+				}, 2000)
+			}).fail(function() {
+				msgEl.removeClass('hidden')
+
+				window.setTimeout(function(){
+					msgEl.text('Invalid Password')
+					msgEl.css('opacity', '1')
+				}, 100)
+				window.setTimeout(function() {
+					msgEl.css('opacity', '0')
+					passinput.val('')
+				}, 2000)
+			})
+
+		}
+	},
+
+	forcePassChange: function() {
+		$('<div><div class="recover-message"><h1 class="recover-message-h">Ok, we\'ve got it. Thank you!</h1></div><h1 class="recover-heading">Please fill your new password</h1><input class="recover-input" type="password"><input class="recover-submit" type="submit"></div>').appendTo('.content').addClass('recover-box')
+		window.setTimeout(function() {
+			$('.recover-box').css('top', '150px')
+		}, 100)
+		// on success remove the cookie
 	}
+
 });
 
 var settingsView = new SettingsView();

@@ -32,6 +32,11 @@ var featuresBlock = featuresBlock.offsetTop - 65;
 
 var continueButton = document.getElementById('continue-button')
 
+passwordRecoverButton = document.getElementsByClassName('forgotten-password')[0]
+forgPassBlock = document.getElementsByClassName('forg-pass-block')[0]
+forgPassEmail = document.getElementsByClassName('forg-pass-email')[0]
+forgPassSend = document.getElementsByClassName('forg-pass-send')[0]
+
 // Add events
 formToggle.addEventListener('click', checkThis)
 featuresScroll.addEventListener('click', scrollPage)
@@ -44,7 +49,35 @@ privacyLink.addEventListener('click', showPrivacy)
 closePrivacyButton.addEventListener('click', showPrivacy)
 privacyLinkForm.addEventListener('click', showPrivacy)
 
+passwordRecoverButton.addEventListener('click', showForgPassBlock)
+forgPassSend.addEventListener('click', sendPassword)
 
+function showForgPassBlock() {
+	forgPassBlock.style.display = 'block';
+	window.setTimeout(function(){
+		forgPassBlock.style.opacity = 1.0;
+		forgPassBlock.style.bottom = 0;
+	}, 100)
+}
+
+function sendPassword() {
+	//test
+	csrfmiddlewaretoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+	username = forgPassEmail.value
+
+	var xhr = new XMLHttpRequest()
+	xhr.open('POST', 'forgotten_password', false);
+	xhr.send('csrfmiddlewaretoken=' + encodeURIComponent(csrfmiddlewaretoken) + 
+		'&username=' + encodeURIComponent(username) )
+
+	if ( xhr.status == 200) {
+		document.getElementsByClassName('send-mail-success')[0].className = 'send-mail-success send-mail-success-show';
+
+		window.setTimeout(function() {
+			formBlock.removeChild(forgPassBlock)
+		}, 3000)
+	}	
+}
 
 function hideWindow(e) {
 	html.removeEventListener('keyup', hideWindow)
@@ -165,7 +198,7 @@ signUpForm.onsubmit = function() {
 	confirmPass = document.getElementById('reg-confirm-pass').value;
 
 	var xhr = new XMLHttpRequest()
-	xhr.open('POST', 'http://markedbyme.appspot.com/register_user', false);
+	xhr.open('POST', 'register_user', false);
 	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
 	xhr.send('csrfmiddlewaretoken=' + encodeURIComponent(csrfmiddlewaretoken) +
 	'&username=' + encodeURIComponent(user) +
@@ -190,7 +223,7 @@ signInForm.onsubmit = function() {
 	pass = document.getElementById('log-pass').value;
 
 	var xhr = new XMLHttpRequest()
-	xhr.open('GET', 'http://markedbyme.appspot.com/login_user?' + 'csrfmiddlewaretoken=' + encodeURIComponent(csrfmiddlewaretoken) +
+	xhr.open('GET', 'login_user?' + 'csrfmiddlewaretoken=' + encodeURIComponent(csrfmiddlewaretoken) +
 	'&username=' + encodeURIComponent(user) +
 	'&password=' + encodeURIComponent(pass), false);
 	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
@@ -200,8 +233,7 @@ signInForm.onsubmit = function() {
 		formSubmit[1].style.backgroundColor = '#46DD70';
 		location.reload()
 	} else if ( xhr.status == 404) {
-		passwordRecover = document.getElementsByClassName('forgotten-password')[0]
-		passwordRecover.style.display = 'block';
+		passwordRecoverButton.style.display = 'block';
 		message = 'Wrong username or password'
 		var form = formSubmit[1];
 		showError(message, signInForm, form)

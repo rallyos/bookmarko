@@ -18,6 +18,8 @@ function getCookie(name) {
 var token = getCookie('Token');
 var new_user = getCookie('new-user');
 var user_template = getCookie('template');
+var csrftoken = getCookie('csrftoken');
+var recover = getCookie('recover');
 
 // Used after every request to the server
 var tokenHeader = { headers: { 'Authorization': 'Token ' + token } };
