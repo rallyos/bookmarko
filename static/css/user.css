@@ -23,10 +23,10 @@ a {
 .sidebar {
 	width: 104px;
 	height: 100%;
-	margin-top: 50px;
+	margin-top: 51px;
 	float: left;
 	position: fixed;
-	background: #fafafa;
+	background: #fff;
 	overflow: scroll;
 	z-index: 1;
 	-webkit-transition: 0.3s;
@@ -45,11 +45,9 @@ a {
 }
 .group {
 	width: 100%;
-	height: 100px;
 	position: relative;
-	font-weight: 300;
+	font-weight: 400;
 	color: #fff;
-	cursor: pointer;
 	overflow: hidden;
 }
 .group-box {
@@ -57,17 +55,21 @@ a {
 	transition: 0.3s;
 }
 .group-add {
-	width: 90px;
-	height: 90px;
-	margin: 10px auto 15px;
+	width: 48px;
+	height: 48px;
+	margin: 20px auto 65px;
 	color: #e0e0e0;
 	font-size: 0.9rem;
 	text-align: center;
-	line-height: 90px;
-	border: dashed 2px #e0e0e0;
+	line-height: 48px;
+	border: solid 2px #e0e0e0;
+	border-radius: 48px;
 	cursor: pointer;
 	-webkit-transition: 0.3s;
 	transition: 0.3s;
+}
+.plus {
+	font-size: 1.4rem;
 }
 .group-add:hover {
 	color: #cbcdcd;
@@ -84,8 +86,15 @@ a {
 	float: left;
 }
 .bookmarks-group-count {
-	float: left;
-	padding: 5px;
+	display: block;
+	margin: 20px auto;
+	width: 40px;
+	height: 40px;
+	color: #fff;
+	text-align: center;
+	line-height: 40px;
+	border-radius: 40px;
+	cursor: pointer;
 }
 .bookmarks-group-actions {
 	width: 25%;
@@ -98,22 +107,46 @@ a {
 	transition: 0.3s;
 }
 .bookmarks-group-delete {
-	padding: 0 5px;
-	float: right;
-	font-size: 0.8rem;
-	color: rgba(255, 255, 255, 0.65);
+	width: 20px;
+	height: 20px;
+	margin: 6px 0 0 3px;
+	float: left;
+	border-radius: 20px;
+	font-size: 0.7rem;
+	font-weight: 300;
+	line-height: 20px;
+	text-align: center;
+	background: #FA5757;
+	color: #fff;
+	cursor: pointer;
+	-webkit-transform: translateX(-107px);
+	-ms-transform: translateX(-107px);
+	transform: translateX(-107px);
 	-webkit-transition: 0.3s;
 	transition: 0.3s;
 }
-.bookmarks-group-delete:hover {
-	color: #666;
-	background: rgba(255, 255, 255, 0.8);
+.group:hover .bookmarks-group-delete {
+	-webkit-transform: translateX(0);
+	-ms-transform: translateX(0);
+	transform: translateX(0);
 }
 .toggle-palette {
-	width: 17px;
-	height: 17px;
-	float: right;
-	margin: 32px 4px 0 0;
+	position: absolute;
+	bottom: 20px;
+	left: 3px;
+	width: 20px;
+	height: 20px;
+	cursor: pointer;
+	-webkit-transform: translateX(-107px);
+	-ms-transform: translateX(-107px);
+	transform: translateX(-107px);
+	-webkit-transition: 0.3s;
+	transition: 0.3s;
+}
+.group:hover .toggle-palette {
+	-webkit-transform: translateX(0);
+	-ms-transform: translateX(0);
+	transform: translateX(0);
 }
 .bookmarks-group-color-palette {
 	width: 100%;
@@ -126,10 +159,12 @@ a {
 	height: 50px;
 }
 .bookmarks-group-color {
-	width: 25%;
-	height: 25px;
+	width: 20px;
+	height: 20px;
+	margin: 3px 3px;
 	display: block;
 	float: left;
+	border-radius: 20px;
 }
 .palette-color-red {
 	background: #EB4040;
@@ -147,10 +182,10 @@ a {
 	background: #863825;
 }
 .palette-color-blue {
-	background: #3E45BB;
+	background: #838AFF;
 }
 .palette-color-orange {
-	background: #eb6d20;
+	background: #FFAC79;
 }
 .palette-color-grey {
 	background: #A3A3A3;
@@ -166,19 +201,11 @@ a {
 	transform: scale(0.85);
 }
 .bookmarks-group-name {
+	display: block;
 	width: 100%;
-	height: 17px;
-	padding: 4px 0;
-	position: absolute;
-	bottom: 0;
-	left: 0;
+	color: #818382;
 	font-size: 0.8rem;
 	text-align: center;
-	-webkit-transition: background 0.3s;
-	transition: background 0.3s;
-}
-.group:hover .bookmarks-group-name {
-	background: rgba(255, 255, 255, 0.1)
 }
 .content {
 	width: 100%;
@@ -925,10 +952,6 @@ a {
 [contenteditable="true"]:focus {
 	outline: 0;
 	text-decoration: underline;
-}
-.bookmarks-group-name,
-.bookmarks-group-count {
-	-webkit-backface-visibility: hidden;
 }
 .hidden {
 	display: none;

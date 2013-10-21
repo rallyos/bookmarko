@@ -62,7 +62,7 @@
 			</div>
 			<div class="content-header">
 				<div class="home-wrap">
-					<img class="sidebar-show-button" src="{{ STATIC_URL }}images/user/open_sidebar.png" width="42" height="50">
+					<img class="sidebar-show-button" src="{{ STATIC_URL }}images/user/open_sidebar.png" width="30" height="50">
 					<img class="home-button" src="{{ STATIC_URL }}images/user/home.png" width="60" height="50">
 				</div>
 				<div class="header-controls-wrap">
@@ -87,7 +87,7 @@
 				</div>
 				<div class="sidebar">
 						<div class="groups-wrap"></div>
-						<div class="group-add"><span>New Group</span></div>
+						<div class="group-add"><span class="plus">+</span></div>
 				</div>
 				<div class="bookmarks-section">
 					<ul class="bookmarks-list"></ul>
@@ -180,13 +180,9 @@
 
 	<script type="text/template" id="group-template">
 		<div class="group">
-			<div class="bookmarks-group-nav">
-				<span class="bookmarks-group-count"><%- this.model.bookmarkCollections.length %></span>
-			</div>
-			<div class="bookmarks-group-actions">
-				<span class="bookmarks-group-delete">X</span>
-				<img class="toggle-palette" src="{{ STATIC_URL }}images/user/toggle_palette.png" width="17" height="17">
-			</div>
+			<span class="bookmarks-group-delete">X</span>
+			<span class="bookmarks-group-count"><%- this.model.bookmarkCollections.length %></span>
+			<img class="toggle-palette" src="{{ STATIC_URL }}images/user/toggle_palette.png" width="20" height="20">
 			<span class="bookmarks-group-name" contenteditable="true"><%= title %></span>
 		</div>
 		<div class="bookmarks-group-color-palette">

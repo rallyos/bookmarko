@@ -8,7 +8,7 @@ var SidebarView = Backbone.View.extend({
 
 		this.$groupsWrap = this.$('.groups-wrap');
 
-		colors = ['#EB4040', '#4ABB3E', '#343534', '#33A3C0', '#863825', '#3E45BB', '#eb6d20', '#A3A3A3']
+		colors = ['#EB4040', '#79D55B', '#343534', '#33A3C0', '#863825', '#838AFF', '#FFAC79', '#A3A3A3']
 	},
 
 	events: {
@@ -56,7 +56,7 @@ var BookmarkCollectionView = Backbone.View.extend({
 	},
 
 	events: {
-		'click .bookmarks-group-nav': 'navigateToGroup',
+		'click .bookmarks-group-count': 'navigateToGroup',
 		'focus .bookmarks-group-name': 'nameFocus',
 		'keypress .bookmarks-group-name': 'onEnter',
 		'blur .bookmarks-group-name': 'updateTitle',
@@ -149,7 +149,7 @@ var BookmarkCollectionView = Backbone.View.extend({
 		// Since the colors in DOM are rgb we have to use alternative way of getting and setting the new color.
 		newBgColor = colors[n]
 
-		this.$el.css('background-color', newBgColor);
+		this.$('.bookmarks-group-count').css('background-color', newBgColor);
 		this.model.save('background', newBgColor, tokenHeader);
 	},
 
@@ -189,7 +189,7 @@ var BookmarkCollectionView = Backbone.View.extend({
 	render: function(bookmarks_collection) {
 		this.$el.html(this.template(this.model.toJSON()));
 		var background_color = this.model.get('background');
-		this.$el.css('background-color', background_color);
+		this.$('.bookmarks-group-count').css('background-color', background_color);
 		return this;
 	}
 
