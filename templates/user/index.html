@@ -35,6 +35,8 @@
 						</li>
 					</ul>
 				</div>
+				<h2 class="settings-type">Collections</h2>
+				<ul class="collections-list-edit"></ul>
 				<h2 class="settings-type">Account</h2>
 				<div class="settings-form-section">
 					<label class="settings-form-label" for="password-field">New password</label>
@@ -68,6 +70,9 @@
 				<div class="header-controls-wrap">
 					<input type="text" class="input-search" placeholder="Search . . .">
 					<div class="content-actions-block">
+						<!--<div class="content-actions-button vp-wide add-url">
+							<span class="actions-button-text">Add Bookmark</span>
+						</div>-->
 						<div class="content-actions-button vp-wide starred" data-pressed="no">
 							<span class="actions-button-text">Starred</span>
 						</div>
@@ -110,7 +115,7 @@
 			<ul class="bookmark-menu-list">
 				<li class="bookmark-menu-list-item to-group">Add to group</li>
 				<li class="bookmark-menu-list-item edit-title">Rename Title</li>
-				<li class="bookmark-menu-list-item add-tag">add Label</li>
+				<li class="bookmark-menu-list-item add-tag">Add Label</li>
 				<li class="bookmark-menu-list-item copy-link">Copy Link</li>
 				<li class="bookmark-menu-list-item star-mobile <%= starred ? 'starred-mobile' : '' %>"><%= starred ? 'Starred' : 'Star' %></li>
 				<li class="bookmark-menu-list-item delete-mobile">Delete</li>
@@ -161,7 +166,7 @@
 				<div class="bookmark-menu grd-bookmark-menu">
 					<ul class="bookmark-menu-list">
 						<li class="bookmark-menu-list-item edit-title">Rename Title</li>
-						<li class="bookmark-menu-list-item add-tag">add Label</li>
+						<li class="bookmark-menu-list-item add-tag">Add Label</li>
 						<li class="bookmark-menu-list-item copy-link">Copy Link</li>
 					</ul>
 				</div>
@@ -180,11 +185,12 @@
 
 	<script type="text/template" id="group-template">
 		<div class="group">
-			<span class="bookmarks-group-delete">X</span>
 			<span class="bookmarks-group-count"><%- this.model.bookmarkCollections.length %></span>
-			<img class="toggle-palette" src="{{ STATIC_URL }}images/user/toggle_palette.png" width="20" height="20">
-			<span class="bookmarks-group-name" contenteditable="true"><%= title %></span>
+			<span class="bookmarks-group-name"><%= title %></span>
 		</div>
+	</script>
+
+	<script type="text/template" id="collection-edit-template">
 		<div class="bookmarks-group-color-palette">
 			<span class="bookmarks-group-color palette-color-red" data-n="0"></span>
 			<span class="bookmarks-group-color palette-color-green" data-n="1"></span>
@@ -194,6 +200,11 @@
 			<span class="bookmarks-group-color palette-color-blue" data-n="5"></span>
 			<span class="bookmarks-group-color palette-color-orange" data-n="6"></span>
 			<span class="bookmarks-group-color palette-color-grey" data-n="7"></span>
+		</div>
+		<div class="collection-edit">
+			<span class="collection-edit-color"></span>
+			<span class="collection-edit-name" contenteditable="true"><%= title %></span>
+			<span class="collection-edit-delete">X</span>
 		</div>
 	</script>
 

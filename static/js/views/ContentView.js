@@ -446,10 +446,12 @@ var SettingsView = Backbone.View.extend({
 
 	initialize: function() {
 
+		this.listenTo(globalBookmarkCollections, 'add', this.addNew);
+		this.listenTo(globalBookmarkCollections, 'reset', this.addAll);
+
 		if ( recover == 'true' ) {
 			this.forcePassChange();
 		}
-
 
 		passinput = this.$('.new-pass-input');
 		confirmButton = this.$('.confirm-pass-change');
@@ -568,8 +570,97 @@ var SettingsView = Backbone.View.extend({
 			$('.recover-box').css('top', '150px')
 		}, 100)
 		// on success remove the cookie
+	},
+
+	addNew: function(bookmarks_collection) {
+		var newCollectionEditView = new CollectionEditView({model: bookmarks_collection});
+		this.$('.collections-list-edit').append(newCollectionEditView.render().el);
+	},
+
+	addAll: function() {
+		this.$('.collections-list-edit').html('');
+		globalBookmarkCollections.each(this.addNew, this);
 	}
 
 });
 
 var settingsView = new SettingsView();
+
+
+var CollectionEditView = Backbone.View.extend({
+	tagName: 'li',
+	className: 'collection-edit',
+
+	template: _.template($('#collection-edit-template').html()),	
+
+	initialize: function() {
+		this.listenTo(this.model, 'destroy', this.remove);
+	},
+
+	events: {
+		'focus .collection-edit-name': 'nameFocus',
+		'keypress .collection-edit-name': 'onEnter',
+		'blur .collection-edit-name': 'updateTitle',
+		'click .collection-edit-delete': 'clear',		
+		'click .bookmarks-group-color': 'changeGroupColor',
+		'click .collection-edit-color': 'togglePalette',
+	},
+
+	nameFocus: function() {
+		titleField = this.$('.collection-edit-name');
+	},
+
+	onEnter: function(e) {
+		if (e.which === ENTER_KEY) {
+			titleField.blur()
+			return false;
+		}
+	},
+
+	updateTitle: function() {
+		newval = titleField.text()
+		this.model.set({title: newval})
+
+		if ( this.model.hasChanged('title') ) {
+			this.saveGroup(newval)
+		}
+	},
+
+	togglePalette: function() {
+		this.$('.bookmarks-group-color-palette').toggleClass('drawer-open');
+	},
+
+	changeGroupColor: function(click) {
+		var n = click.target.getAttribute('data-n');
+		// Since the colors in DOM are rgb we have to use alternative way of getting and setting the new color.
+		newBgColor = colors[n]
+
+		this.$('.collection-edit-color').css('background-color', newBgColor);
+		this.model.save('background', newBgColor, tokenHeader);
+	},
+
+	clear: function () {
+		model = this.model;
+		this.$el.css({ opacity: '0' })
+
+		this.$el.one('transitionend', function() {
+			console.log('removed')
+			model.destroy(tokenHeader);
+		});
+	},
+
+	saveGroup: function(newval) {
+		this.model.save({ 'title': newval}, tokenHeader);
+		setTimeout(function() {
+			globalBookmarkCollections.fetch({reset:true})
+		}, 1000)
+	},
+
+	render: function(bookmarks_collection) {
+		this.$el.html(this.template(this.model.toJSON()));
+		var background_color = this.model.get('background');
+		this.$('.collection-edit-color').css('background-color', background_color);
+		return this;
+	}
+
+})

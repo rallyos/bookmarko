@@ -106,57 +106,22 @@ a {
 	-webkit-transition: 0.3s;
 	transition: 0.3s;
 }
-.bookmarks-group-delete {
-	width: 20px;
-	height: 20px;
-	margin: 6px 0 0 3px;
-	float: left;
-	border-radius: 20px;
-	font-size: 0.7rem;
-	font-weight: 300;
-	line-height: 20px;
-	text-align: center;
-	background: #FA5757;
-	color: #fff;
-	cursor: pointer;
-	-webkit-transform: translateX(-107px);
-	-ms-transform: translateX(-107px);
-	transform: translateX(-107px);
-	-webkit-transition: 0.3s;
-	transition: 0.3s;
-}
-.group:hover .bookmarks-group-delete {
-	-webkit-transform: translateX(0);
-	-ms-transform: translateX(0);
-	transform: translateX(0);
-}
-.toggle-palette {
-	position: absolute;
-	bottom: 20px;
-	left: 3px;
-	width: 20px;
-	height: 20px;
-	cursor: pointer;
-	-webkit-transform: translateX(-107px);
-	-ms-transform: translateX(-107px);
-	transform: translateX(-107px);
-	-webkit-transition: 0.3s;
-	transition: 0.3s;
-}
-.group:hover .toggle-palette {
-	-webkit-transform: translateX(0);
-	-ms-transform: translateX(0);
-	transform: translateX(0);
-}
 .bookmarks-group-color-palette {
-	width: 100%;
-	height: 0;
+	width: 104px;
+	height: 50px;
+	padding: 4px;
+	position: absolute;
+	top: -60px;
+	left: 6px;
+	border: solid 1px #B9B9B9;
+	background: #fff;
 	overflow: hidden;
+	display: none;
 	-webkit-transition: 0.2s;
 	transition: 0.2s;
 }
 .drawer-open {
-	height: 50px;
+	display: block;
 }
 .bookmarks-group-color {
 	width: 20px;
@@ -206,6 +171,7 @@ a {
 	color: #818382;
 	font-size: 0.8rem;
 	text-align: center;
+	cursor: default;
 }
 .content {
 	width: 100%;
@@ -278,6 +244,10 @@ a {
 .content-actions-button:active {
 	-webkit-transform: scale(0.90);
 	transform: scale(0.90);
+}
+.add-url {
+	margin: 5px 0 5px 2%;
+	background-image: url(../images/user/add_url.png);
 }
 .starred {
 	margin: 5px 0 5px 2%;
@@ -716,6 +686,7 @@ a {
 .settings-block {
 	position: fixed;
 	width: 400px;
+	height: 90%;
 	right: 0;
 	top: 50px;
 	background: #fff;
@@ -724,6 +695,59 @@ a {
 	z-index: 2;
 	-webkit-transition: 0.3s;
 	transition: 0.3s;
+	overflow: scroll;
+}
+.collections-list-edit {
+	width: 100%;
+	float: left;
+}
+.collection-edit {
+	width: 100%;
+	height: 40px;
+	position: relative;
+}
+.collection-edit-color {
+	display: block;
+	float: left;
+	margin: 5px 6px;
+	width: 30px;
+	height: 30px;
+	border-radius: 30px;
+	cursor: pointer;
+}
+.collection-edit-name {
+	width: 70%;
+	margin-left: 10px;
+	display: block;
+	float: left;
+	color: #818382;
+	font-size: 0.9rem;
+	line-height: 40px;
+	cursor: pointer;
+}
+.collection-edit-name:focus {
+	cursor: text;
+}
+.collection-edit-delete {
+	width: 18px;
+	height: 18px;
+	margin: 10px 8px;
+	float: right;
+	border-radius: 20px;
+	font-size: 0.7rem;
+	font-weight: 300;
+	line-height: 20px;
+	background: #fff;
+	color: #FA5757;
+	text-align: center;
+	border: solid 1px #FA5757;
+	cursor: pointer;
+	-webkit-transition: 0.3s;
+	transition: 0.3s;
+}
+.collection-edit-delete:hover {
+	background: #FA5757;
+	color: #fff;
 }
 .settings-hidden {
 	-webkit-transform: translateX(100%);

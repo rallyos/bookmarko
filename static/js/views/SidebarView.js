@@ -23,7 +23,7 @@ var SidebarView = Backbone.View.extend({
 		});
 		globalBookmarkCollections.add(group)
 		group.trigger('scale');
-		this.$('.bookmarks-group-name').focus();
+		this.$('.bookmarks-group-name').attr('contenteditable', 'true').focus();
 	},
 
 	addNew: function(bookmarks_collection) {
@@ -56,19 +56,15 @@ var BookmarkCollectionView = Backbone.View.extend({
 	},
 
 	events: {
-		'click .bookmarks-group-count': 'navigateToGroup',
 		'focus .bookmarks-group-name': 'nameFocus',
 		'keypress .bookmarks-group-name': 'onEnter',
 		'blur .bookmarks-group-name': 'updateTitle',
 
+		'click .bookmarks-group-count': 'navigateToGroup',
 		'dragenter': 'dragEnterEvent',
 		'dragover': 'dragOverEvent',
 		'dragleave': 'dragLeaveEvent',
 		'drop': 'dragDropEvent',
-
-		'click .bookmarks-group-delete': 'clear',
-		'click .toggle-palette': 'togglePalette',
-		'click .bookmarks-group-color': 'changeGroupColor'
 	},
 
 	animateGroup: function() {
@@ -144,15 +140,6 @@ var BookmarkCollectionView = Backbone.View.extend({
 		this.$('.bookmarks-group-color-palette').toggleClass('drawer-open');
 	},
 
-	changeGroupColor: function(click) {
-		var n = click.target.getAttribute('data-n');
-		// Since the colors in DOM are rgb we have to use alternative way of getting and setting the new color.
-		newBgColor = colors[n]
-
-		this.$('.bookmarks-group-count').css('background-color', newBgColor);
-		this.model.save('background', newBgColor, tokenHeader);
-	},
-
 	nameFocus: function() {
 		titleField = this.$('.bookmarks-group-name');
 	},
@@ -168,22 +155,21 @@ var BookmarkCollectionView = Backbone.View.extend({
 		newval = titleField.text()
 		this.model.set({title: newval})
 
+		console.log('save')
+
+		this.$('.bookmarks-group-name').attr('contenteditable', 'false')
+
 		if ( this.model.hasChanged('title') ) {
 			this.saveGroup(newval)
 		}
+
 	},
 
 	saveGroup: function(newval) {
 		this.model.save({ 'title': newval}, tokenHeader);
-	},
-
-	clear: function () {
-		model = this.model;
-		this.$el.css({ right: '100%' })
-		
-		this.$el.one('transitionend', function() {
-			model.destroy(tokenHeader);
-		})
+		setTimeout(function() {
+			globalBookmarkCollections.fetch({reset:true})
+		}, 1000)
 	},
 
 	render: function(bookmarks_collection) {
