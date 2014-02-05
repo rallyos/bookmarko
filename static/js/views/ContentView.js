@@ -1,6 +1,6 @@
 // Content View
 // Responsible for showing all bookmarks 
-
+'use strict'
 var ContentView = Backbone.View.extend({
 	el: '.content',
 
@@ -22,7 +22,7 @@ var ContentView = Backbone.View.extend({
 
 		this.$searchInput = this.$('.input-search');
 		this.$starButton = this.$('.starred');
-		settingsBlock = $('.settings-block');
+		this.$settingsBlock = $('.settings-block');
 	},
 
 	events: {
@@ -32,6 +32,9 @@ var ContentView = Backbone.View.extend({
 		'click .starred': 'showStarred',
 		'click #report': 'showReportBlock',
 		'click #settings': 'openSettings',
+		'click #add-url': 'openAddUrl',
+		'keyup .add-url-input': 'addOnEnter',
+		'click .add-url-submit': 'addFromPage',
 		'click .report-send': 'sendReport',
 		'click .recover-submit': 'forcePassChangeSubmit'
 	},
@@ -57,17 +60,17 @@ var ContentView = Backbone.View.extend({
 	},
 
 	showHelp: function() {
-		var newUserTemplate = $('<img class="help-arrows" src="http://bookmarkoapp.com/static/images/user/newtest.png">')
+		var newUserTemplate = $('<img class="help-arrows" src="http://www.bookmarkoapp.com/static/images/user/newtest.png">')
 			newUserTemplate.appendTo($('.bookmarks-section') );
 
 		if (new_user == 'true') {
     		var newUserTemplate = $('<h1 class="new-user-text thank-you">Thank you for signing up!</h1><p class="new-user-text beta-warning"><span class="new-user-bookmarko">Bookmarko</span> is still in early beta so everything can brake, and <br> your user experience may not be so good.</p>')
     			newUserTemplate.insertAfter('.help-arrows');
 	
-			var getExtensionTemplate = $('<div class="browser-extensions-box"><h1 class="new-user-text get-extension-header">Get the extension and start saving bookmarks</h1><a class="browser-extensions-link" href="https://chrome.google.com/webstore/detail/bookmarko/cjiadbbjgehkojjabcbegjmmlcfhgped" target="_blank"><img class="browser-extensions-icon" src="http://bookmarkoapp.com/static/images/user/webstorex124.png"></a></div>')
+			var getExtensionTemplate = $('<div class="browser-extensions-box"><h1 class="new-user-text get-extension-header">Get the extension and start saving bookmarks</h1><a class="browser-extensions-link" href="https://chrome.google.com/webstore/detail/bookmarko/cjiadbbjgehkojjabcbegjmmlcfhgped" target="_blank"><img class="browser-extensions-icon" src="http://www.bookmarkoapp.com/static/images/user/webstorex124.png"></a></div>')
 				getExtensionTemplate.insertAfter('.beta-warning')
 		} else {
-			var getExtensionTemplate = $('<div class="browser-extensions-box"><h1 class="new-user-text get-extension-header">Get the extension and start saving bookmarks</h1><a class="browser-extensions-link" href="https://chrome.google.com/webstore/detail/bookmarko/cjiadbbjgehkojjabcbegjmmlcfhgped" target="_blank"><img class="browser-extensions-icon" src="http://bookmarkoapp.com/static/images/user/webstorex124.png"></a></div>')
+			var getExtensionTemplate = $('<div class="browser-extensions-box"><h1 class="new-user-text get-extension-header">Get the extension and start saving bookmarks</h1><a class="browser-extensions-link" href="https://chrome.google.com/webstore/detail/bookmarko/cjiadbbjgehkojjabcbegjmmlcfhgped" target="_blank"><img class="browser-extensions-icon" src="http://www.bookmarkoapp.com/static/images/user/webstorex124.png"></a></div>')
 				getExtensionTemplate.insertAfter('.help-arrows')
 		}
 	},
@@ -83,17 +86,17 @@ var ContentView = Backbone.View.extend({
 	},
 
 	setBookmarkClass: function() {
-		if ( user_template == 'list' ) {
+		if ( appearance == 'LI' ) {
 		    $('.bookmark').removeClass('grid-tmpl').addClass('list-tmpl')
-		} else if ( user_template == 'grid' ) {
+		} else if ( appearance == 'GR' ) {
 		    $('.bookmark').removeClass('list-tmpl').addClass('grid-tmpl')
 		}
 	},
 
 	// Show bookmarks based on their collection
 	userEntered: function() {
-		param = null;
-		fn = 'collection';
+		var param = null;
+		var fn = 'collection';
 		this.filterBy(param, fn);
 	},
 
@@ -112,8 +115,8 @@ var ContentView = Backbone.View.extend({
 			this.$starButton.data('pressed', 'no');
 
 			// Use the universal filter function to show the previous view
-			fn = 'collection';
-			param = null;
+			var fn = 'collection';
+			var param = null;
 			this.filterBy(param, fn);
 		} else {
 			this.$starButton.data('pressed', 'yes');
@@ -135,7 +138,36 @@ var ContentView = Backbone.View.extend({
 	},
 
 	openSettings: function() {
-		settingsBlock.toggleClass("settings-hidden");
+		this.$settingsBlock.toggleClass("settings-hidden");
+	},
+
+	openAddUrl: function() {
+		$('.add-url-block').toggleClass('add-url-show')
+	},
+
+	addOnEnter: function(key) {
+		if (key.which === ENTER_KEY) {
+			this.addFromPage()
+		}
+	},
+
+	addFromPage: function() {
+		$('.add-url-submit').text('').append('<img class="add-url-loading" width="25" height="25" src="/static/images/user/add_url_loading.png">')
+		$.ajax({
+			type: 'POST',
+			url: 'add_from_page',
+			headers: {'Authorization': 'Token ' + token, 'X-CSRFToken': csrftoken},
+			data: {url: $('.add-url-input ').val()}
+		}).done(function(data) {
+			var p = JSON.parse(data)
+			$('.add-url-submit').remove('.add-url-loading').text('\u2713')
+			bookmarks.add({id: p.id, title: p.title, url: p.url,
+			image: null, starred: false, collection_id: null, description: null, tag: null})
+			setTimeout(function() {
+				$('.add-url-block').removeClass('add-url-show')
+				$('.add-url-submit').text('+')
+			}, 1000)
+		})
 	},
 
 	showReportBlock: function() {
@@ -152,7 +184,7 @@ var ContentView = Backbone.View.extend({
 
 	sendReport: function() {
 
-		message = this.$('.report-message').val()
+		var message = this.$('.report-message').val()
 
 		if ( message.length > 0 ) {
 			$.ajax({
@@ -174,7 +206,7 @@ var ContentView = Backbone.View.extend({
 
 	forcePassChangeSubmit: function() {
 
-		newpass = this.$('.recover-input').val()
+		var newpass = this.$('.recover-input').val()
 
 		if ( newpass.length > 0 ) {
 			$.ajax({
@@ -213,7 +245,7 @@ var bookmarksList = new ContentView();
 // Single bookmark view
 var BookmarkView = Backbone.View.extend({
 	tagName: 'li',
-	className: 'bookmark',
+	className: cls,
 
 	events: {
 		'click .bookmark-star': 'starBookmark',
@@ -263,7 +295,7 @@ var BookmarkView = Backbone.View.extend({
 	},
 
 	showMenu: function(e) {
-		bookmarkMenu = this.$('.bookmark-menu');
+		var bookmarkMenu = this.$('.bookmark-menu');
 		bookmarkMenu.toggle();
 		$('html').one('click', function() {
 			bookmarkMenu.hide();
@@ -273,7 +305,7 @@ var BookmarkView = Backbone.View.extend({
 	},
 
 	copyToClipboard: function() {
-		bookmark_url = this.model.get('url')
+		var bookmark_url = this.model.get('url')
 		window.prompt ("Copy to clipboard:", bookmark_url);
 	},
 
@@ -323,14 +355,14 @@ var BookmarkView = Backbone.View.extend({
 	// ! These functions will be here untill the tags functionality is ready
 	addTag: function() {
 		this.model.set({tag: ' '})
-		tagField = this.$('.bookmark-tags');
+		var tagField = this.$('.bookmark-tags');
 		this.$el.removeAttr('draggable')
 		tagField.attr('contenteditable', 'true')
 		tagField.focus();
 	},
 
 	tagFocus: function() {
-		tagField = this.$('.bookmark-tags');
+		var tagField = this.$('.bookmark-tags');
 	},
 
 	onEnterTag: function(e) {
@@ -352,7 +384,7 @@ var BookmarkView = Backbone.View.extend({
 	},
 
     tagClicked: function() {
-            tagTitle = this.model.get('tag');
+            var tagTitle = this.model.get('tag');
             pageRouter.navigate('/tags/'+ tagTitle, true);
     },
 
@@ -361,9 +393,9 @@ var BookmarkView = Backbone.View.extend({
     },
 
 	showResults: function(bookmark, searchWord) {
-		title = bookmark.get('title').toLowerCase();
-		url = bookmark.get('url').toLowerCase();
-		searchWord = searchWord.toLowerCase();
+		var title = bookmark.get('title').toLowerCase();
+		var url = bookmark.get('url').toLowerCase();
+		var searchWord = searchWord.toLowerCase();
 
 		//tag = bookmark.get('tag').toLowerCase();
 
@@ -393,7 +425,7 @@ var BookmarkView = Backbone.View.extend({
 
 	editBookmark: function(e) {
 		this.$el.removeAttr('draggable')
-		titleField = this.$('.bookmark-title');
+		var titleField = this.$('.bookmark-title');
 		titleField.attr('contenteditable', 'true').focus()
 	},
 
@@ -408,7 +440,7 @@ var BookmarkView = Backbone.View.extend({
 		this.$el.attr('draggable', 'true')
 		titleField.removeAttr('contenteditable');
 
-		newval = titleField.text()
+		var newval = titleField.text()
 		this.model.set({title: newval})
 
 		if (newval.length == 0) {
@@ -423,9 +455,9 @@ var BookmarkView = Backbone.View.extend({
 	},
 
 	clear: function() {
-		model = this.model;
+		var model = this.model;
 
-		if ( user_template == 'list' ) {
+		if ( appearance == 'LI' ) {
 			this.$el.css({ right: '100%' })
 		} else {
 			this.$el.css({
@@ -453,11 +485,12 @@ var SettingsView = Backbone.View.extend({
 			this.forcePassChange();
 		}
 
-		passinput = this.$('.new-pass-input');
-		confirmButton = this.$('.confirm-pass-change');
+		var passinput = this.$('.new-pass-input');
+		var confirmButton = this.$('.confirm-pass-change');
 	},
 
 	events: {
+		'click .show-hide-setting': 'hideSetting',
 		'click .change-tmpl': 'changeTemplate',
 		'change .settings-form-select': 'changeBookmarkTemplate',
 		'change .settings-import-button': 'sendBookmarks',
@@ -466,45 +499,63 @@ var SettingsView = Backbone.View.extend({
 		'click .confirm-pass-change': 'changePassword'
 	},
 
+	hideSetting: function(click) {
+		if (click.target.textContent == '+') {
+			click.target.textContent = '-'
+		} else {
+			click.target.textContent = '+'
+		}
+		$(click.target).parent().next().slideToggle()
+	},
+
 	changeTemplate: function(click) {
 
 		if ( click.target.id == 'list' ) {
-			user_template = 'list'
-	        Template = '#list-template';
+			window.appearance = 'LI'
+	        window.Template = '#list-template';
+	        window.cls = 'bookmark list-tmpl'
 		} else if ( click.target.id == 'grid' ) {
-			user_template = 'grid'
-	        Template = '#grid-template';
+			window.appearance = 'GR'
+	        window.Template = '#grid-template';
+	        window.cls = 'bookmark grid-tmpl'
 		}
 
+		this.syncSettings()
 		bookmarks.fetch({reset: true})
-		this.setTemplateCookie(user_template)
 	},
 
-	setTemplateCookie: function(user_template) {
-		year = new Date()
-		nextYear = year.getFullYear() + 1
-		year.setYear(nextYear)
-		document.cookie ='template='+ user_template +'; expires='+ year +'; path=/'
+	syncSettings: function() {
+		$.ajax({
+			type: 'POST',
+			url: 'change_settings',
+			headers: {'Authorization': 'Token ' + token, 'X-CSRFToken': csrftoken},
+			data: {'appearance': appearance, 'order_collections': order_collections}
+		})
 	},
 
+	// Why this function has wrong name?
 	changeBookmarkTemplate: function() {
 	    if ( $('.settings-form-option:selected').val() == 'title' ) {
+	    		window.order_collections = 'NA'
 	            globalBookmarkCollections.order_by_title();
 	    } else if ( $('.settings-form-option:selected').val() == 'date' ) {
+	    		window.order_collections = 'DA'
 	            globalBookmarkCollections.order_by_date();
 	    } else if ( $('.settings-form-option:selected').val() == 'size' ) {
+	    		window.order_collections = 'SI'
 	            globalBookmarkCollections.order_by_size();
 	    }
 
 	    globalBookmarkCollections.trigger('reset');
+	    this.syncSettings()
 	},
 
 	sendBookmarks: function() {
-		mda = document.getElementsByClassName('settings-import-button')[0]
+		var mda = document.getElementsByClassName('settings-import-button')[0]
 	    var formData = new FormData();
 	    formData.append("thefile", mda.files[0]);
 	    var xhr = new XMLHttpRequest();
-	    xhr.open('POST', 'http://bookmarkoapp.com/da', true);
+	    xhr.open('POST', 'http://www.bookmarkoapp.com/da', true);
 	    xhr.send(formData);
 
 	    console.log(xhr.status)
@@ -526,8 +577,8 @@ var SettingsView = Backbone.View.extend({
 	},
 
 	changePassword: function() {
-		msgEl = this.$('.change-pass-message')
-		newpass = passinput.val()
+		var msgEl = this.$('.change-pass-message')
+		var newpass = passinput.val()
 
 		if ( newpass.length > 0 ) {
 			$.ajax({
@@ -607,7 +658,7 @@ var CollectionEditView = Backbone.View.extend({
 	},
 
 	nameFocus: function() {
-		titleField = this.$('.collection-edit-name');
+		var titleField = this.$('.collection-edit-name');
 	},
 
 	onEnter: function(e) {
@@ -618,7 +669,7 @@ var CollectionEditView = Backbone.View.extend({
 	},
 
 	updateTitle: function() {
-		newval = titleField.text()
+		var newval = titleField.text()
 		this.model.set({title: newval})
 
 		if ( this.model.hasChanged('title') ) {
@@ -633,14 +684,14 @@ var CollectionEditView = Backbone.View.extend({
 	changeGroupColor: function(click) {
 		var n = click.target.getAttribute('data-n');
 		// Since the colors in DOM are rgb we have to use alternative way of getting and setting the new color.
-		newBgColor = colors[n]
+		var newBgColor = colors[n]
 
 		this.$('.collection-edit-color').css('background-color', newBgColor);
 		this.model.save('background', newBgColor, tokenHeader);
 	},
 
 	clear: function () {
-		model = this.model;
+		var model = this.model;
 		this.$el.css({ opacity: '0' })
 
 		this.$el.one('transitionend', function() {

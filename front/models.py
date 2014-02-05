@@ -29,3 +29,24 @@ class Post(models.Model):
 class Recover(models.Model):
 	user = models.ForeignKey(User)
 	key = models.CharField(max_length=132)
+
+class AppSettings(models.Model):
+	user = models.ForeignKey(User)
+
+	NAME = 'NA'
+	DATE = 'DA'
+	SIZE = 'SI'
+	order_collections_choices = (
+		(NAME, 'By name'),
+		(DATE, 'By date created'),
+		(SIZE, 'By size'),
+	)
+	order_collections = models.CharField(max_length=2, choices=order_collections_choices, default=NAME)
+
+	GRID = 'GR'
+	LIST = 'LI'
+	appearance_choices = (
+		(GRID, 'Grid'),
+		(LIST, 'List'),
+	)
+	appearance = models.CharField(max_length=2, choices=appearance_choices, default=GRID)

@@ -1,5 +1,5 @@
 var ENTER_KEY = 13;
-
+'use strict'
 function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie != '') {
@@ -17,7 +17,6 @@ function getCookie(name) {
 }
 var token = getCookie('Token');
 var new_user = getCookie('new-user');
-var user_template = getCookie('template');
 var csrftoken = getCookie('csrftoken');
 var recover = getCookie('recover');
 
@@ -25,8 +24,10 @@ var recover = getCookie('recover');
 var tokenHeader = { headers: { 'Authorization': 'Token ' + token } };
 
 
-if ( user_template == 'list' ) {
-    Template = '#list-template';
-} else if ( user_template == 'grid' ) {
-    Template = '#grid-template';
+if ( appearance == 'LI' ) {
+    var Template = '#list-template';
+    var cls = 'bookmark list-tmpl'
+} else if ( appearance == 'GR' ) {
+    var Template = '#grid-template';
+    var cls = 'bookmark grid-tmpl'
 }

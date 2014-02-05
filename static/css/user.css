@@ -183,7 +183,6 @@ a {
 	z-index: 1;
 	background: #fff;
 	border-bottom: solid 1px #F0EFF1;
-	overflow: hidden;
 }
 .header-controls-wrap {
 	margin-left: 60px;
@@ -265,6 +264,83 @@ a {
 	float: right;
 	margin: 5px 2% 5px 0;
 	background-image: url(../images/user/flag.png);
+}
+#add-url {
+
+}
+.add-url-block {
+	width: 40%;
+	height: 30px;
+	position: absolute;
+	border: solid 1px #FFCBCB;
+	left: 40%;
+	top: 50px;
+	background: #fff;
+	-webkit-transform: translateY(-300%);
+	-ms-transform: translateY(-300%);
+	transform: translateY(-300%);
+	-webkit-transition: 0.3s;
+	transition: 0.3s;
+}
+.add-url-show {
+	-webkit-transform: translateY(0);
+	-ms-transform: translateY(0);
+	transform: translateY(0);
+}
+.add-url-input {
+	width: 90%;
+	height: 22px;
+	padding: 4px 0;
+	float: left;
+	font-family: 'Roboto', sans-serif;
+	font-size: 0.9rem;
+	display: block;
+	text-indent: 2%;
+	border: 0;
+	outline: 0;
+}
+.add-url-submit {
+	display: block;
+	width: 10%;
+	height: 30px;
+	padding: 0;
+	float: right;
+	font-size: 1.1rem;
+	color: #fff;
+	background: #FF4242;
+	border: 0;
+	outline: 0;
+	cursor: pointer;
+}
+.add-url-loading {
+	margin: 2.5px 0;
+	-webkit-animation: myfirst 1s infinite linear;
+	animation: myfirst 1s infinite linear;
+}
+@-webkit-keyframes myfirst {
+	from {
+		-webkit-transform: rotate(0);
+		-ms-transform: rotate(0);
+		transform: rotate(0);	
+	}
+	to {
+		-webkit-transform: rotate(360deg);
+		-ms-transform: rotate(360deg);
+		transform: rotate(360deg);
+	}
+
+}
+@keyframes myfirst {
+	from {
+		-webkit-transform: rotate(0);
+		-ms-transform: rotate(0);
+		transform: rotate(0);	
+	}
+	to {
+		-webkit-transform: rotate(360deg);
+		-ms-transform: rotate(360deg);
+		transform: rotate(360deg);
+	}
 }
 #list {
 	background-image: url(../images/user/list.png);
@@ -470,9 +546,10 @@ a {
 	border: solid 1px transparent;
 }
 .grid-tmpl {
-	width: 32%;
+	width: 18%;
+	max-width: 240px;
 	height: 240px;
-	margin: 1% 0 1% 1%;
+	margin: 1%;
 	float: left;
 	position: relative;
 	font-family: 'Roboto', helvetica, sans-serif;
@@ -486,9 +563,9 @@ a {
 	bottom: 0;
 	width: 100%;
 	background: rgba(255, 255, 255, 0.97);
-	-webkit-transform: translateY(30px);
-	-ms-transform: translateY(30px);
-	transform: translateY(30px);
+	-webkit-transform: translateY(100%);
+	-ms-transform: translateY(100%);
+	transform: translateY(100%);
 	-webkit-transition: 0.3s;
 	transition: 0.3s;
 }
@@ -497,17 +574,22 @@ a {
 	-ms-transform: translateY(0);
 	transform: translateY(0);
 }
-.grd-bookmark-content-w-title {
-	height: 84px;
-}
-.grd-bookmark-content-wo-title {
-	height: 30px;
+.grid-tmpl:hover .grd-bookmark-image {
+	-webkit-transform: translateX(-30%);
+	-ms-transform: translateX(-30%);
+	transform: translateX(-30%);
 }
 .grd-bookmark-image {
-	max-width: 100%;
+	height: 100%;
+	-webkit-transition: 3s;
+	transition: 3s;
+	-webkit-transform: translateX(0);
+	-ms-transform: translateX(0);
+	transform: translateX(0);
 }
 .grd-bookmark-title {
 	display: block;
+	font-size: 0.9rem;
 	padding: 5px 0 5px 4px;
 	font-weight: 300;
 }
@@ -518,9 +600,9 @@ a {
 }
 .grd-bookmark-title-big {
 	margin: 0;
-	padding: 5px 8px 10px 8px;
-	font-size: 1.4rem;
-	font-weight: 300;
+	padding: 11px;
+	font-size: 1.3rem;
+	font-weight: 100;
 }
 .grd-bookmark-descr {
 	padding: 0 5px;
@@ -589,13 +671,16 @@ a {
 	width: 30px;
 	height: 30px;
 	background-size: 30px;
+	background-position: -30px;
+	background-image: url(../images/user/grd-dots.png);
+	z-index: 1;
+	-webkit-transition: 0.2s;
+	transition: 0.2s;
 }
 .grid-tmpl:hover .grd-select-bookmark {
-	background-image: url(../images/user/grd-dots.png);
+	background-position: 0px;
 }
 .grd-bookmark-settings {
-	position: absolute;
-	bottom: 0;
 	width: 100%;
 	height: 30px;
 }
@@ -699,6 +784,7 @@ a {
 }
 .collections-list-edit {
 	width: 100%;
+	margin: 10px 0;
 	float: left;
 }
 .collection-edit {
@@ -759,6 +845,9 @@ a {
 	-ms-transform: translateX(0);
 	transform: translateX(0);
 }
+.setting-group-wrap {
+	margin: 10px 0;
+}
 .settings-header {
 	padding: 5px 0;
 	font-size: 1.2rem;
@@ -767,13 +856,28 @@ a {
 	text-align: center;
 	background: #DB4A39;
 }
+.setting-heading-wrap {
+	width: 60%;
+	border-bottom: solid 2px #9E9B9B;
+	overflow: hidden;
+}
 .settings-type {
-	width: 45%;
+	width: 60%;
+	margin: 0;
 	padding: 0 0 3px 5px;
+	float: left;
 	color: #9E9B9B;
 	font-size: 1rem;
 	font-weight: 600;
-	border-bottom: solid 2px;
+}
+.show-hide-setting {
+	float: right;
+	font-size: 2rem;
+	margin-right: 10px;
+	color: #DB4A39;
+	line-height: 20px;
+	font-weight: 300;
+	cursor: pointer;
 }
 .settings-form-section {
 	width: 100%;

@@ -1,3 +1,4 @@
+'use strict'
 var SidebarView = Backbone.View.extend({
 	el: '.sidebar',
 
@@ -8,7 +9,22 @@ var SidebarView = Backbone.View.extend({
 
 		this.$groupsWrap = this.$('.groups-wrap');
 
-		colors = ['#EB4040', '#79D55B', '#343534', '#33A3C0', '#863825', '#838AFF', '#FFAC79', '#A3A3A3']
+	    	if (order_collections == 'NA') {
+	    		$('.settings-form-option:nth-child(1)').attr('selected', 'selected')
+	    		globalBookmarkCollections.order_by_title();
+	    	} else if (order_collections == 'DA') {
+	    		$('.settings-form-option:nth-child(2)').attr('selected', 'selected')
+	            globalBookmarkCollections.order_by_date();
+	    	} else if (order_collections == 'SI') {
+	    		$('.settings-form-option:nth-child(3)').attr('selected', 'selected')
+	            globalBookmarkCollections.order_by_size();
+	    	}
+
+
+	    globalBookmarkCollections.trigger('reset');
+
+
+		var colors = ['#EB4040', '#79D55B', '#343534', '#33A3C0', '#863825', '#838AFF', '#FFAC79', '#A3A3A3']
 	},
 
 	events: {
@@ -68,7 +84,7 @@ var BookmarkCollectionView = Backbone.View.extend({
 	},
 
 	animateGroup: function() {
-		groupEl = $(this.el)
+		var groupEl = $(this.el)
 		$(groupEl).toggleClass('scale')
 
 		// For now timeout is needed to kick the animation (toggling the transform class)
@@ -89,7 +105,7 @@ var BookmarkCollectionView = Backbone.View.extend({
 		if (e.preventDefault) { e.preventDefault(); }
 
 		// Convert data back to JSON
-		data = JSON.parse(e.originalEvent.dataTransfer.getData('model'));
+		var data = JSON.parse(e.originalEvent.dataTransfer.getData('model'));
 
 		// Store the collection id of the model that's being dragged
 		var draggedModelCollectionID = data.collection_id;
@@ -141,7 +157,7 @@ var BookmarkCollectionView = Backbone.View.extend({
 	},
 
 	nameFocus: function() {
-		titleField = this.$('.bookmarks-group-name');
+		var titleField = this.$('.bookmarks-group-name');
 	},
 
 	onEnter: function(e) {
@@ -152,7 +168,7 @@ var BookmarkCollectionView = Backbone.View.extend({
 	},
 
 	updateTitle: function() {
-		newval = titleField.text()
+		var newval = titleField.text()
 		this.model.set({title: newval})
 
 		console.log('save')

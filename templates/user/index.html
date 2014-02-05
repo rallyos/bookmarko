@@ -12,38 +12,45 @@
 	<div class="wrap">
 		<div class="settings-block settings-hidden">
 			<h1 class="settings-header">Settings</h1>
-			<a href="logout_user" id="sign-out">Sign out</a>
-				<h2 class="settings-type">App preferences</h2>
-				<div class="settings-form-section">
-					<label class="settings-form-label label-medium">Order collections</label>
-					<select class="settings-form-select">
-						<option class="settings-form-option" value="title">By name</option>
-						<option class="settings-form-option" value="date">By date created</option>
-						<option class="settings-form-option" value="size">By size</option>
-					</select>
-					<label class="settings-form-label label-long">Bookmarks appearance</label>
-					<ul class="settings-change-tmpl">
-						<li>
-							<div class="content-actions-button change-tmpl vp-wide" id="list">
-								<span class="actions-button-text">List</span>
-							</div>
-						</li>
-						<li>
-							<div class="content-actions-button change-tmpl vp-wide" id="grid">
-								<span class="actions-button-text">Grid</span>
-							</div>
-						</li>
-					</ul>
+				<div class="setting-group-wrap">
+					<div class="setting-heading-wrap"><h2 class="settings-type">App preferences</h2><span class="show-hide-setting">-</span></div>
+
+					<div class="settings-form-section">
+						<label class="settings-form-label label-medium">Order collections</label>
+						<select class="settings-form-select">
+							<option class="settings-form-option" value="title">By name</option>
+							<option class="settings-form-option" value="date">By date created</option>
+							<option class="settings-form-option" value="size">By size</option>
+						</select>
+						<label class="settings-form-label label-long">Bookmarks appearance</label>
+						<ul class="settings-change-tmpl">
+							<li>
+								<div class="content-actions-button change-tmpl vp-wide" id="list">
+									<span class="actions-button-text">List</span>
+								</div>
+							</li>
+							<li>
+								<div class="content-actions-button change-tmpl vp-wide" id="grid">
+									<span class="actions-button-text">Grid</span>
+								</div>
+							</li>
+						</ul>
+					</div>
 				</div>
-				<h2 class="settings-type">Collections</h2>
-				<ul class="collections-list-edit"></ul>
-				<h2 class="settings-type">Account</h2>
-				<div class="settings-form-section">
-					<label class="settings-form-label" for="password-field">New password</label>
-					<input class="settings-form-input new-pass-input" id="password-field" type="password">
-					<span class="change-pass-message hidden">message</span>
-					<input class="confirm-pass-change hidden" type="button" value="Confirm">
+				<div class="setting-group-wrap">
+					<div class="setting-heading-wrap"><h2 class="settings-type">Collections</h2><span class="show-hide-setting">-</span></div>
+					<ul class="collections-list-edit"></ul>
 				</div>
+				<div class="setting-group-wrap">
+					<div class="setting-heading-wrap"><h2 class="settings-type">Account</h2><span class="show-hide-setting">-</span></div>
+					<div class="settings-form-section">
+						<label class="settings-form-label" for="password-field">New password</label>
+						<input class="settings-form-input new-pass-input" id="password-field" type="password">
+						<span class="change-pass-message hidden">message</span>
+						<input class="confirm-pass-change hidden" type="button" value="Confirm">
+					</div>
+				</div>
+				<a href="logout_user" id="sign-out">Sign out</a>
 				<!-- Doesn't work well yet
 				<h2 class="settings-type import-data">Data</h2>
 				<div class="settings-form-section import-data">
@@ -70,9 +77,13 @@
 				<div class="header-controls-wrap">
 					<input type="text" class="input-search" placeholder="Search . . .">
 					<div class="content-actions-block">
-						<!--<div class="content-actions-button vp-wide add-url">
-							<span class="actions-button-text">Add Bookmark</span>
-						</div>-->
+						<div class="content-actions-button vp-wide add-url" id="add-url">
+							<span class="actions-button-text">Add</span>
+						</div>
+						<div class="add-url-block">
+							<input class="add-url-input" type="text" placeholder="Page url">
+							<button class="add-url-submit">+</button>
+						</div>
 						<div class="content-actions-button vp-wide starred" data-pressed="no">
 							<span class="actions-button-text">Starred</span>
 						</div>
@@ -207,7 +218,13 @@
 			<span class="collection-edit-delete">X</span>
 		</div>
 	</script>
+<script>
+	    var appearance = "{{appearance|escapejs}}"
+		var appearance = JSON.parse(appearance)
 
+	    var order_collections = "{{order_collections|escapejs}}"
+		var order_collections = JSON.parse(order_collections)
+</script>
 <script src="{{ STATIC_URL }}libraries/underscore-min.js"></script>
 <script src="{{ STATIC_URL }}libraries/jquery-min.js"></script>
 <script src="{{ STATIC_URL }}libraries/backbone-min.js"></script>
@@ -225,6 +242,9 @@
 	    var json = "{{bookmarks|escapejs}}"
 		var parsons = JSON.parse(json)
 		bookmarks.reset(parsons)
+
+
+
 
 		var testing = "{{testing|escapejs}}"
 	</script>

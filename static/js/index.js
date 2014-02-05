@@ -76,7 +76,10 @@ function sendPassword() {
 		window.setTimeout(function() {
 			formBlock.removeChild(forgPassBlock)
 		}, 3000)
-	}	
+	} else {
+		forgPassEmail.style.borderColor = '#DC584D'
+		forgPassEmail.value = 'User ' + username + ' not found.'
+	}
 }
 
 function hideWindow(e) {

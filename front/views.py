@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm, PasswordResetForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from front.models import Bookmark, BookmarkCollection, Post, Recover
+from front.models import Bookmark, BookmarkCollection, Post, Recover, AppSettings
 from front.serializers import BookmarkSerializer, BookmarkCollectionSerializer
 from django.http import Http404
 from rest_framework.views import APIView
@@ -22,13 +22,19 @@ from django.core.exceptions import ObjectDoesNotExist
 def index(request):
 	if request.user.is_authenticated():
 		user_id = request.user.id
+
+		appSettings = AppSettings.objects.get(user_id__exact=user_id)
+
 		bookmarks = Bookmark.objects.filter(user_id__exact=user_id)
 		serializedBookmarks = BookmarkSerializer(bookmarks, many=True)
 
 		collection = BookmarkCollection.objects.filter(user_id__exact=user_id)
 		serializedBookmarkCollections = BookmarkCollectionSerializer(collection, many=True)
 
-		bootstrapped_data = {'bookmarks': json.dumps(serializedBookmarks.data), 'BookmarkCollections': json.dumps(serializedBookmarkCollections.data)}
+		bootstrapped_data = {'bookmarks': json.dumps(serializedBookmarks.data),
+							'BookmarkCollections': json.dumps(serializedBookmarkCollections.data),
+							'order_collections': json.dumps(appSettings.order_collections),
+							'appearance': json.dumps(appSettings.appearance)}
 		return render(request, 'user/index.html', bootstrapped_data)
 	else:
 		return render(request, 'index.html')
@@ -60,10 +66,12 @@ def register_user(request):
 					# Login and set the token cookie
 					login(request, user)
 					success = HttpResponse(status=200)
+
+					AppSettings.objects.create(user_id=user.id)
+
 					new_user_time = datetime.datetime.utcnow().replace(tzinfo=utc) + timedelta(seconds=48)
 					success.set_cookie('new-user', 'true', expires=new_user_time)
 					success.set_cookie('Token', token, expires=365 * 24 * 60 * 60)
-					success.set_cookie('template', 'grid', expires=365 * 24 * 60 * 60)
 					return success
 
 		return HttpResponse(status=403)
@@ -84,8 +92,6 @@ def login_user(request):
 				login(request, user)
 				login_success = HttpResponse(status=200)
 				login_success.set_cookie('Token', token, expires=365 * 24 * 60 * 60)
-				if request.COOKIES.get('template', 'none') == 'none':
-					login_success.set_cookie('template', 'grid', expires=365 * 24 * 60 * 60)
 				return login_success
 			else:
 				# Change this if you delete/deactivate user/user has deleted it's account
@@ -111,6 +117,13 @@ def set_or_get_token(user):
 
 	return token
 
+def change_settings(request):
+	user_settings = AppSettings.objects.get(user_id=request.user.id)
+	user_settings.appearance = request.POST['appearance']
+	user_settings.order_collections = request.POST['order_collections']
+	user_settings.save()
+	return HttpResponse(status=200)
+
 def password_change(request):
 	if request.method == 'POST':
 		user = request.user
@@ -123,7 +136,12 @@ def password_change(request):
 def forgotten_password(request):
 	if request.method == 'POST':
 		email = request.POST['username']
-		user = User.objects.get(username=email)
+
+		try:
+			user = User.objects.get(username=email)
+		except ObjectDoesNotExist:
+			return HttpResponse('User not found',status=404)
+
 		key = User.objects.make_random_password(length=32)
 
 		mail.send_mail(sender="Bookmarko support <dimitar@bookmarkoapp.com>",
@@ -192,6 +210,20 @@ def logout_user(request):
 	logout(request)
 	return redirect('/')
 
+def add_from_page(request):
+	if request.method == 'POST':
+		import urllib2
+		from bs4 import BeautifulSoup
+
+		url = request.POST['url']
+		source = urllib2.urlopen(url)
+		BS = BeautifulSoup(source)
+
+		title = BS.title.text
+		
+		bookmark = Bookmark.objects.create(user_id=request.user.id, title=title, url=url)
+		data = {'id': bookmark.pk, 'title': bookmark.title, 'url': bookmark.url}
+		return HttpResponse(json.dumps(data) , status=201)
 
 # API Class Views
 class BookmarksList(APIView):
