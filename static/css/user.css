@@ -180,7 +180,7 @@ a {
 .content-header {
 	width: 100%;
 	position: fixed;
-	z-index: 1;
+	z-index: 2;
 	background: #fff;
 	border-bottom: solid 1px #F0EFF1;
 }
@@ -575,9 +575,9 @@ a {
 	transform: translateY(0);
 }
 .grid-tmpl:hover .grd-bookmark-image {
-	-webkit-transform: translateX(-30%);
-	-ms-transform: translateX(-30%);
-	transform: translateX(-30%);
+	-webkit-transform: translateX(-20%);
+	-ms-transform: translateX(-20%);
+	transform: translateX(-20%);
 }
 .grd-bookmark-image {
 	height: 100%;
@@ -587,10 +587,23 @@ a {
 	-ms-transform: translateX(0);
 	transform: translateX(0);
 }
+.play-image {
+	position: absolute;
+	top: 85px;
+	left: 50%;
+	margin-left: -35px;
+	z-index: 1;
+	opacity: 0.7;
+	-webkit-transition: 0.3s;
+	transition: 0.3s;
+}
+.play-image:hover {
+	opacity: 1;
+}
 .grd-bookmark-title {
 	display: block;
 	font-size: 0.9rem;
-	padding: 5px 0 5px 4px;
+	padding: 5px 0 0 4px;
 	font-weight: 300;
 }
 .grd-bookmark-link {
@@ -600,9 +613,15 @@ a {
 }
 .grd-bookmark-title-big {
 	margin: 0;
-	padding: 11px;
-	font-size: 1.3rem;
-	font-weight: 100;
+	padding: 20px 20px 0 20px;
+	font-weight: 300;
+}
+.grd-bookmark-url {
+	margin: 0;
+	padding: 5px 20px 20px 20px;
+	color: #808080;
+	font-weight: 300;
+	word-wrap: break-word;
 }
 .grd-bookmark-descr {
 	padding: 0 5px;

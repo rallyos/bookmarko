@@ -313,7 +313,7 @@ class BookmarkCollectionDetail(APIView):
 		collection.delete()
 		return Response(status=status.HTTP_204_NO_CONTENT)
 
-"""
+'''
 from django.views.decorators.csrf import csrf_exempt
 import re
 import urllib2
@@ -324,6 +324,7 @@ from urlparse import urljoin
 import mimetypes
 from google.appengine.api import taskqueue
 
+@csrf_exempt
 def dam(request):
 	if request.method == 'POST':
 		file = request.FILES['thefile']
@@ -332,6 +333,7 @@ def dam(request):
 		taskqueue.add(url='/upload',payload=test)
 	return HttpResponse(status=200)
 
+@csrf_exempt
 def upload_file(test):
 
 		hmm = re.findall(r'href=[\'"]?([^\'" >]+)', str(test), flags=re.IGNORECASE)
@@ -344,9 +346,11 @@ def upload_file(test):
 				try:
 					source = urllib2.urlopen(sait)
 					BS = BeautifulSoup(source)
-
-					links = BS.findAll('img', src=True)
-					i = 0
+					
+					title = BS.title.text
+					Bookmark.objects.create(title=title, url=sait, user_id=1)
+#					links = BS.findAll('img', src=True)
+#					i = 0
 				except urllib2.HTTPError, err:
 					if err.code == 403:
 						pass
@@ -355,38 +359,37 @@ def upload_file(test):
 				except urllib2.URLError:
 					pass
 
-				for link in links:
-					i+= 1
-					thelink = urlparse.urljoin(sait, link['src'])
-					try:
-						imgdata = urllib2.urlopen(thelink)
-						img_data = imgdata.open()
-						img_type = imgdata.info().getheader('Content-Type')
-						
-						if img_type == 'image/png' or img_type == 'image/jpeg' or img_type == 'image/gif':
-							#therealimage = Image(image_data=img_data)
+#				for link in links:
+#					i+= 1
+#					thelink = urlparse.urljoin(sait, link['src'])
+#					try:
+#						imgdata = urllib2.urlopen(thelink)
+#						img_data = imgdata.open()
+#						img_type = imgdata.info().getheader('Content-Type')
+#						
+#						if img_type == 'image/png' or img_type == 'image/jpeg' or img_type == 'image/gif':
+#							#therealimage = Image(image_data=img_data)
 										
-							if img_data.width > 400 and img_data.height > 300:
-								url = sait
-								title = BS.find('title').text
-								Bookmark.objects.create(title=title, url=url, image=thelink, user_id=2)
-								img_data.close()
-								break
-							if i > 1 and img_data.width < 400 and img_data.height < 300:
-								url = sait
-								title = BS.find('title').text
-								Bookmark.objects.create(title=title, url=url, user_id=2)
-								break
-					except urllib2.HTTPError, err:
-						if err.code == 403:
-							pass
-						else:
-							pass
-					except urllib2.URLError:
-						pass
-					except:
-						pass
+#							if img_data.width > 240 and img_data.height > 240:
+#								url = sait
+#								title = BS.find('title').text
+#								Bookmark.objects.create(title=title, url=url, image=thelink, user_id=2)
+#								img_data.close()
+#								break
+#							if i > 1 and img_data.width < 240 and img_data.height < 240:
+#								url = sait
 
-		#file.close()
+#								break
+					#except urllib2.HTTPError, err:
+					#	if err.code == 403:
+					#		pass
+					#	else:
+					#		pass
+					#except urllib2.URLError:
+					#	pass
+					#except:
+					#	pass
+
+		file.close()
 		return HttpResponse(status=201)
-"""
+'''

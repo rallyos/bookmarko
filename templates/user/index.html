@@ -50,14 +50,16 @@
 						<input class="confirm-pass-change hidden" type="button" value="Confirm">
 					</div>
 				</div>
-				<a href="logout_user" id="sign-out">Sign out</a>
-				<!-- Doesn't work well yet
-				<h2 class="settings-type import-data">Data</h2>
-				<div class="settings-form-section import-data">
-					<label class="settings-form-label label-medium">Import bookmarks</label>
-					<input class="settings-import-button" type="file" value="Select file">
+				<!--
+				<div class="setting-group-wrap">
+					<div class="setting-heading-wrap"><h2 class="settings-type">Data</h2><span class="show-hide-setting">-</span></div>
+					<div class="settings-form-section import-data">
+						<label class="settings-form-label label-medium">Import bookmarks</label>
+						<input class="settings-import-button" type="file" value="Select file">
+					</div>
 				</div>
 				-->
+				<a href="logout_user" id="sign-out">Sign out</a>
 		</div>
 		<div class="content">
 			<div class="report-block hidden">
@@ -152,10 +154,14 @@
 	<script type="text/template" id="grid-template">
 		<span class="select-bookmark grd-select-bookmark"></span>
 		<a class="grd-bookmark-link" href="<%= url %>" target="_blank">
+		<% if ( url.match('youtube.com') || url.match('vimeo.com') ) { %>
+			<img class="play-image" width="70" height="70" src="{{ STATIC_URL }}images/user/play.png">
+		<%}%>
 		<% if ( image ) {%>
 			<img class="grd-bookmark-image" src="<%= image %>">
 		<% } else {%>
-			<h2 class="grd-bookmark-title-big"><%= title %></h2>
+			<h4 class="grd-bookmark-title-big"><%= title %></h4>
+			<h5 class="grd-bookmark-url"><%= url %> </h5>
 		<% } %>
 		</a>
 		<div class="grd-bookmark-content

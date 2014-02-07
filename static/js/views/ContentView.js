@@ -249,6 +249,7 @@ var BookmarkView = Backbone.View.extend({
 
 	events: {
 		'click .bookmark-star': 'starBookmark',
+		'click .select-bookmark': 'selectBookmark',
 		'dragstart': 'dragStartEvent',
 		'dragend': 'dragEndEvent',
 
@@ -307,6 +308,11 @@ var BookmarkView = Backbone.View.extend({
 	copyToClipboard: function() {
 		var bookmark_url = this.model.get('url')
 		window.prompt ("Copy to clipboard:", bookmark_url);
+	},
+
+	selectBookmark: function() {
+		console.log('not implemented')
+		// $(this.el).toggleClass('bookmark-selected')
 	},
 
 	dragStartEvent: function (e) {
@@ -555,13 +561,17 @@ var SettingsView = Backbone.View.extend({
 	    var formData = new FormData();
 	    formData.append("thefile", mda.files[0]);
 	    var xhr = new XMLHttpRequest();
-	    xhr.open('POST', 'http://www.bookmarkoapp.com/da', true);
+	    xhr.open('POST', 'da');
+	    xhr.setRequestHeader('X-CSRFToken', csrftoken)
 	    xhr.send(formData);
 
 	    console.log(xhr.status)
 
-	    if (xhr.status == 201) {
-	        location.reload()
+	    xhr.onreadystatechange = function() {
+	    	console.log(xhr.readyState)
+			if (xhr.readyState == 4) {
+				location.reload()
+			}
 	    }
 	},
 
@@ -691,13 +701,15 @@ var CollectionEditView = Backbone.View.extend({
 	},
 
 	clear: function () {
-		var model = this.model;
-		this.$el.css({ opacity: '0' })
+		if (window.confirm("Delete collection " + this.model.attributes.title + '?')) {
+			var model = this.model;
+			this.$el.css({ opacity: '0' })
 
-		this.$el.one('transitionend', function() {
-			console.log('removed')
-			model.destroy(tokenHeader);
-		});
+			this.$el.one('transitionend', function() {
+				console.log('removed')
+				model.destroy(tokenHeader);
+			});
+		}
 	},
 
 	saveGroup: function(newval) {
