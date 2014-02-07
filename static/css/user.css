@@ -1103,8 +1103,11 @@ a {
 .hidden {
 	display: none;
 }
-@media screen and (max-width: 1023px) {
 
+@media screen and (max-width: 1023px) {
+	.grid-tmpl {
+		width: 23%;
+	}
 	.content-header {
 		border: 0;
 		box-shadow: 0 1px 2px #C0C0C0;
@@ -1169,14 +1172,14 @@ a {
 }
 @media screen and (max-width: 800px) {
 	.grid-tmpl {
-		width: 48.5%;
+		width: 31.3%;
 	}
 }
 @media screen and (max-width: 560px) {
 	.grid-tmpl {
-		width: 96%;
-		margin: 15px auto;
-		float: none;
+		width: 48%;
+		margin: 15px 1%;
+		max-width: none;
 	}
 	.list-tmpl {
 		height: 60px;
@@ -1296,6 +1299,13 @@ a {
 	}
 	.change-tmpl {
 		margin: 0 20px;
+	}
+}
+@media screen and (max-width: 500px) {
+	.grid-tmpl {
+		width: 96%;
+		margin: 15px auto;
+		float: none;
 	}
 }
 @media screen and (min-width: 320px) and (max-width: 360px) {
