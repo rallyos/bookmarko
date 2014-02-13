@@ -29,15 +29,10 @@
 		<a class="not-supported-buttons" id="update-link"  href="//windows.microsoft.com/en-us/internet-explorer/download-ie" >I want to update my browser</a>
 		<span class="not-supported-buttons" id="continue-button">Continue</span>
 	</div>
+	<a href="/"><img class="logo" src="{{ STATIC_URL }}images/logo.png" alt="Bookmarko"></a>
 	<header class="header">
-		<a href="/"><img class="logo" src="{{ STATIC_URL }}images/logo_example.png" width="140" height="40" alt="Bookmarko"></a>
 		<nav class="nav-block">
 			<ul class="menu">
-				{% if request.path != '/' %}
-				<li class="menu-item" id="form-toggle"><a href="/">Sign In</a></li>
-				{% else %}
-				<li class="menu-item" id="form-toggle">Sign In</li>
-				{% endif %}
 				{% if request.path != '/' %}
 				<li class="menu-item"><a href="/">Features</a></li>
 				{% else %}

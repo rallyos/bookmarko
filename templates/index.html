@@ -1,85 +1,65 @@
 	{% include "header.html" %}
 	<section class="sign-section">
 			<div class="sign-up-block">
-				<form class="sign-form" id="sign-up">{% csrf_token %}
-					<input class="form-input" id="reg-user" type="email" name="username" placeholder="Email address" maxlength="50" required>
-					<input class="form-input form-passwords" id="reg-pass" type="password" name="password1" placeholder="Password" required>
-					<input class="form-input form-passwords" id="reg-confirm-pass" type="password" name="password2" placeholder="Confirm password" required>
-					<input class="form-submit" type="submit" value="Sign Up">
-					<p class="form-text">By creating account you agree to the <span class="undrl">Terms</span> and <span class="undrl">Privacy policy</span></p>
-				</form>
-				<form class="sign-form form-hide-right" id="sign-in">{% csrf_token %}
-					<input class="form-input" id="log-user" type="email" name="username" placeholder="Email address">
-					<input class="form-input" id="log-pass" type="password" name="password" placeholder="Password">
-					<input class="form-submit" id="sign-in-submit" type="submit" value="Login">
-					<span class="forgotten-password">Forgotten password</span>
-				</form>
-				<div class="forg-pass-block">
-					<div class="send-mail-success">
-						<h1 class="send-mail-headings">Thank you!</h1>
-						<h4 class="send-mail-headings">You will recieve email in a few minutes.</h4>
+				<h2 class="sign-up-heading">Sign up for the early beta.</h2>
+				<div class="toggle-forms">
+					<span class="toggle-form-button" id="up">Sign Up</span>
+					<span class="toggle-form-button" id="in">Sign In</span>
+				</div>
+				<div class="forms-block">
+					<form class="sign-form" id="sign-up">{% csrf_token %}
+						<input class="form-input" id="reg-user" type="email" name="username" placeholder="Email address" maxlength="50" required>
+						<input class="form-input" id="reg-pass" type="password" name="password1" placeholder="Password" required>
+						<input class="form-input" id="reg-confirm-pass" type="password" name="password2" placeholder="Confirm password" required>
+						<input class="form-submit" type="submit" value="Sign Up">
+						<span class="progress">_</span>
+					</form>
+					<form class="sign-form form-hide" id="sign-in">{% csrf_token %}
+						<input class="form-input" id="log-user" type="email" name="username" placeholder="Email address">
+						<input class="form-input" id="log-pass" type="password" name="password" placeholder="Password">
+						<input class="form-submit" id="sign-in-submit" type="submit" value="Sign In">
+						<span class="progress">_</span>
+						<span class="forgotten-password">Forgotten password</span>
+					</form>
+					<div class="forg-pass-block">
+						<div class="send-mail-success">
+							<h1 class="send-mail-headings">Thank you!</h1>
+							<h4 class="send-mail-headings">You will recieve email in a few minutes.</h4>
+						</div>
+						<h2 class="forg-pass-header">Fill your email to receive a new password</h2>
+						<input class="forg-pass-email" type="email">
+						<input class="forg-pass-send" type="button" value="Confirm">
 					</div>
-					<h2 class="forg-pass-header">Fill your email to receive a new password</h2>
-					<input class="forg-pass-email" type="email">
-					<input class="forg-pass-send" type="button" value="Confirm">
 				</div>
 			</div>
 	</section>
 	<div class="features-wrap">
 		<h1 class="features-top-header">Keep your bookmarks in the cloud</h1>
-		<section class="features-top">
-			<div class="features-top-feature-block">
-				<img class="features-top-feature-image" src="{{ STATIC_URL }}images/store_bookmarks.png" width="240" height="150" alt="Store bookmarks online">
-				<h2 class="features-top-feature-header">Store bookmarks online</h2>
-				<p class="features-top-feature-text">
-					Stop the emails full with links and start saving your collection of bookmarks safely in the cloud.
-				</p>
-			</div>
-			<div class="features-top-feature-block">
-				<img class="features-top-feature-image" src="{{ STATIC_URL }}images/organize.png" width="240" height="150" alt="Manage them easy">
-				<h2 class="features-top-feature-header">Manage them easy</h2>
-				<p class="features-top-feature-text">
-					Create groups of bookmarks for easier managing.
-				</p>
-			</div>
-			<div class="features-top-feature-block">
-				<img class="features-top-feature-image" src="{{ STATIC_URL }}images/fast_search.png" width="240" height="150" alt="Search fast">
-				<h2 class="features-top-feature-header">Search fast</h2>
-				<p class="features-top-feature-text">
-					Finding the site that you saved months before is a joy.
-					The search bar offers fast and smart way to look through your collection.
-				</p>
-			</div>
-		</section>
-		<!-- Not available yet
-		<section class="main-feature">
-			<h1 class="feature-apps-header">Connect with the apps you use</h1>
-			<p class="main-feature-text">Bookmarko will be integrated with your other favourite bookmarking sites, so you don't have to lose data.</p>
-			<img class="main-feature-image" src="{{ STATIC_URL }}images/apps.png" alt="Connect with the apps you use">
-		</section>
-		-->
-		<section class="main-feature">
-			<h1 class="devices-header">Available on most devices</h1>
-			<p class="main-feature-text">Bookmarko was made with responsive design in mind. It was build to support wide range of devices. The site is optimized for touch input, so you can access and use it from your mobile device.</p>
-			<img class="main-feature-image" src="{{ STATIC_URL }}images/devices.png" alt="Available on most devices">
-		</section>
-		<section class="bottom-features">
-			<div class="bottom-feature-box">
-				<img class="bottom-feature-image" src="{{ STATIC_URL }}images/cloud_platform.png" width="138" height="100" alt="App engine">
-				<p class="bottom-feature-text">The site is using Google App Engine, which offers us scalability and other cool things.</p>
-			</div>
-			<div class="bottom-feature-box">
-				<h1 id="bottom-feature-beta">Beta</h1>
-				<p class="bottom-feature-text">Bookmarko is still in beta and will be a always developing project. There are still many things to come.</p>
-			</div>
-			<div class="bottom-feature-box">
-				<img class="bottom-feature-image" src="{{ STATIC_URL }}images/test1.png" width="100" height="100" alt="Download your library">
-				<p class="bottom-feature-text">You can download your full library in any format, if you want to migrate to other services.</p>
-			</div>
-			<div class="bottom-feature-box">
-				<img class="bottom-feature-image" src="{{ STATIC_URL }}images/test2.png" width="100" height="100" alt="Built for speed">
-				<p class="bottom-feature-text">Built for speed and good user experience with the power of the modern web.</p>
-			</div>
-		</section>
+		<div class="features-column">
+				<div class="feature-block">
+					<img class="feature-img" src="{{ STATIC_URL }}images/cloud.png" alt="">
+					<p class="feature-text">Step out of the browser and keep your bookmarks in the cloud.</p>
+				</div>
+				<div class="feature-block">
+					<img class="feature-img" src="{{ STATIC_URL }}images/collections.png" alt="">
+					<p class="feature-text">Use collections to manage your bookmarks more easily.</p>
+				</div>
+				<div class="feature-block">
+					<img class="feature-img" src="{{ STATIC_URL }}images/lighting.png" alt="">
+					<p class="feature-text">Responsive web app built with the need for speed.</p>
+				</div>
+				<div class="feature-block">
+					<img class="feature-img" src="{{ STATIC_URL }}images/responsive.png" alt="">
+					<p class="feature-text">Made with responsive design in mind, so you can access and use it from your mobile device.</p>
+				</div>
+				<div class="feature-block">
+					<img class="feature-img" src="{{ STATIC_URL }}images/beta.png" alt="">
+					<p class="feature-text">Bookmarko is still in beta and will be a always developing project. There are still many things to come.</p>
+				</div>
+				<div class="feature-block">
+					<img class="feature-img" src="{{ STATIC_URL }}images/gae.png" alt="">
+					<p class="feature-text">The site is using Google App Engine, which offers us scalability and other cool things.</p>
+				</div>
+		</div>
 	</div>
 	{% include "footer.html" %}

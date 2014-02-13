@@ -5,17 +5,20 @@ if (navigator.appName == 'Microsoft Internet Explorer') {
 	continueButton.attachEvent('onclick', closeWindow)
 }
 
+
+// ASYNC ASYNC ASYNC
+
+
 // Store elements
-var formToggle = document.getElementById('form-toggle');
+var toggleFormButton = document.getElementsByClassName('toggle-form-button')
+
 var featuresScroll = document.getElementById('features-scroll');
 var signUpForm = document.getElementById('sign-up');
 var signInForm = document.getElementById('sign-in');
-var formBlock = document.getElementsByClassName('sign-up-block')[0]
+var formBlock = document.getElementsByClassName('forms-block')[0]
 var termsLink = document.getElementsByClassName('footer-links-item')[2]
 var privacyLink = document.getElementsByClassName('footer-links-item')[3]
 
-var termsLinkForm = document.getElementsByClassName('undrl')[0]
-var privacyLinkForm = document.getElementsByClassName('undrl')[1]
 html = document.getElementsByTagName('html')[0]
 
 var termsBlock = document.getElementsByClassName('terms-block')[0];
@@ -28,7 +31,7 @@ var formSubmit = document.getElementsByClassName('form-submit');
 
 //
 var featuresBlock = document.getElementsByClassName('features-wrap')[0];
-var featuresBlock = featuresBlock.offsetTop - 65;
+var featuresBlockHeight = featuresBlock.offsetTop - 45;
 
 var continueButton = document.getElementById('continue-button')
 
@@ -38,16 +41,13 @@ forgPassEmail = document.getElementsByClassName('forg-pass-email')[0]
 forgPassSend = document.getElementsByClassName('forg-pass-send')[0]
 
 // Add events
-formToggle.addEventListener('click', checkThis)
 featuresScroll.addEventListener('click', scrollPage)
 continueButton.addEventListener('click', closeWindow)
 termsLink.addEventListener('click', showTerms)
 closeTermsButton.addEventListener('click', showTerms)
-termsLinkForm.addEventListener('click', showTerms)
 
 privacyLink.addEventListener('click', showPrivacy)
 closePrivacyButton.addEventListener('click', showPrivacy)
-privacyLinkForm.addEventListener('click', showPrivacy)
 
 passwordRecoverButton.addEventListener('click', showForgPassBlock)
 forgPassSend.addEventListener('click', sendPassword)
@@ -153,43 +153,9 @@ return function (target, duration) {
 }());
 
 // Test function name, change it
-function checkThis() {
-
-		if ( formToggle.textContent == 'Sign In' ) {
-		
-			if ( window.scrollY > 300 ) {
-				smoothScrollTo(0);
-			}
-
-			// Scroll to top
-			formToggle.textContent = 'Sign Up';
-			toggleClasses();
-		} else if ( formToggle.textContent == 'Sign Up' ) {
-			
-			if ( window.scrollY > 300 ) {
-				smoothScrollTo(0);
-			}
-
-			formToggle.textContent = 'Sign In';
-			toggleClasses();
-		}
-
-}
 
 function scrollPage() {
-	smoothScrollTo(featuresBlock)
-}
-
-function toggleClasses() {
-
-	if ( signUpForm.className == 'sign-form' ) {
-		signUpForm.className = signUpForm.className + ' form-hide-left';
-		signInForm.className = 'sign-form';
-	} else if ( signInForm.className == 'sign-form' ) {
-		signInForm.className = signInForm.className + ' form-hide-right';
-		signUpForm.className = 'sign-form';
-	}
-
+	smoothScrollTo(featuresBlockHeight)
 }
 
 signUpForm.onsubmit = function() {
@@ -201,19 +167,25 @@ signUpForm.onsubmit = function() {
 	confirmPass = document.getElementById('reg-confirm-pass').value;
 
 	var xhr = new XMLHttpRequest()
-	xhr.open('POST', 'register_user', false);
+	xhr.open('POST', 'register_user');
 	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
 	xhr.send('csrfmiddlewaretoken=' + encodeURIComponent(csrfmiddlewaretoken) +
 	'&username=' + encodeURIComponent(user) +
 	'&password1=' + encodeURIComponent(pass) +
 	'&password2=' + encodeURIComponent(confirmPass))
-
-	if ( xhr.status == 200) {
-		location.reload()
-	} else if ( xhr.status ==  403) {
-		var message = 'Your email or password is invalid'
-		var form = formSubmit[0];
-		showError(message, signUpForm, form)
+	document.getElementsByClassName('progress')[0].style.display = 'inline-block'
+	xhr.onreadystatechange = function() {
+		if ( xhr.status == 200) {
+			document.getElementsByClassName('progress')[0].style.display = 'none'
+			formSubmit[0].value = '\u2713'
+			formSubmit[0].className = 'form-submit submit-animate'
+			location.reload()
+		} else if ( xhr.status ==  403) {
+			document.getElementsByClassName('progress')[0].style.display = 'block'
+			var message = 'Your email or password is invalid'
+			var form = formSubmit[0];
+			showError(message, signUpForm, form)
+		}
 	}
 
 	return false;
@@ -228,19 +200,24 @@ signInForm.onsubmit = function() {
 	var xhr = new XMLHttpRequest()
 	xhr.open('GET', 'login_user?' + 'csrfmiddlewaretoken=' + encodeURIComponent(csrfmiddlewaretoken) +
 	'&username=' + encodeURIComponent(user) +
-	'&password=' + encodeURIComponent(pass), false);
+	'&password=' + encodeURIComponent(pass));
 	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
 	xhr.send()
-
-	if ( xhr.status == 200) {
-		formSubmit[1].style.backgroundColor = '#46DD70';
-		location.reload()
-	} else if ( xhr.status == 404) {
-		passwordRecoverButton.style.display = 'block';
-		message = 'Wrong username or password'
-		var form = formSubmit[1];
-		showError(message, signInForm, form)
-	};
+	document.getElementsByClassName('progress')[1].style.display = 'inline-block'
+	xhr.onreadystatechange = function() {
+		if ( xhr.status == 200) {
+			document.getElementsByClassName('progress')[0].style.display = 'none'
+			formSubmit[1].value = '\u2713'
+			formSubmit[1].className = 'form-submit submit-animate'
+			location.reload()
+		} else if ( xhr.status == 404) {
+			document.getElementsByClassName('progress')[1].style.display = 'none'
+			passwordRecoverButton.style.display = 'block';
+			message = 'Wrong username or password'
+			var form = formSubmit[1];
+			showError(message, signInForm, form)
+		};
+	}
 
 	return false;
 }
@@ -261,3 +238,36 @@ function closeWindow() {
 	document.getElementById('not-supported').style.display = 'none';
 
 }
+
+
+
+
+
+// TESTING TESTING TESTING TESTING
+var moveBlue = function() {
+	signUpForm.className = 'sign-form'
+	signInForm.className = 'sign-form'
+
+}
+var moveGreen = function() {
+	signUpForm.className = 'sign-form form-move'
+	signInForm.className = 'sign-form form-move'
+}
+var up = document.getElementById('up')
+var inn = document.getElementById('in')
+
+up.addEventListener('click', moveBlue)
+inn.addEventListener('click', moveGreen)
+
+/*
+
+window.onscroll = function() {
+	n = window.scrollY  / 1000
+
+	opacity = 0.55 + n
+	featuresBlock.style.opacity = opacity
+	// featuresBlock.style.backgroundColor = 'rgba(255, 255, 255, '+ opacity +')'
+}
+*/
+
+
