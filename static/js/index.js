@@ -1,123 +1,51 @@
+'use strict'
+
+// Close windows on IE < 9
+var continue_button = document.getElementById('continue-button')
+continue_button.addEventListener('click', closeWindow)
 
 if (navigator.appName == 'Microsoft Internet Explorer') {
-	var continueButton = document.getElementById('continue-button')
+	var continue_button = document.getElementById('continue-button')
 
-	continueButton.attachEvent('onclick', closeWindow)
+	continue_button.attachEvent('onclick', closeWindow)
+}
+
+function closeWindow() {
+	document.getElementById('not-supported').style.display = 'none';
+
+}
+
+// Store sign-up-in toggle buttons and add event handlers
+var up = document.getElementById('up')
+var inn = document.getElementById('in')
+up.addEventListener('click', moveBlue)
+inn.addEventListener('click', moveGreen)
+
+
+// ********
+// Show/hide forms
+// ********
+function moveBlue() {
+	signup_form.className = 'sign-form'
+	signin_form.className = 'sign-form'
+
+}
+function moveGreen() {
+	signup_form.className = 'sign-form form-move'
+	signin_form.className = 'sign-form form-move'
 }
 
 
-// ASYNC ASYNC ASYNC
+// Scroll to features button and event handler
+var features_scroll_button = document.getElementById('features-scroll');
+features_scroll_button.addEventListener('click', scrollToFeatures)
+// Features block
+var features_block = document.getElementsByClassName('features-wrap')[0];
+// Features block offset from top
+var features_blockScrollY = features_block.offsetTop - 45;
 
 
-// Store elements
-var toggleFormButton = document.getElementsByClassName('toggle-form-button')
-
-var featuresScroll = document.getElementById('features-scroll');
-var signUpForm = document.getElementById('sign-up');
-var signInForm = document.getElementById('sign-in');
-var formBlock = document.getElementsByClassName('forms-block')[0]
-var termsLink = document.getElementsByClassName('footer-links-item')[2]
-var privacyLink = document.getElementsByClassName('footer-links-item')[3]
-
-html = document.getElementsByTagName('html')[0]
-
-var termsBlock = document.getElementsByClassName('terms-block')[0];
-var closeTermsButton = document.getElementById('terms-close-button');
-var privacyBlock = document.getElementsByClassName('terms-block')[1];
-var closePrivacyButton = document.getElementById('privacy-close-button');
-
-//
-var formSubmit = document.getElementsByClassName('form-submit');
-
-//
-var featuresBlock = document.getElementsByClassName('features-wrap')[0];
-var featuresBlockHeight = featuresBlock.offsetTop - 45;
-
-var continueButton = document.getElementById('continue-button')
-
-passwordRecoverButton = document.getElementsByClassName('forgotten-password')[0]
-forgPassBlock = document.getElementsByClassName('forg-pass-block')[0]
-forgPassEmail = document.getElementsByClassName('forg-pass-email')[0]
-forgPassSend = document.getElementsByClassName('forg-pass-send')[0]
-
-// Add events
-featuresScroll.addEventListener('click', scrollPage)
-continueButton.addEventListener('click', closeWindow)
-termsLink.addEventListener('click', showTerms)
-closeTermsButton.addEventListener('click', showTerms)
-
-privacyLink.addEventListener('click', showPrivacy)
-closePrivacyButton.addEventListener('click', showPrivacy)
-
-passwordRecoverButton.addEventListener('click', showForgPassBlock)
-forgPassSend.addEventListener('click', sendPassword)
-
-function showForgPassBlock() {
-	forgPassBlock.style.display = 'block';
-	window.setTimeout(function(){
-		forgPassBlock.style.opacity = 1.0;
-		forgPassBlock.style.bottom = 0;
-	}, 100)
-}
-
-function sendPassword() {
-	//test
-	csrfmiddlewaretoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
-	username = forgPassEmail.value
-
-	var xhr = new XMLHttpRequest()
-	xhr.open('POST', 'forgotten_password', false);
-	xhr.send('csrfmiddlewaretoken=' + encodeURIComponent(csrfmiddlewaretoken) + 
-		'&username=' + encodeURIComponent(username) )
-
-	if ( xhr.status == 200) {
-		document.getElementsByClassName('send-mail-success')[0].className = 'send-mail-success send-mail-success-show';
-
-		window.setTimeout(function() {
-			formBlock.removeChild(forgPassBlock)
-		}, 3000)
-	} else {
-		forgPassEmail.style.borderColor = '#DC584D'
-		forgPassEmail.value = 'User ' + username + ' not found.'
-	}
-}
-
-function hideWindow(e) {
-	html.removeEventListener('keyup', hideWindow)
-	if ( e.keyCode == 27 && privacyBlock.style.display == 'block' ) {
-		html.removeEventListener('keyup', hideWindow)
-		showPrivacy();
-	} else if ( e.keyCode == 27 && termsBlock.style.display == 'block' ) {
-		html.removeEventListener('keyup', hideWindow)
-		showTerms();
-	}
-}
-
-function showTerms() {
-	display = termsBlock.style.display
-	
-	html.addEventListener('keyup', hideWindow)
-
-	if ( display == 'block' ) {
-		termsBlock.style.display = 'none';
-	} else {
-		termsBlock.style.display = 'block';
-	}
-}
-
-function showPrivacy() {
-	display = privacyBlock.style.display
-
-	html.addEventListener('keyup', hideWindow)
-
-	if ( display == 'block' ) {
-		privacyBlock.style.display = 'none';
-	} else {
-		privacyBlock.style.display = 'block';
-	}
-}
-
-var smoothScrollTo = ( function () {
+var smoothScrollTo = (function() {
 	var timer, start, factor;
 
 return function (target, duration) {
@@ -152,19 +80,33 @@ return function (target, duration) {
 	};
 }());
 
-// Test function name, change it
 
-function scrollPage() {
-	smoothScrollTo(featuresBlockHeight)
+// ********
+// Smooth scroll to features
+// ********
+function scrollToFeatures() {
+	smoothScrollTo(features_blockScrollY)
 }
 
-signUpForm.onsubmit = function() {
 
-	// Store the elements
-	csrfmiddlewaretoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
-	user = document.getElementById('reg-user').value;
-	pass = document.getElementById('reg-pass').value;
-	confirmPass = document.getElementById('reg-confirm-pass').value;
+// Forms container
+var form_block = document.getElementsByClassName('forms-block')[0]
+// Store sign up form
+var signup_form = document.getElementById('sign-up');
+// Store submit buttons
+var form_submit = document.getElementsByClassName('form-submit');
+
+
+// ********
+// Send form data and animate various elements to please the user
+// ********
+signup_form.onsubmit = function() {
+
+	var csrfmiddlewaretoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+	var user = document.getElementById('reg-user').value;
+	var pass = document.getElementById('reg-pass').value;
+	var confirm_pass = document.getElementById('reg-confirm-pass').value;
+	var loading_animation = document.getElementsByClassName('progress')[0]
 
 	var xhr = new XMLHttpRequest()
 	xhr.open('POST', 'register_user');
@@ -172,30 +114,41 @@ signUpForm.onsubmit = function() {
 	xhr.send('csrfmiddlewaretoken=' + encodeURIComponent(csrfmiddlewaretoken) +
 	'&username=' + encodeURIComponent(user) +
 	'&password1=' + encodeURIComponent(pass) +
-	'&password2=' + encodeURIComponent(confirmPass))
-	document.getElementsByClassName('progress')[0].style.display = 'inline-block'
+	'&password2=' + encodeURIComponent(confirm_pass))
+
+	loading_animation.style.display = 'inline-block'
+
 	xhr.onreadystatechange = function() {
 		if ( xhr.status == 200) {
-			document.getElementsByClassName('progress')[0].style.display = 'none'
-			formSubmit[0].value = '\u2713'
-			formSubmit[0].className = 'form-submit submit-animate'
+			loading_animation.style.display = 'none'
+			form_submit[0].value = '\u2713'
+			form_submit[0].className = 'form-submit submit-animate'
 			location.reload()
 		} else if ( xhr.status ==  403) {
-			document.getElementsByClassName('progress')[0].style.display = 'block'
+			loading_animation.style.display = 'block'
 			var message = 'Your email or password is invalid'
-			var form = formSubmit[0];
-			showError(message, signUpForm, form)
+			var form = form_submit[0];
+			showError(message, signup_form, submit_button)
 		}
 	}
 
 	return false;
 }
 
-signInForm.onsubmit = function() {
 
-	csrfmiddlewaretoken = document.getElementsByName('csrfmiddlewaretoken')[1].value;
-	user = document.getElementById('log-user').value;
-	pass = document.getElementById('log-pass').value;
+// Store Sign in form 
+var signin_form = document.getElementById('sign-in');
+
+// ********
+// Send form data and animate various elements to please the user
+// ********
+signin_form.onsubmit = function() {
+
+	var csrfmiddlewaretoken = document.getElementsByName('csrfmiddlewaretoken')[1].value;
+	var user = document.getElementById('log-user').value;
+	var pass = document.getElementById('log-pass').value;
+	var loading_animation = document.getElementsByClassName('progress')[1]
+
 
 	var xhr = new XMLHttpRequest()
 	xhr.open('GET', 'login_user?' + 'csrfmiddlewaretoken=' + encodeURIComponent(csrfmiddlewaretoken) +
@@ -203,25 +156,83 @@ signInForm.onsubmit = function() {
 	'&password=' + encodeURIComponent(pass));
 	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
 	xhr.send()
-	document.getElementsByClassName('progress')[1].style.display = 'inline-block'
+	loading_animation.style.display = 'inline-block'
+
 	xhr.onreadystatechange = function() {
 		if ( xhr.status == 200) {
-			document.getElementsByClassName('progress')[0].style.display = 'none'
-			formSubmit[1].value = '\u2713'
-			formSubmit[1].className = 'form-submit submit-animate'
+			loading_animation.style.display = 'none'
+			form_submit[1].value = '\u2713'
+			form_submit[1].className = 'form-submit submit-animate'
 			location.reload()
 		} else if ( xhr.status == 404) {
-			document.getElementsByClassName('progress')[1].style.display = 'none'
-			passwordRecoverButton.style.display = 'block';
+			loading_animation.style.display = 'none'
+			password_recover_button.style.display = 'block';
 			message = 'Wrong username or password'
-			var form = formSubmit[1];
-			showError(message, signInForm, form)
+			var form = form_submit[1];
+			showError(message, signin_form, submit_button)
 		};
 	}
 
 	return false;
 }
 
+
+// Forgotten password form elements
+var forg_pass_block = document.getElementsByClassName('forg-pass-block')[0]
+var forg_pass_email = document.getElementsByClassName('forg-pass-email')[0]
+var forg_pass_send = document.getElementsByClassName('forg-pass-send')[0]
+// Send email Event handler 
+forg_pass_send.addEventListener('click', sendPassword)
+
+// Forgotten password button and event handler to show the form
+var password_recover_button = document.getElementsByClassName('forgotten-password')[0]
+password_recover_button.addEventListener('click', showForgPassBlock)
+
+
+// ********
+// Show forgotten password form block
+// ********
+function showForgPassBlock() {
+	forg_pass_block.style.display = 'block';
+
+	window.setTimeout(function(){
+		forg_pass_block.style.opacity = 1;
+		forg_pass_block.style.bottom = 0;
+	}, 100)
+
+}
+
+
+// ********
+// Show user email
+// ********
+function sendPassword() {
+	var csrfmiddlewaretoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+	var username = forg_pass_email.value
+
+	var xhr = new XMLHttpRequest()
+	xhr.open('POST', 'forgotten_password');
+	xhr.send('csrfmiddlewaretoken=' + encodeURIComponent(csrfmiddlewaretoken) + 
+		'&username=' + encodeURIComponent(username) )
+
+	xhr.onreadystatechange = function() {
+		if ( xhr.status == 200) {
+			document.getElementsByClassName('send-mail-success')[0].className = 'send-mail-success send-mail-success-show';
+
+			window.setTimeout(function() {
+				form_block.removeChild(forg_pass_block)
+			}, 3000)
+		} else {
+			forg_pass_email.style.borderColor = '#DC584D'
+			forg_pass_email.value = 'User ' + username + ' not found.'
+		}
+	}
+}
+
+
+// ********
+// Show form errors
+// ********
 function showError(message, theform, form) {
 	if ( document.getElementsByClassName('form-error').length != 0 ) {
 		error = document.getElementsByClassName('form-error')
@@ -231,43 +242,78 @@ function showError(message, theform, form) {
 	var error = document.createElement('span')
 	error.className = 'form-error';
 	error.textContent = message;
-	var error = theform.insertBefore(error, form)
-}
-
-function closeWindow() {
-	document.getElementById('not-supported').style.display = 'none';
-
+	var error = theform.insertBefore(error, submit_button)
 }
 
 
+// Store terms link and add event handler
+var terms_link = document.getElementsByClassName('footer-links-item')[2]
+terms_link.addEventListener('click', show_hide_terms)
+
+// Store terms block
+var terms_block = document.getElementsByClassName('terms-block')[0];
+
+// Store html tag to listen for escape button
+var html = document.getElementsByTagName('html')[0]
+
+var close_terms_button = document.getElementById('terms-close-button');
+close_terms_button.addEventListener('click', show_hide_terms)
 
 
+// ********
+// Show or hide terms window
+// ********
+function show_hide_terms() {
+	var display = terms_block.style.display
+	
+	html.addEventListener('keyup', hideWindow)
 
-// TESTING TESTING TESTING TESTING
-var moveBlue = function() {
-	signUpForm.className = 'sign-form'
-	signInForm.className = 'sign-form'
-
+	if ( display == 'block' ) {
+		terms_block.style.display = 'none';
+	} else {
+		terms_block.style.display = 'block';
+	}
 }
-var moveGreen = function() {
-	signUpForm.className = 'sign-form form-move'
-	signInForm.className = 'sign-form form-move'
+
+
+// Store pribacy block
+var privacy_block = document.getElementsByClassName('terms-block')[1];
+
+// Store privacy link and add event handler
+var privacy_link = document.getElementsByClassName('footer-links-item')[3]
+privacy_link.addEventListener('click', show_hide_privacy)
+
+// Store X button and add event handler
+var close_privacy_button = document.getElementById('privacy-close-button');
+close_privacy_button.addEventListener('click', show_hide_privacy)
+
+
+// ********
+// Show or hide privacy window
+// ********
+function show_hide_privacy() {
+	var display = privacy_block.style.display
+
+	html.addEventListener('keyup', hideWindow)
+
+	if ( display == 'block' ) {
+		privacy_block.style.display = 'none';
+	} else {
+		privacy_block.style.display = 'block';
+	}
 }
-var up = document.getElementById('up')
-var inn = document.getElementById('in')
 
-up.addEventListener('click', moveBlue)
-inn.addEventListener('click', moveGreen)
 
-/*
-
-window.onscroll = function() {
-	n = window.scrollY  / 1000
-
-	opacity = 0.55 + n
-	featuresBlock.style.opacity = opacity
-	// featuresBlock.style.backgroundColor = 'rgba(255, 255, 255, '+ opacity +')'
+// ********
+// Hide window on escape button
+// ********
+function hideWindow(e) {
+	html.removeEventListener('keyup', hideWindow)
+	if ( e.keyCode == 27 && privacy_block.style.display == 'block' ) {
+		html.removeEventListener('keyup', hideWindow)
+		show_hide_privacy();
+	} else if ( e.keyCode == 27 && terms_block.style.display == 'block' ) {
+		html.removeEventListener('keyup', hideWindow)
+		show_hide_terms();
+	}
 }
-*/
-
-

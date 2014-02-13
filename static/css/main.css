@@ -155,9 +155,14 @@ a {
 	bottom: 28px;
 	left: 190px;
 	color: #fff;
+	animation: first 0.4s infinite linear;
 	-webkit-animation: first 0.4s infinite linear;
 }
 @-webkit-keyframes first {
+	from {-webkit-transform: rotate(0);}
+	to {-webkit-transform: rotate(360deg);}
+}
+@keyframes first {
 	from {-webkit-transform: rotate(0);}
 	to {-webkit-transform: rotate(360deg);}
 }
