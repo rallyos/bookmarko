@@ -95,6 +95,8 @@ a {
 	line-height: 40px;
 	border-radius: 40px;
 	cursor: pointer;
+	-webkit-transition: 0.3s;
+	transition: 0.3s;
 }
 .bookmarks-group-actions {
 	width: 25%;

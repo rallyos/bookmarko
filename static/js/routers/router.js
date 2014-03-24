@@ -3,8 +3,7 @@ var PageRouter = Backbone.Router.extend({
 
 	routes: {
 		'': 'mhm',
-		'collections/:id': 'showCollection',
-		'tags/:tag': 'filterByTag'
+		'collections/:title': 'showCollection',
 	},
 
 	// These functions trigger the 'filter' event
@@ -14,13 +13,16 @@ var PageRouter = Backbone.Router.extend({
 		var fn = 'collection';
 		bookmarks.trigger('filter', id, fn);
 	},
-	showCollection: function(id) {
+	showCollection: function(title) {
+		// Just test
+		for (var i = 0; i <= globalBookmarkCollections.models.length - 1; i++) {
+			if (globalBookmarkCollections.models[i].attributes.title.toLowerCase() == title) {
+				var id = globalBookmarkCollections.models[i].id
+			}
+		};
+
 		var fn = 'collection';
 		bookmarks.trigger('filter', id, fn);
-	},
-	filterByTag: function(tag) {
-		var fn = 'tag';
-		bookmarks.trigger('filter', tag, fn);
 	},
 });
 

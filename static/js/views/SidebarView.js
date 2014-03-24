@@ -66,6 +66,7 @@ var BookmarkCollectionView = Backbone.View.extend({
 	initialize: function() {				
 		this.listenTo(this.model, 'destroy', this.remove);
 		this.listenTo(this.model, 'scale', this.animateGroup);
+		this.listenTo(this.model, 'colorChanged', this.changeColor)
 
 		this.listenTo(this.model.bookmarkCollections, 'all', this.render);
 
@@ -149,11 +150,11 @@ var BookmarkCollectionView = Backbone.View.extend({
 	},
 
 	navigateToGroup: function() {
-		pageRouter.navigate('/collections/' + this.model.id, true);
+		pageRouter.navigate('/collections/' + this.model.attributes.title.toLowerCase(), true);
 	},
 
-	togglePalette: function() {
-		this.$('.bookmarks-group-color-palette').toggleClass('drawer-open');
+	changeColor: function(newBgColor) {
+		this.$('.bookmarks-group-count').css('background-color', newBgColor);
 	},
 
 	nameFocus: function() {

@@ -1,6 +1,6 @@
 // Content View
 // Responsible for showing all bookmarks 
-'use strict'
+//'use strict'
 var ContentView = Backbone.View.extend({
 	el: '.content',
 
@@ -43,8 +43,8 @@ var ContentView = Backbone.View.extend({
 
 		// If the address contains 'collections' do the work and show him the desired collection
 		if ( location.pathname.match('collections') ) {
-			var num = location.pathname.replace( /^\D+/g, '');
-			pageRouter.showCollection(num)
+			var title = location.pathname.match(/\w{0,}$/)
+			pageRouter.showCollection(title)
 		} else {
 			bookmarks.trigger('login');
 		} // Another else for tags?
@@ -578,7 +578,8 @@ var CollectionEditView = Backbone.View.extend({
 	},
 
 	nameFocus: function() {
-		var titleField = this.$('.collection-edit-name');
+		// temp solution
+		window.titleField = this.$('.collection-edit-name');
 	},
 
 	onEnter: function(e) {
@@ -607,6 +608,8 @@ var CollectionEditView = Backbone.View.extend({
 		var newBgColor = colors[n]
 
 		this.$('.collection-edit-color').css('background-color', newBgColor);
+		this.model.trigger('colorChanged', newBgColor)
+
 		this.model.save('background', newBgColor, tokenHeader);
 	},
 
