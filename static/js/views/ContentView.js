@@ -253,10 +253,6 @@ var BookmarkView = Backbone.View.extend({
 		'dragstart': 'dragStartEvent',
 		'dragend': 'dragEndEvent',
 
-		'click .edit-title': 'editBookmark',
-		'focus .bookmark-title': 'saveTitle',
-		'keypress .bookmark-title': 'onEnter',
-
 		'click .bookmark-menu-wrap': 'showMenu',
 		'click .copy-link': 'copyToClipboard',
 
@@ -264,7 +260,6 @@ var BookmarkView = Backbone.View.extend({
 		//tests
 		'click .star-mobile': 'starBookmark',
 		'click .delete-mobile': 'clear',
-		'blur .bookmark-title': 'updateBookmark',
 	},
 
 	initialize: function() {
@@ -373,41 +368,6 @@ var BookmarkView = Backbone.View.extend({
 		} else {
 				this.$el.removeClass('hidden');
 		}
-	},
-
-	saveTitle: function() {
-		window.savedTitle = this.$('.bookmark-title').text();
-	},
-
-	editBookmark: function(e) {
-		this.$el.removeAttr('draggable')
-		var titleField = this.$('.bookmark-title');
-		titleField.attr('contenteditable', 'true').focus()
-	},
-
-	onEnter: function(e) {
-		if (e.which === ENTER_KEY) {
-			titleField.blur()
-			return false;
-		}
-	},
-
-	updateBookmark: function() {
-		this.$el.attr('draggable', 'true')
-		titleField.removeAttr('contenteditable');
-
-		var newval = titleField.text()
-		this.model.set({title: newval})
-
-		if (newval.length == 0) {
-			titleField.text(window.savedTitle);
-		} else if ( this.model.hasChanged('title') ) {		
-			this.saveBookmark();
-		}
-	},
-
-	saveBookmark: function() {
-			this.model.save({ 'title': newval}, tokenHeader);
 	},
 
 	clear: function() {
