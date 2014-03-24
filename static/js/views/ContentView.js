@@ -259,13 +259,6 @@ var BookmarkView = Backbone.View.extend({
 
 		'click .bookmark-menu-wrap': 'showMenu',
 		'click .copy-link': 'copyToClipboard',
-		'click .add-tag': 'addTag',
-
-		'focus .bookmark-tags': 'tagFocus',
-		'keyup .bookmark-tags': 'onEnterTag',
-		'blur .bookmark-tags': 'updateTag',
-		'click .bookmark-tags': 'tagClicked',
-		'click .tag-delete': 'removeTag',
 
 		'click .bookmark-delete': 'clear',
 		//tests
@@ -357,47 +350,6 @@ var BookmarkView = Backbone.View.extend({
 			}
 	},
 
-	// Start tag creating flow
-	// ! These functions will be here untill the tags functionality is ready
-	addTag: function() {
-		this.model.set({tag: ' '})
-		var tagField = this.$('.bookmark-tags');
-		this.$el.removeAttr('draggable')
-		tagField.attr('contenteditable', 'true')
-		tagField.focus();
-	},
-
-	tagFocus: function() {
-		var tagField = this.$('.bookmark-tags');
-	},
-
-	onEnterTag: function(e) {
-		if (e.which === ENTER_KEY) {
-			tagField.blur();
-			return false;
-		}
-	},
-
-	updateTag: function() {
-			var tag = tagField.text();
-			tagField.removeAttr('contenteditable');
-			this.$el.attr('draggable', 'true')
-			this.tagSave(tag)
-	},
-
-	tagSave: function(tag) {
-			this.model.save({tag: tag}, tokenHeader);
-	},
-
-    tagClicked: function() {
-            var tagTitle = this.model.get('tag');
-            pageRouter.navigate('/tags/'+ tagTitle, true);
-    },
-
-    removeTag: function() {
-    	this.model.save({tag: ''}, tokenHeader)
-    },
-
 	showResults: function(bookmark, searchWord) {
 		var title = bookmark.get('title').toLowerCase();
 		var url = bookmark.get('url').toLowerCase();
@@ -417,8 +369,6 @@ var BookmarkView = Backbone.View.extend({
 	// Depending on them hides or shows bookmarks
 	hideBookmarks: function(bookmark, param, fn) {
 		if ( fn == 'collection' & bookmark.get('collection_id') != param) {
-				this.$el.addClass('hidden');
-		} else if ( fn == 'tag' & bookmark.get('tag') != param ) {
 				this.$el.addClass('hidden');
 		} else {
 				this.$el.removeClass('hidden');

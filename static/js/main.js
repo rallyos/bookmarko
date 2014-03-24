@@ -22,7 +22,9 @@ var recover = getCookie('recover');
 
 // Used after every request to the server
 var tokenHeader = { headers: { 'Authorization': 'Token ' + token } };
-
+    
+    // Move to view
+    var colors = ['#EB4040', '#79D55B', '#343534', '#33A3C0', '#863825', '#838AFF', '#FFAC79', '#A3A3A3']
 
 if ( appearance == 'LI' ) {
     var Template = '#list-template';

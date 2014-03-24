@@ -574,18 +574,8 @@ a {
 	-ms-transform: translateY(0);
 	transform: translateY(0);
 }
-.grid-tmpl:hover .grd-bookmark-image {
-	-webkit-transform: translateX(-20%);
-	-ms-transform: translateX(-20%);
-	transform: translateX(-20%);
-}
 .grd-bookmark-image {
 	height: 100%;
-	-webkit-transition: 3s;
-	transition: 3s;
-	-webkit-transform: translateX(0);
-	-ms-transform: translateX(0);
-	transform: translateX(0);
 }
 .play-image {
 	position: absolute;

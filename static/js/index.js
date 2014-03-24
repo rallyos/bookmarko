@@ -125,9 +125,9 @@ signup_form.onsubmit = function() {
 			form_submit[0].className = 'form-submit submit-animate'
 			location.reload()
 		} else if ( xhr.status ==  403) {
-			loading_animation.style.display = 'block'
+			loading_animation.style.display = 'none'
 			var message = 'Your email or password is invalid'
-			var form = form_submit[0];
+			var submit_button = form_submit[0];
 			showError(message, signup_form, submit_button)
 		}
 	}
@@ -168,7 +168,7 @@ signin_form.onsubmit = function() {
 			loading_animation.style.display = 'none'
 			password_recover_button.style.display = 'block';
 			message = 'Wrong username or password'
-			var form = form_submit[1];
+			var submit_button = form_submit[1];
 			showError(message, signin_form, submit_button)
 		};
 	}
@@ -233,7 +233,7 @@ function sendPassword() {
 // ********
 // Show form errors
 // ********
-function showError(message, theform, form) {
+function showError(message, theform, submit_button) {
 	if ( document.getElementsByClassName('form-error').length != 0 ) {
 		error = document.getElementsByClassName('form-error')
 		theform.removeChild(error[0])

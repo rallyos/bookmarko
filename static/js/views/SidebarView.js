@@ -1,4 +1,5 @@
-'use strict'
+//'use strict'
+// when creating groups the app sends two requests - check this.
 var SidebarView = Backbone.View.extend({
 	el: '.sidebar',
 
@@ -23,8 +24,6 @@ var SidebarView = Backbone.View.extend({
 
 	    globalBookmarkCollections.trigger('reset');
 
-
-		var colors = ['#EB4040', '#79D55B', '#343534', '#33A3C0', '#863825', '#838AFF', '#FFAC79', '#A3A3A3']
 	},
 
 	events: {
@@ -37,6 +36,7 @@ var SidebarView = Backbone.View.extend({
 			title: ' ',
 			background: colors[Math.floor(Math.random() * 7)]
 		});
+
 		globalBookmarkCollections.add(group)
 		group.trigger('scale');
 		this.$('.bookmarks-group-name').attr('contenteditable', 'true').focus();
@@ -157,7 +157,8 @@ var BookmarkCollectionView = Backbone.View.extend({
 	},
 
 	nameFocus: function() {
-		var titleField = this.$('.bookmarks-group-name');
+		// temporary fix
+		window.titleField = this.$('.bookmarks-group-name');
 	},
 
 	onEnter: function(e) {
