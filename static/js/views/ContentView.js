@@ -47,7 +47,7 @@ var ContentView = Backbone.View.extend({
 			pageRouter.showCollection(title)
 		} else {
 			bookmarks.trigger('login');
-		} // Another else for tags?
+		}
 		
 		// Show welcome page
 		if ( bookmarks.length == 0 ) {

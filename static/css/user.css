@@ -427,13 +427,13 @@ a {
 	height: 18px;
 	padding: 4px 0 4px 30px;
 	line-height: initial;
-	background-position: 5px 6px;
-	background-size: 15px;
-	background-repeat: no-repeat;
+	-webkit-transition: 0.3s;
+	transition: 0.3s;
 }
 .bookmark-menu-list-item:hover {
-	background-color: #fafafa;
+	background-color: #F77;
 	cursor: pointer;
+	color: #FFF;
 }
 .being-moved {
 	opacity: 0.4;
@@ -613,7 +613,9 @@ a {
 	padding: 5px 20px 20px 20px;
 	color: #808080;
 	font-weight: 300;
+	height: 55px;
 	word-wrap: break-word;
+	overflow: hidden;
 }
 .grd-bookmark-descr {
 	padding: 0 5px;
@@ -639,7 +641,13 @@ a {
 	background-image: url(../images/user/add-tag.png);
 }
 .copy-link {
-	background-image: url(../images/user/copy-icon.png);
+	background-position: 5px 6px;
+	background-size: 15px;
+	background-repeat: no-repeat;
+	background-image: url(../images/user/copy-icon-bl.png);
+}
+.copy-link:hover {
+	background-image: url(../images/user/copy-icon-wh.png);
 }
 .star-mobile {
 	background-image: url(../images/user/dark-star.png);
@@ -806,9 +814,9 @@ a {
 .collection-edit-color {
 	display: block;
 	float: left;
-	margin: 5px 6px;
-	width: 30px;
-	height: 30px;
+	margin: 7.5px 6px;
+	width: 25px;
+	height: 25px;
 	border-radius: 30px;
 	cursor: pointer;
 }
@@ -1303,6 +1311,9 @@ a {
 @media screen and (min-width: 320px) and (max-width: 360px) {
 	.settings-form-label {
 		font-size: 0.9rem;
+	}
+	.settings-block {
+		height: 80%;
 	}
 }
 @media screen and (min-width: 320px) and (max-width: 320px) {
