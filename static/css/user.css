@@ -606,7 +606,8 @@ a {
 .grd-bookmark-title-big {
 	margin: 0;
 	padding: 20px 20px 0 20px;
-	font-weight: 300;
+	font-weight: 500;
+	color: #585858;
 }
 .grd-bookmark-url {
 	margin: 0;
