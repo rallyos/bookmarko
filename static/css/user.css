@@ -419,13 +419,16 @@ a {
 }
 .bookmark-menu-list {
 	display: block;
+	padding: 3px 0;
 	font-size: 0.8rem;
-	border-radius: 5px;
+	border-radius: 2px;
 	box-shadow: 0 0 8px #E9E9E9;
 }
 .bookmark-menu-list-item {
 	height: 18px;
+	margin: 1px 0;
 	padding: 4px 0 4px 30px;
+	font-weight: 300;
 	line-height: initial;
 	-webkit-transition: 0.3s;
 	transition: 0.3s;
@@ -703,6 +706,11 @@ a {
 .grd-bookmark-settings {
 	width: 100%;
 	height: 30px;
+}
+.no-starred-block {
+	width: 50%;
+	margin: 140px auto;
+	text-align: center;
 }
 .report-block {
 	position: absolute;

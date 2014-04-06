@@ -114,6 +114,8 @@ var ContentView = Backbone.View.extend({
 			this.$starButton.toggleClass('yellow-star')
 			this.$starButton.data('pressed', 'no');
 
+			this.$('.no-starred-block').hide()					
+
 			// Use the universal filter function to show the previous view
 			var fn = 'collection';
 			var param = null;
@@ -126,6 +128,24 @@ var ContentView = Backbone.View.extend({
 			bookmarks.forEach(function(bookmarks) {
 				bookmarks.trigger('isStarred', bookmarks);
 			});	
+
+
+			// just test code
+			// refactor it
+			// foreach function or other
+			var starred = []
+			for (var i = 0; i < bookmarks.length; i++) {
+				if (bookmarks.models[i].attributes.starred == true) {
+					starred.push(i)	
+				}
+			};
+
+			console.log(starred.length < 1)
+			if (starred.length < 1) {
+				this.$('.no-starred-block').show()
+			} else {
+				this.$('.no-starred-block').hide()					
+			}
 		}
 	},
 
