@@ -34,7 +34,7 @@ var SidebarView = Backbone.View.extend({
 	createGroup: function() {
 		var group = new BookmarkCollection({
 			title: ' ',
-			background: colors[Math.floor(Math.random() * 7)]
+			background: COLORS[Math.floor(Math.random() * 7)]
 		});
 
 		globalBookmarkCollections.add(group)
@@ -130,13 +130,13 @@ var BookmarkCollectionView = Backbone.View.extend({
 			// And then add the bookmark to it
 			dropTarget.add(draggedModel);
 			// Save the bookmark's new collection id to the server
-			draggedModel.save({collection_id: dropTargetID}, tokenHeader);
+			draggedModel.save({collection_id: dropTargetID}, TOKEN_HEADER);
 		// The easy scenario - The bookmark that's being dragged don't have collection yet	
 		} else {
 			// Set the new collection id, add the bookmark to it, and then save to server.
 			draggedModel.set({collection_id: dropTargetID})
 			dropTarget.add(draggedModel);
-			draggedModel.save({collection_id: dropTargetID}, tokenHeader);
+			draggedModel.save({collection_id: dropTargetID}, TOKEN_HEADER);
 		}
 
 		// When the drag and drop is over, hide the moved bookmark
@@ -184,7 +184,7 @@ var BookmarkCollectionView = Backbone.View.extend({
 	},
 
 	saveGroup: function(newval) {
-		this.model.save({ 'title': newval}, tokenHeader);
+		this.model.save({ 'title': newval}, TOKEN_HEADER);
 		setTimeout(function() {
 			globalBookmarkCollections.fetch({reset:true})
 		}, 1000)

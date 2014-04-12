@@ -1,6 +1,6 @@
 	{% include "header.html" %}
 	<div class="blog-wrap">
-            {% for post in posts %}
+            {% for post in posts|dictsortreversed:"date" %}
             <article class="blog-post">
             	<h1 class="post-title">{{ post.title }}</h1>
             	<h5 class="post-date">{{ post.date }}</h5>

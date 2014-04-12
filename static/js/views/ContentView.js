@@ -44,7 +44,7 @@ var ContentView = Backbone.View.extend({
 		// If the address contains 'collections' do the work and show him the desired collection
 		if ( location.pathname.match('collections') ) {
 			var title = location.pathname.match(/\w{0,}$/)
-			pageRouter.showCollection(title)
+			pageRouter.collection(title)
 		} else {
 			bookmarks.trigger('login');
 		}
@@ -63,7 +63,7 @@ var ContentView = Backbone.View.extend({
 		var newUserTemplate = $('<img class="help-arrows" src="http://www.bookmarkoapp.com/static/images/user/newtest.png">')
 			newUserTemplate.appendTo($('.bookmarks-section') );
 
-		if (new_user == 'true') {
+		if (NEW_USER == 'true') {
     		var newUserTemplate = $('<h1 class="new-user-text thank-you">Thank you for signing up!</h1><p class="new-user-text beta-warning"><span class="new-user-bookmarko">Bookmarko</span> is still in early beta so everything can brake, and <br> your user experience may not be so good.</p>')
     			newUserTemplate.insertAfter('.help-arrows');
 	
@@ -86,9 +86,9 @@ var ContentView = Backbone.View.extend({
 	},
 
 	setBookmarkClass: function() {
-		if ( appearance == 'LI' ) {
+		if ( APPEARANCE == 'LI' ) {
 		    $('.bookmark').removeClass('grid-tmpl').addClass('list-tmpl')
-		} else if ( appearance == 'GR' ) {
+		} else if ( APPEARANCE == 'GR' ) {
 		    $('.bookmark').removeClass('list-tmpl').addClass('grid-tmpl')
 		}
 	},
@@ -176,7 +176,7 @@ var ContentView = Backbone.View.extend({
 		$.ajax({
 			type: 'POST',
 			url: 'add_from_page',
-			headers: {'Authorization': 'Token ' + token, 'X-CSRFToken': csrftoken},
+			headers: {'Authorization': 'Token ' + TOKEN, 'X-CSRFToken': CSRFTOKEN},
 			data: {url: $('.add-url-input ').val()}
 		}).done(function(data) {
 			var p = JSON.parse(data)
@@ -210,7 +210,7 @@ var ContentView = Backbone.View.extend({
 			$.ajax({
 				type: 'POST',
 				url: 'report_bug',
-				headers: {'Authorization': 'Token ' + token, 'X-CSRFToken': csrftoken},
+				headers: {'Authorization': 'Token ' + TOKEN, 'X-CSRFToken': CSRFTOKEN},
 				data: {message: message}
 			}).done(function() {
 					$('.say-thanks').addClass('say-thanks-translate')
@@ -232,7 +232,7 @@ var ContentView = Backbone.View.extend({
 			$.ajax({
 				type: 'POST',
 				url: 'password_change',
-				headers: {'Authorization': 'Token ' + token, 'X-CSRFToken': csrftoken},
+				headers: {'Authorization': 'Token ' + TOKEN, 'X-CSRFToken': CSRFTOKEN},
 				data: {data: newpass}
 			}).done(function() {
 				$('.recover-message').addClass('recover-message-show')
@@ -265,7 +265,7 @@ var bookmarksList = new ContentView();
 // Single bookmark view
 var BookmarkView = Backbone.View.extend({
 	tagName: 'li',
-	className: cls,
+	className: BM_CLASS,
 
 	events: {
 		'click .bookmark-star': 'starBookmark',
@@ -295,7 +295,7 @@ var BookmarkView = Backbone.View.extend({
 			globalBookmarkCollections.get(bookmarkCollectionID).bookmarkCollections.add(this.model)
 		}
 
-		this.template = _.template($(Template).html())
+		this.template = _.template($($TEMPLATE).html())
 	},
 
 	render: function(bookmark) {
@@ -350,10 +350,10 @@ var BookmarkView = Backbone.View.extend({
 	starBookmark: function(bookmark) {
 		if ( this.model.get('starred') == false ) {
 			this.$('.bookmark-star').addClass("bookmark-starred");
-			this.model.save({ 'starred': true}, tokenHeader);
+			this.model.save({ 'starred': true}, TOKEN_HEADER);
 		} else if ( this.model.get('starred') == true ) {
 			this.$('.bookmark-star').removeClass("bookmark-starred");
-			this.model.save({ 'starred': false}, tokenHeader);
+			this.model.save({ 'starred': false}, TOKEN_HEADER);
 		}
 	},
 
@@ -393,7 +393,7 @@ var BookmarkView = Backbone.View.extend({
 	clear: function() {
 		var model = this.model;
 
-		if ( appearance == 'LI' ) {
+		if ( APPEARANCE == 'LI' ) {
 			this.$el.css({ right: '100%' })
 		} else {
 			this.$el.css({
@@ -403,7 +403,7 @@ var BookmarkView = Backbone.View.extend({
 			});
 		}	
 		this.$el.one('transitionend', function() {
-			model.destroy(tokenHeader);
+			model.destroy(TOKEN_HEADER);
 		})
 	},
 
@@ -417,7 +417,7 @@ var SettingsView = Backbone.View.extend({
 		this.listenTo(globalBookmarkCollections, 'add', this.addNew);
 		this.listenTo(globalBookmarkCollections, 'reset', this.addAll);
 
-		if ( recover == 'true' ) {
+		if ( RECOVER == 'true' ) {
 			this.forcePassChange();
 		}
 
@@ -447,13 +447,13 @@ var SettingsView = Backbone.View.extend({
 	changeTemplate: function(click) {
 
 		if ( click.target.id == 'list' ) {
-			window.appearance = 'LI'
-	        window.Template = '#list-template';
-	        window.cls = 'bookmark list-tmpl'
+			window.APPEARANCE = 'LI'
+	        window.$TEMPLATE = '#list-template';
+	        window.BM_CLASS = 'bookmark list-tmpl'
 		} else if ( click.target.id == 'grid' ) {
-			window.appearance = 'GR'
-	        window.Template = '#grid-template';
-	        window.cls = 'bookmark grid-tmpl'
+			window.APPEARANCE = 'GR'
+	        window.$TEMPLATE = '#grid-template';
+	        window.BM_CLASS = 'bookmark grid-tmpl'
 		}
 
 		this.syncSettings()
@@ -464,8 +464,8 @@ var SettingsView = Backbone.View.extend({
 		$.ajax({
 			type: 'POST',
 			url: 'change_settings',
-			headers: {'Authorization': 'Token ' + token, 'X-CSRFToken': csrftoken},
-			data: {'appearance': appearance, 'order_collections': order_collections}
+			headers: {'Authorization': 'Token ' + TOKEN, 'X-CSRFToken': CSRFTOKEN},
+			data: {'appearance': APPEARANCE, 'order_collections': order_collections}
 		})
 	},
 
@@ -492,7 +492,7 @@ var SettingsView = Backbone.View.extend({
 	    formData.append("thefile", mda.files[0]);
 	    var xhr = new XMLHttpRequest();
 	    xhr.open('POST', 'da');
-	    xhr.setRequestHeader('X-CSRFToken', csrftoken)
+	    xhr.setRequestHeader('X-CSRFToken', CSRFTOKEN)
 	    xhr.send(formData);
 
 	    console.log(xhr.status)
@@ -524,7 +524,7 @@ var SettingsView = Backbone.View.extend({
 			$.ajax({
 				type: 'POST',
 				url: 'password_change',
-				headers: {'Authorization': 'Token ' + token, 'X-CSRFToken': csrftoken},
+				headers: {'Authorization': 'Token ' + TOKEN, 'X-CSRFToken': CSRFTOKEN},
 				data: {data: newpass}
 			}).done(function() {
 				msgEl.removeClass('hidden')
@@ -625,12 +625,12 @@ var CollectionEditView = Backbone.View.extend({
 	changeGroupColor: function(click) {
 		var n = click.target.getAttribute('data-n');
 		// Since the colors in DOM are rgb we have to use alternative way of getting and setting the new color.
-		var newBgColor = colors[n]
+		var newBgColor = COLORS[n]
 
 		this.$('.collection-edit-color').css('background-color', newBgColor);
 		this.model.trigger('colorChanged', newBgColor)
 
-		this.model.save('background', newBgColor, tokenHeader);
+		this.model.save('background', newBgColor, TOKEN_HEADER);
 	},
 
 	clear: function () {
@@ -640,13 +640,13 @@ var CollectionEditView = Backbone.View.extend({
 
 			this.$el.one('transitionend', function() {
 				console.log('removed')
-				model.destroy(tokenHeader);
+				model.destroy(TOKEN_HEADER);
 			});
 		}
 	},
 
 	saveGroup: function(newval) {
-		this.model.save({ 'title': newval}, tokenHeader);
+		this.model.save({ 'title': newval}, TOKEN_HEADER);
 		setTimeout(function() {
 			globalBookmarkCollections.fetch({reset:true})
 		}, 1000)

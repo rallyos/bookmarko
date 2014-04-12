@@ -555,11 +555,35 @@ a {
 	font-size: 0.9rem;
 	font-weight: 600;
 }
+.post-img-center {
+	display: block;
+	margin: 0 auto;
+}
 .post-text {
 	margin: 27px 0;
 }
 .post-paragraph {
+	margin: 6px 0 20px;
+}
+.post-h3,
+.post-h4 {
+	margin: 0;
+}
+.fader {
+	width: 100%;
+	min-height: 440px;
+	position: relative;
 	margin: 20px 0;
+	overflow: hidden;
+}
+.img-fade {
+	width: 100%;
+	position: absolute;
+	-webkit-transition: opacity 0.5s;
+	transition: opacity 0.5s;
+}
+.img-fade:nth-child(2):hover {
+	opacity: 0;
 }
 @media screen and (max-width: 1024px) {
 	.sign-up-block {

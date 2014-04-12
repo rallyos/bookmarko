@@ -226,8 +226,8 @@
 		</div>
 	</script>
 <script>
-	    var appearance = "{{appearance|escapejs}}"
-		var appearance = JSON.parse(appearance)
+	    var APPEARANCE = "{{appearance|escapejs}}"
+		var APPEARANCE = JSON.parse(APPEARANCE)
 
 	    var order_collections = "{{order_collections|escapejs}}"
 		var order_collections = JSON.parse(order_collections)
@@ -235,7 +235,7 @@
 <script src="{{ STATIC_URL }}libraries/underscore-min.js"></script>
 <script src="{{ STATIC_URL }}libraries/jquery-min.js"></script>
 <script src="{{ STATIC_URL }}libraries/backbone-min.js"></script>
-<script src="{{ STATIC_URL }}js/main.js"></script>
+<script src="{{ STATIC_URL }}js/globals.js"></script>
 <script src="{{ STATIC_URL }}js/models/models.js"></script>
 <script src="{{ STATIC_URL }}js/collections/collections.js"></script>
 <script src="{{ STATIC_URL }}js/views/SidebarView.js"></script>
