@@ -1,6 +1,6 @@
 import json
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.shortcuts import render
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.forms import UserCreationForm, PasswordResetForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -95,7 +95,7 @@ def login_user(request):
                 return login_success
             else:
                 # Change this if you delete/deactivate user/user has deleted it's account
-                return redirect('/')
+                return HttpResponseRedirect('/')
         else:
         # Return an 'invalid login' error message.
             return HttpResponse(status=404)
@@ -184,7 +184,7 @@ def recover_password(request):
         
         recover.delete()
 
-        success = redirect('/')
+        success = HttpResponseRedirect('/')
         
         new_user_time = datetime.datetime.utcnow().replace(tzinfo=utc) + timedelta(seconds=48)
         success.set_cookie('recover', 'true', expires=new_user_time)
@@ -208,7 +208,7 @@ def report_bug(request):
 
 def logout_user(request):
     logout(request)
-    return redirect('/')
+    return HttpResponseRedirect('/')
 
 def add_from_page(request):
     if request.method == 'POST':
