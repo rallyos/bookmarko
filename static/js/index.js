@@ -167,7 +167,7 @@ signin_form.onsubmit = function() {
 		} else if ( xhr.status == 404) {
 			loading_animation.style.display = 'none'
 			password_recover_button.style.display = 'block';
-			message = 'Wrong username or password'
+			var message = 'Wrong username or password'
 			var submit_button = form_submit[1];
 			showError(message, signin_form, submit_button)
 		};
