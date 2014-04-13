@@ -4,7 +4,6 @@ var SidebarView = Backbone.View.extend({
 	el: '.sidebar',
 
 	initialize: function () {
-
 		this.listenTo(globalBookmarkCollections, 'add', this.addNew);
 		this.listenTo(globalBookmarkCollections, 'reset', this.addAll);
 
@@ -21,16 +20,13 @@ var SidebarView = Backbone.View.extend({
 	            globalBookmarkCollections.order_by_size();
 	    	}
 
-
 	    globalBookmarkCollections.trigger('reset');
-
 	},
 
 	events: {
 		'click .group-add': 'createGroup'
 	},
 	
-	// Create new group.
 	createGroup: function() {
 		var group = new BookmarkCollection({
 			title: ' ',
@@ -67,6 +63,8 @@ var BookmarkCollectionView = Backbone.View.extend({
 		this.listenTo(this.model, 'destroy', this.remove);
 		this.listenTo(this.model, 'scale', this.animateGroup);
 		this.listenTo(this.model, 'colorChanged', this.changeColor)
+
+		this.listenTo(this.model, 'update_s', this.updateT)
 
 		this.listenTo(this.model.bookmarkCollections, 'all', this.render);
 
@@ -158,7 +156,6 @@ var BookmarkCollectionView = Backbone.View.extend({
 	},
 
 	nameFocus: function() {
-		// temporary fix
 		window.titleField = this.$('.bookmarks-group-name');
 	},
 
@@ -173,27 +170,25 @@ var BookmarkCollectionView = Backbone.View.extend({
 		var newval = titleField.text()
 		this.model.set({title: newval})
 
-		console.log('save')
-
 		this.$('.bookmarks-group-name').attr('contenteditable', 'false')
 
 		if ( this.model.hasChanged('title') ) {
+			this.model.trigger('updated')
 			this.saveGroup(newval)
 		}
+	},
 
+	updateT: function() {
+		this.$('.bookmarks-group-name').text(this.model.attributes.title)
 	},
 
 	saveGroup: function(newval) {
 		this.model.save({ 'title': newval}, TOKEN_HEADER);
-		setTimeout(function() {
-			globalBookmarkCollections.fetch({reset:true})
-		}, 1000)
 	},
 
 	render: function(bookmarks_collection) {
 		this.$el.html(this.template(this.model.toJSON()));
-		var background_color = this.model.get('background');
-		this.$('.bookmarks-group-count').css('background-color', background_color);
+		this.$('.bookmarks-group-count').css('background-color', this.model.get('background'));
 		return this;
 	}
 

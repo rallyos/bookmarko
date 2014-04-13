@@ -1,6 +1,7 @@
 // Content View
 // Responsible for showing all bookmarks 
-//'use strict'
+'use strict'
+
 var ContentView = Backbone.View.extend({
 	el: '.content',
 
@@ -22,7 +23,6 @@ var ContentView = Backbone.View.extend({
 
 		this.$searchInput = this.$('.input-search');
 		this.$starButton = this.$('.starred');
-		this.$settingsBlock = $('.settings-block');
 	},
 
 	events: {
@@ -49,14 +49,10 @@ var ContentView = Backbone.View.extend({
 			bookmarks.trigger('login');
 		}
 		
-		// Show welcome page
+		// Show welcome page if there are no bookmarks
 		if ( bookmarks.length == 0 ) {
 			bookmarks.trigger('empty')
-		}
-		
-		$('.bookmark').attr('draggable', 'true')
-
-		this.setBookmarkClass(); 
+		}		
 	},
 
 	showHelp: function() {
@@ -80,17 +76,10 @@ var ContentView = Backbone.View.extend({
 		pageRouter.navigate('', true);
 	},
 
+	// Show/Hide blocks on mobile
 	toggleSidebar: function() {
 		$('.sidebar').toggleClass('sidebar-show');
 		$('.bookmarks-section').toggleClass('bookmarks-section-translate');
-	},
-
-	setBookmarkClass: function() {
-		if ( APPEARANCE == 'LI' ) {
-		    $('.bookmark').removeClass('grid-tmpl').addClass('list-tmpl')
-		} else if ( APPEARANCE == 'GR' ) {
-		    $('.bookmark').removeClass('list-tmpl').addClass('grid-tmpl')
-		}
 	},
 
 	// Show bookmarks based on their collection
@@ -140,7 +129,6 @@ var ContentView = Backbone.View.extend({
 				}
 			};
 
-			console.log(starred.length < 1)
 			if (starred.length < 1) {
 				this.$('.no-starred-block').show()
 			} else {
@@ -158,7 +146,7 @@ var ContentView = Backbone.View.extend({
 	},
 
 	openSettings: function() {
-		this.$settingsBlock.toggleClass("settings-hidden");
+		$('.settings-block').toggleClass("settings-hidden");
 	},
 
 	openAddUrl: function() {
@@ -254,7 +242,6 @@ var ContentView = Backbone.View.extend({
 	addAll: function () {
 		this.$('.bookmarks-list').html('');
 		bookmarks.each(this.addBookmark, this);
-		this.setBookmarkClass();
 	},
 });
 
@@ -265,7 +252,7 @@ var bookmarksList = new ContentView();
 // Single bookmark view
 var BookmarkView = Backbone.View.extend({
 	tagName: 'li',
-	className: BM_CLASS,
+	className: 'bookmark',
 
 	events: {
 		'click .bookmark-star': 'starBookmark',
@@ -277,7 +264,7 @@ var BookmarkView = Backbone.View.extend({
 		'click .copy-link': 'copyToClipboard',
 
 		'click .bookmark-delete': 'clear',
-		//tests
+
 		'click .star-mobile': 'starBookmark',
 		'click .delete-mobile': 'clear',
 	},
@@ -291,15 +278,20 @@ var BookmarkView = Backbone.View.extend({
 		this.listenTo(this.model, 'change', this.render);
 
 		var bookmarkCollectionID = this.model.get('collection_id')
+
 		if ( bookmarkCollectionID != null ) {
 			globalBookmarkCollections.get(bookmarkCollectionID).bookmarkCollections.add(this.model)
 		}
+
+		$(this.el).attr('draggable', 'true')
 
 		this.template = _.template($($TEMPLATE).html())
 	},
 
 	render: function(bookmark) {
 		this.$el.html(this.template(this.model.toJSON()));
+		// Needy because of the view class change
+		this.$el.attr('class', BM_CLASS)
 		return this;
 	},
 
@@ -370,9 +362,7 @@ var BookmarkView = Backbone.View.extend({
 		var url = bookmark.get('url').toLowerCase();
 		var searchWord = searchWord.toLowerCase();
 
-		//tag = bookmark.get('tag').toLowerCase();
-
-		if ( title.match(searchWord) || url.match(searchWord)/* || tag.match(searchWord)*/ ) {
+		if (title.match(searchWord) || url.match(searchWord)) {
 			this.$el.removeClass('hidden');
 		} else {
 			this.$el.addClass('hidden');
@@ -585,6 +575,7 @@ var CollectionEditView = Backbone.View.extend({
 	template: _.template($('#collection-edit-template').html()),	
 
 	initialize: function() {
+		this.listenTo(this.model, 'updated', this.updateNew);
 		this.listenTo(this.model, 'destroy', this.remove);
 	},
 
@@ -598,7 +589,6 @@ var CollectionEditView = Backbone.View.extend({
 	},
 
 	nameFocus: function() {
-		// temp solution
 		window.titleField = this.$('.collection-edit-name');
 	},
 
@@ -616,6 +606,12 @@ var CollectionEditView = Backbone.View.extend({
 		if ( this.model.hasChanged('title') ) {
 			this.saveGroup(newval)
 		}
+
+		this.model.trigger('update_s')
+	},
+
+	updateNew: function() {
+		this.$('.collection-edit-name').text(this.model.attributes.title)
 	},
 
 	togglePalette: function() {
@@ -647,15 +643,11 @@ var CollectionEditView = Backbone.View.extend({
 
 	saveGroup: function(newval) {
 		this.model.save({ 'title': newval}, TOKEN_HEADER);
-		setTimeout(function() {
-			globalBookmarkCollections.fetch({reset:true})
-		}, 1000)
 	},
 
 	render: function(bookmarks_collection) {
 		this.$el.html(this.template(this.model.toJSON()));
-		var background_color = this.model.get('background');
-		this.$('.collection-edit-color').css('background-color', background_color);
+		this.$('.collection-edit-color').css('background-color', this.model.get('background'));
 		return this;
 	}
 
