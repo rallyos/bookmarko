@@ -575,14 +575,14 @@ var CollectionEditView = Backbone.View.extend({
 	template: _.template($('#collection-edit-template').html()),	
 
 	initialize: function() {
-		this.listenTo(this.model, 'updated', this.updateNew);
+		this.listenTo(this.model, 'update', this.updateTitle);
 		this.listenTo(this.model, 'destroy', this.remove);
 	},
 
 	events: {
 		'focus .collection-edit-name': 'nameFocus',
 		'keypress .collection-edit-name': 'onEnter',
-		'blur .collection-edit-name': 'updateTitle',
+		'blur .collection-edit-name': 'setTitle',
 		'click .collection-edit-delete': 'clear',		
 		'click .bookmarks-group-color': 'changeGroupColor',
 		'click .collection-edit-color': 'togglePalette',
@@ -599,18 +599,17 @@ var CollectionEditView = Backbone.View.extend({
 		}
 	},
 
-	updateTitle: function() {
+	setTitle: function() {
 		var newval = titleField.text()
 		this.model.set({title: newval})
 
 		if ( this.model.hasChanged('title') ) {
+			this.model.trigger('update')
 			this.saveGroup(newval)
 		}
-
-		this.model.trigger('update_s')
 	},
 
-	updateNew: function() {
+	updateTitle: function() {
 		this.$('.collection-edit-name').text(this.model.attributes.title)
 	},
 
@@ -635,7 +634,6 @@ var CollectionEditView = Backbone.View.extend({
 			this.$el.css({ opacity: '0' })
 
 			this.$el.one('transitionend', function() {
-				console.log('removed')
 				model.destroy(TOKEN_HEADER);
 			});
 		}

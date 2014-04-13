@@ -64,7 +64,7 @@ var BookmarkCollectionView = Backbone.View.extend({
 		this.listenTo(this.model, 'scale', this.animateGroup);
 		this.listenTo(this.model, 'colorChanged', this.changeColor)
 
-		this.listenTo(this.model, 'update_s', this.updateT)
+		this.listenTo(this.model, 'update', this.updateTitle)
 
 		this.listenTo(this.model.bookmarkCollections, 'all', this.render);
 
@@ -73,7 +73,7 @@ var BookmarkCollectionView = Backbone.View.extend({
 	events: {
 		'focus .bookmarks-group-name': 'nameFocus',
 		'keypress .bookmarks-group-name': 'onEnter',
-		'blur .bookmarks-group-name': 'updateTitle',
+		'blur .bookmarks-group-name': 'setTitle',
 
 		'click .bookmarks-group-count': 'navigateToGroup',
 		'dragenter': 'dragEnterEvent',
@@ -166,19 +166,19 @@ var BookmarkCollectionView = Backbone.View.extend({
 		}
 	},
 
-	updateTitle: function() {
+	setTitle: function() {
 		var newval = titleField.text()
 		this.model.set({title: newval})
 
 		this.$('.bookmarks-group-name').attr('contenteditable', 'false')
 
 		if ( this.model.hasChanged('title') ) {
-			this.model.trigger('updated')
+			this.model.trigger('update')
 			this.saveGroup(newval)
 		}
 	},
 
-	updateT: function() {
+	updateTitle: function() {
 		this.$('.bookmarks-group-name').text(this.model.attributes.title)
 	},
 
