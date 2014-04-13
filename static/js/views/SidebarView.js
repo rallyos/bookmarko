@@ -71,9 +71,7 @@ var BookmarkCollectionView = Backbone.View.extend({
 	},
 
 	events: {
-		'focus .bookmarks-group-name': 'nameFocus',
-		'keypress .bookmarks-group-name': 'onEnter',
-		'blur .bookmarks-group-name': 'setTitle',
+		'keypress .bookmarks-group-name': 'createOnEnter',
 
 		'click .bookmarks-group-count': 'navigateToGroup',
 		'dragenter': 'dragEnterEvent',
@@ -155,26 +153,19 @@ var BookmarkCollectionView = Backbone.View.extend({
 		this.$('.bookmarks-group-count').css('background-color', newBgColor);
 	},
 
-	nameFocus: function() {
-		window.titleField = this.$('.bookmarks-group-name');
-	},
-
-	onEnter: function(e) {
+	createOnEnter: function(e) {
 		if (e.which === ENTER_KEY) {
-			titleField.blur()
+			var newval = this.$('.bookmarks-group-name').text();
+			this.model.set({title: newval})
+
+			this.$('.bookmarks-group-name').attr('contenteditable', 'false')
+
+			if ( this.model.hasChanged('title') ) {
+				this.model.trigger('update')
+				this.saveGroup(newval)
+			}
+
 			return false;
-		}
-	},
-
-	setTitle: function() {
-		var newval = titleField.text()
-		this.model.set({title: newval})
-
-		this.$('.bookmarks-group-name').attr('contenteditable', 'false')
-
-		if ( this.model.hasChanged('title') ) {
-			this.model.trigger('update')
-			this.saveGroup(newval)
 		}
 	},
 

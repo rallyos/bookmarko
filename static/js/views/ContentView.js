@@ -163,7 +163,7 @@ var ContentView = Backbone.View.extend({
 		$('.add-url-submit').text('').append('<img class="add-url-loading" width="25" height="25" src="/static/images/user/add_url_loading.png">')
 		$.ajax({
 			type: 'POST',
-			url: 'add_from_page',
+			url: 'http://www.bookmarkoapp.com/add_from_page',
 			headers: {'Authorization': 'Token ' + TOKEN, 'X-CSRFToken': CSRFTOKEN},
 			data: {url: $('.add-url-input ').val()}
 		}).done(function(data) {
@@ -197,7 +197,7 @@ var ContentView = Backbone.View.extend({
 		if ( message.length > 0 ) {
 			$.ajax({
 				type: 'POST',
-				url: 'report_bug',
+				url: 'http://www.bookmarkoapp.com/report_bug',
 				headers: {'Authorization': 'Token ' + TOKEN, 'X-CSRFToken': CSRFTOKEN},
 				data: {message: message}
 			}).done(function() {
@@ -219,7 +219,7 @@ var ContentView = Backbone.View.extend({
 		if ( newpass.length > 0 ) {
 			$.ajax({
 				type: 'POST',
-				url: 'password_change',
+				url: 'http://www.bookmarkoapp.com/password_change',
 				headers: {'Authorization': 'Token ' + TOKEN, 'X-CSRFToken': CSRFTOKEN},
 				data: {data: newpass}
 			}).done(function() {
@@ -411,8 +411,8 @@ var SettingsView = Backbone.View.extend({
 			this.forcePassChange();
 		}
 
-		var passinput = this.$('.new-pass-input');
-		var confirmButton = this.$('.confirm-pass-change');
+		this.$passinput = this.$('.new-pass-input');
+		this.$confirmButton = this.$('.confirm-pass-change');
 	},
 
 	events: {
@@ -453,7 +453,7 @@ var SettingsView = Backbone.View.extend({
 	syncSettings: function() {
 		$.ajax({
 			type: 'POST',
-			url: 'change_settings',
+			url: 'http://www.bookmarkoapp.com/change_settings',
 			headers: {'Authorization': 'Token ' + TOKEN, 'X-CSRFToken': CSRFTOKEN},
 			data: {'appearance': APPEARANCE, 'order_collections': order_collections}
 		})
@@ -496,24 +496,24 @@ var SettingsView = Backbone.View.extend({
 	},
 
 	showConfirmButton: function() {
-		confirmButton.removeClass('hidden');
+		this.$confirmButton.removeClass('hidden');
 	},
 
 	onEnterPass: function(e) {
 		if (e.which === ENTER_KEY) {
-			confirmButton.click()
+			this.$confirmButton.click()
 			return false;
 		}
 	},
 
 	changePassword: function() {
 		var msgEl = this.$('.change-pass-message')
-		var newpass = passinput.val()
+		var newpass = this.$passinput.val()
 
 		if ( newpass.length > 0 ) {
 			$.ajax({
 				type: 'POST',
-				url: 'password_change',
+				url: 'http://www.bookmarkoapp.com/password_change',
 				headers: {'Authorization': 'Token ' + TOKEN, 'X-CSRFToken': CSRFTOKEN},
 				data: {data: newpass}
 			}).done(function() {
@@ -525,9 +525,9 @@ var SettingsView = Backbone.View.extend({
 				}, 100)
 				window.setTimeout(function() {
 					msgEl.css('opacity', '0')
-					confirmButton.addClass('hidden')
+					settingsView.$confirmButton.addClass('hidden')
 					msgEl.addClass('hidden')
-					passinput.val('')
+					settingsView.$passinput.val('')
 				}, 2000)
 			}).fail(function() {
 				msgEl.removeClass('hidden')
@@ -538,7 +538,7 @@ var SettingsView = Backbone.View.extend({
 				}, 100)
 				window.setTimeout(function() {
 					msgEl.css('opacity', '0')
-					passinput.val('')
+					settingsView.$passinput.val('')
 				}, 2000)
 			})
 
@@ -580,32 +580,25 @@ var CollectionEditView = Backbone.View.extend({
 	},
 
 	events: {
-		'focus .collection-edit-name': 'nameFocus',
-		'keypress .collection-edit-name': 'onEnter',
-		'blur .collection-edit-name': 'setTitle',
+		'keypress .collection-edit-name': 'createOnEnter',
 		'click .collection-edit-delete': 'clear',		
 		'click .bookmarks-group-color': 'changeGroupColor',
 		'click .collection-edit-color': 'togglePalette',
 	},
 
-	nameFocus: function() {
-		window.titleField = this.$('.collection-edit-name');
-	},
-
-	onEnter: function(e) {
+	createOnEnter: function(e) {
 		if (e.which === ENTER_KEY) {
-			titleField.blur()
+			var newval = this.$('.collection-edit-name').text();
+			this.model.set({title: newval})
+
+			if ( this.model.hasChanged('title') ) {
+				this.model.trigger('update')
+				this.saveGroup(newval)
+			}
+
+			this.$('.collection-edit-name').blur()
+
 			return false;
-		}
-	},
-
-	setTitle: function() {
-		var newval = titleField.text()
-		this.model.set({title: newval})
-
-		if ( this.model.hasChanged('title') ) {
-			this.model.trigger('update')
-			this.saveGroup(newval)
 		}
 	},
 
