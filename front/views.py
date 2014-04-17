@@ -1,25 +1,30 @@
+'''Defines app views'''
+
 import json
+from datetime import timedelta, datetime
+from django.utils.timezone import utc
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.contrib.auth.forms import UserCreationForm, PasswordResetForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from front.models import Bookmark, BookmarkCollection, Post, Recover, AppSettings
-from front.serializers import BookmarkSerializer, BookmarkCollectionSerializer
-from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authtoken.models import Token
-import datetime
-from datetime import timedelta
-from django.utils.timezone import utc
-from google.appengine.api import mail
 from django.core.signing import Signer
 from django.core.exceptions import ObjectDoesNotExist
+from google.appengine.api import mail
+from front.models import Bookmark, BookmarkCollection, Post, Recover, AppSettings
+from front.serializers import BookmarkSerializer, BookmarkCollectionSerializer
 
-# Check if user is logged, otherwise show index page
+
 def index(request):
+    ''' Returns user or front templates
+    If user is logged in, it grabs its data and returns it with the user template.
+    If it's not, it shows him the front page.
+    '''
+
     if request.user.is_authenticated():
         user_id = request.user.id
 
@@ -31,6 +36,7 @@ def index(request):
         collection = BookmarkCollection.objects.filter(user_id__exact=user_id)
         serializedBookmarkCollections = BookmarkCollectionSerializer(collection, many=True)
 
+        # The user data is returned in this way to ease the app loading.
         bootstrapped_data = {'bookmarks': json.dumps(serializedBookmarks.data),
                             'BookmarkCollections': json.dumps(serializedBookmarkCollections.data),
                             'order_collections': json.dumps(appSettings.order_collections),
@@ -38,57 +44,68 @@ def index(request):
         return render(request, 'user/index.html', bootstrapped_data)
     else:
         return render(request, 'index.html')
-        
+
+
 def about(request):
+    '''Returns the about page'''
+
     return render(request, 'about.html')
 
+
 def blog(request):
+    '''Grabs all blog posts and returns the blog page'''
+
     posts = Post.objects.all()
     return render(request, 'blog.html', {'posts': posts})
 
+
 def register_user(request):
+    '''Signs new user'''
+
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
+
         if form.is_valid():
             user = form.save()
-
-            # Login the user
             username = request.POST['username']
             password = request.POST['password1']
             user = authenticate(username=username, password=password)
 
-            # If authenticated 
             if user is not None:
                 if user.is_active:
-                    # Get or Create the token object for the logged user 
+
+                    # Get the token needed to access the api
                     token = set_or_get_token(user)
 
-                    # Login and set the token cookie
+                    # Login user and create settings object
                     login(request, user)
-                    success = HttpResponse(status=200)
-
                     AppSettings.objects.create(user_id=user.id)
 
-                    new_user_time = datetime.datetime.utcnow().replace(tzinfo=utc) + timedelta(seconds=48)
+                    # Set token cookie and new user cookie which expires after 48 seconds
+                    success = HttpResponse(status=200)
+                    new_user_time = datetime.utcnow().replace(tzinfo=utc) + timedelta(seconds=48)
                     success.set_cookie('new-user', 'true', expires=new_user_time)
                     success.set_cookie('Token', token, expires=365 * 24 * 60 * 60)
                     return success
 
         return HttpResponse(status=403)
 
+
 def login_user(request):
+    '''Lets the user in'''
+
     if request.method == 'GET':
-        username = request.GET[ 'username' ]
-        password = request.GET[ 'password' ]
+        username = request.GET['username']
+        password = request.GET['password']
         user = authenticate(username=username, password=password)
-    
-        # If authenticated 
+
         if user is not None:
             if user.is_active:
-                # Get or Create the token object for the logged user 
+
+                # Get the token needed to access the api
                 token = set_or_get_token(user)
 
-                # Login and set the token cookie
+                # Login user and renew token cookie
                 login(request, user)
                 login_success = HttpResponse(status=200)
                 login_success.set_cookie('Token', token, expires=365 * 24 * 60 * 60)
@@ -97,140 +114,171 @@ def login_user(request):
                 # Change this if you delete/deactivate user/user has deleted it's account
                 return HttpResponseRedirect('/')
         else:
-        # Return an 'invalid login' error message.
             return HttpResponse(status=404)
 
-# Create or get a token for the user and return it
+
 def set_or_get_token(user):
+    ''' Checks user token
+    Creates new api token if the user doesn't have one, or it's older than 48 hours.
+    '''
+
     token, created = Token.objects.get_or_create(user=user)
 
     if not created:
-        # update the created time of the token to keep it valid
-        token.created = datetime.datetime.utcnow().replace(tzinfo=utc)
-        token.save()    
-    
-    if token.created < datetime.datetime.utcnow().replace(tzinfo=utc) - timedelta(hours=48):
+        token.created = datetime.utcnow().replace(tzinfo=utc)
+        token.save()
+
+    if token.created < datetime.utcnow().replace(tzinfo=utc) - timedelta(hours=48):
         token.delete()
         token = Token.objects.create(user=user)
-        token.created = datetime.datetime.utcnow().replace(tzinfo=utc)
-        token.save()    
+        token.created = datetime.utcnow().replace(tzinfo=utc)
+        token.save()
 
     return token
 
+
 def change_settings(request):
+    '''Updates user app settings'''
+
     user_settings = AppSettings.objects.get(user_id=request.user.id)
     user_settings.appearance = request.POST['appearance']
     user_settings.order_collections = request.POST['order_collections']
     user_settings.save()
     return HttpResponse(status=200)
 
+
 def password_change(request):
+    '''Gets the new password that the user sent and saves it'''
+
     if request.method == 'POST':
         user = request.user
         password = request.POST['data']
         user.set_password(password)
         user.save()
-
         return HttpResponse(status=200)
 
+
 def forgotten_password(request):
+    ''' Helps the user incase of forgotten password
+    Accepts user email and if exists creates random signed key, which is saved with
+    the user id to the db and then sends email with instructions to the user.
+    '''
+
     if request.method == 'POST':
         email = request.POST['username']
 
         try:
             user = User.objects.get(username=email)
         except ObjectDoesNotExist:
-            return HttpResponse('User not found',status=404)
+            return HttpResponse('User not found', status=404)
 
         key = User.objects.make_random_password(length=32)
 
         mail.send_mail(sender="Bookmarko support <dimitar@bookmarkoapp.com>",
-                      to="<"+ email +">",
-                      subject="New password requested for Bookmarko",
-                      body= """
-                            Hello %s
-                            This message is generate atomatically please don't reply. :)
-                            <a href="http://bookmarkoapp.com/recover?key=%s">Change password</a>
-                            """ % (email, key), html="""
-                            Hello %s <br>
-                            Someone requested password change for your account, if that's you, use the link below.<br>
-                            <br>
-                            <a href="http://bookmarkoapp.com/recover?key=%s">Change password</a><br>
-                            <br>
-                            This message is generated automatically.
-                            """ % (email, key) )
+        to="<" + email + ">", subject="New password requested for Bookmarko",
+        body="""
+            Hello %s
+            This message is generate atomatically please don't reply. :)
+            <a href="http://bookmarkoapp.com/recover?key=%s">Change password</a>
+            """ % (email, key), html="""
+            Hello %s <br>
+            Someone requested password change for your account, if that's you, use the link below.<br>
+            <br>
+            <a href="http://bookmarkoapp.com/recover?key=%s">Change password</a><br>
+            <br>
+            This message is generated automatically.
+            """ % (email, key))
 
         signer = Signer()
         signed_key = signer.sign(key)
-
         token_key = Recover.objects.create(user_id=user.id, key=signed_key)
         token_key.save()
 
         return HttpResponse(status=200)
 
+
 def recover_password(request):
-    
+    ''' Verifies key
+    Accepts the key parameter from the url. If exists in the db it signs the user in
+    and prompts him to change his password.
+    When the token is used - it's deleted.
+    '''
+
     key = request.GET['key']
-    
     signer = Signer()
     signed_key = signer.sign(key)
-    
+
     try:
         recover = Recover.objects.get(key=signed_key)
-        user = User.objects.get(id=recover.user_id)
-
-        user.backend = 'django.contrib.auth.backends.ModelBackend'
-        login(request, user)
-        
-        recover.delete()
-
-        success = HttpResponseRedirect('/')
-        
-        new_user_time = datetime.datetime.utcnow().replace(tzinfo=utc) + timedelta(seconds=48)
-        success.set_cookie('recover', 'true', expires=new_user_time)
-
-        return success
-
     except ObjectDoesNotExist:
-        return HttpResponse('Key already used, or does not exists.',status=404)
+        return HttpResponse('Key already used, or does not exists.', status=404)
+
+    user = User.objects.get(id=recover.user_id)
+
+    # Try to authenticate first so user.backend hack is not needed
+    user.backend = 'django.contrib.auth.backends.ModelBackend'
+    login(request, user)
+
+    recover.delete()
+
+    success = HttpResponseRedirect('/')
+    cookie_time = datetime.utcnow().replace(tzinfo=utc) + timedelta(seconds=48)
+    success.set_cookie('recover', 'true', expires=cookie_time)
+    return success
+
 
 def report_bug(request):
+    '''Accepts bug report
+    Sends bug reports to app email. This function is not used for now because google screwed up.
+    (Note: Change the email so it can work again)
+    '''
+
     if request.method == 'POST':
         email = request.user.username
         message = request.POST['message']
 
-        mail.send_mail(sender="<"+ email +">",
-                          to="Dimitar Ralev <dimitar@bookmarkoapp.com>",
-                          subject="User Feedback",
-                          body=message)
-
+        mail.send_mail(sender="<" + email + ">",
+        to="Dimitar Ralev <dimitar@bookmarkoapp.com>",
+        subject="User Feedback", body=message)
         return HttpResponse(status=200)
 
+
 def logout_user(request):
+    '''Waves to the user for goodbye'''
+
     logout(request)
     return HttpResponseRedirect('/')
 
+
 def add_from_page(request):
+    ''' Adds bookmark from the app
+    Accepts url address, grabs the page title and saves the bookmark.
+    '''
+
     if request.method == 'POST':
+
+        # use urllib and beautifulsoup to make request and fetch the title
         import urllib2
         from bs4 import BeautifulSoup
 
         url = request.POST['url']
-
         try:
             source = urllib2.urlopen(url)
         except ValueError:
             source = urllib2.urlopen('http://' + url)
 
+        # Parse the returned html and store title tag text
         BS = BeautifulSoup(source)
-
         title = BS.title.text
-        
+
+        # Create the new bookmark and return success with the saved bookmark
+        # so it can pop in the app too.
+        # (To do: return the bookmark object and parse it on the front)
         bookmark = Bookmark.objects.create(user_id=request.user.id, title=title, url=url)
         data = {'id': bookmark.pk, 'title': bookmark.title, 'url': bookmark.url}
-        return HttpResponse(json.dumps(data) , status=201)
+        return HttpResponse(json.dumps(data), status=201)
 
-# API Class Views
+# Django-rest api classes
 class BookmarksList(APIView):
 
     def get(self, request, format=None):
@@ -247,6 +295,7 @@ class BookmarksList(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class BookmarkDetail(APIView):
 
@@ -274,6 +323,7 @@ class BookmarkDetail(APIView):
         bookmark.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
 class BookmarkCollectionList(APIView):
 
     def get(self, request, format=None):
@@ -290,6 +340,7 @@ class BookmarkCollectionList(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class BookmarkCollectionDetail(APIView):
 
@@ -317,84 +368,3 @@ class BookmarkCollectionDetail(APIView):
         collection = self.get_object(pk)
         collection.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-'''
-from django.views.decorators.csrf import csrf_exempt
-import re
-import urllib2
-from bs4 import BeautifulSoup
-from google.appengine.api.images import Image
-import urlparse
-from urlparse import urljoin
-import mimetypes
-from google.appengine.api import taskqueue
-
-@csrf_exempt
-def dam(request):
-    if request.method == 'POST':
-        file = request.FILES['thefile']
-        test = file.read()
-
-        taskqueue.add(url='/upload',payload=test)
-    return HttpResponse(status=200)
-
-@csrf_exempt
-def upload_file(test):
-
-        hmm = re.findall(r'href=[\'"]?([^\'" >]+)', str(test), flags=re.IGNORECASE)
-        for sait in hmm:
-
-            if sait.endswith('.gif') or sait.endswith('.png') or sait.endswith('.jpeg'):
-                Bookmark.objects.create(title=sait, url=sait, image=sait, user_id=1)
-            
-            else:
-                try:
-                    source = urllib2.urlopen(sait)
-                    BS = BeautifulSoup(source)
-                    
-                    title = BS.title.text
-                    Bookmark.objects.create(title=title, url=sait, user_id=1)
-#                   links = BS.findAll('img', src=True)
-#                   i = 0
-                except urllib2.HTTPError, err:
-                    if err.code == 403:
-                        pass
-                    else:
-                        pass
-                except urllib2.URLError:
-                    pass
-
-#               for link in links:
-#                   i+= 1
-#                   thelink = urlparse.urljoin(sait, link['src'])
-#                   try:
-#                       imgdata = urllib2.urlopen(thelink)
-#                       img_data = imgdata.open()
-#                       img_type = imgdata.info().getheader('Content-Type')
-#                       
-#                       if img_type == 'image/png' or img_type == 'image/jpeg' or img_type == 'image/gif':
-#                           #therealimage = Image(image_data=img_data)
-                                        
-#                           if img_data.width > 240 and img_data.height > 240:
-#                               url = sait
-#                               title = BS.find('title').text
-#                               Bookmark.objects.create(title=title, url=url, image=thelink, user_id=2)
-#                               img_data.close()
-#                               break
-#                           if i > 1 and img_data.width < 240 and img_data.height < 240:
-#                               url = sait
-
-#                               break
-                    #except urllib2.HTTPError, err:
-                    #   if err.code == 403:
-                    #       pass
-                    #   else:
-                    #       pass
-                    #except urllib2.URLError:
-                    #   pass
-                    #except:
-                    #   pass
-
-        file.close()
-        return HttpResponse(status=201)
-'''

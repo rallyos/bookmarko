@@ -72,7 +72,6 @@ var BookmarkCollectionView = Backbone.View.extend({
 
 	events: {
 		'keypress .bookmarks-group-name': 'createOnEnter',
-
 		'click .bookmarks-group-count': 'navigateToGroup',
 		'dragenter': 'dragEnterEvent',
 		'dragover': 'dragOverEvent',
@@ -82,7 +81,7 @@ var BookmarkCollectionView = Backbone.View.extend({
 
 	animateGroup: function() {
 		var groupEl = $(this.el)
-		$(groupEl).toggleClass('scale')
+		groupEl.toggleClass('scale')
 
 		// For now timeout is needed to kick the animation (toggling the transform class)
 		setTimeout(function() {
