@@ -103,6 +103,11 @@ var ContentView = Backbone.View.extend({
 			this.$starButton.toggleClass('yellow-star')
 			this.$starButton.data('pressed', 'no');
 
+			if (bookmarks.length == 0) {
+				this.$('.help-arrows').show()
+				this.$('.browser-extensions-box').show()
+			}
+
 			this.$('.no-starred-block').hide()					
 
 			// Use the universal filter function to show the previous view
@@ -130,6 +135,10 @@ var ContentView = Backbone.View.extend({
 			};
 
 			if (starred.length < 1) {
+				if (bookmarks.length == 0) {
+					this.$('.help-arrows').hide()
+					this.$('.browser-extensions-box').hide()
+				}
 				this.$('.no-starred-block').show()
 			} else {
 				this.$('.no-starred-block').hide()					
@@ -169,6 +178,10 @@ var ContentView = Backbone.View.extend({
 		}).done(function(data) {
 			var p = JSON.parse(data)
 			$('.add-url-submit').remove('.add-url-loading').text('\u2713')
+			if (bookmarks.length == 0) {
+				$('.help-arrows').remove()
+				$('.browser-extensions-box').remove()
+			}
 			bookmarks.add({id: p.id, title: p.title, url: p.url,
 			image: null, starred: false, collection_id: null, description: null, tag: null})
 			setTimeout(function() {
