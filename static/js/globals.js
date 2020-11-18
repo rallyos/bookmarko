@@ -37,4 +37,5 @@ if ( APPEARANCE == 'LI' ) {
     var BM_CLASS = 'bookmark grid-tmpl'
 }
 
+const ROOT_URL = 'https://bookmarko.herokuapp.com'
 // Maybe create globals object

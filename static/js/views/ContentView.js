@@ -56,17 +56,17 @@ var ContentView = Backbone.View.extend({
 	},
 
 	showHelp: function() {
-		var newUserTemplate = $('<img class="help-arrows" src="http://www.bookmarkoapp.com/static/images/user/newtest.png">')
+		var newUserTemplate = $('<img class="help-arrows" src="https://bookmarko.herokuapp.com/static/images/user/newtest.png">')
 			newUserTemplate.appendTo($('.bookmarks-section') );
 
 		if (NEW_USER == 'true') {
     		var newUserTemplate = $('<h1 class="new-user-text thank-you">Thank you for signing up!</h1><p class="new-user-text beta-warning"><span class="new-user-bookmarko">Bookmarko</span> is still in early beta so everything can brake, and <br> your user experience may not be so good.</p>')
     			newUserTemplate.insertAfter('.help-arrows');
 	
-			var getExtensionTemplate = $('<div class="browser-extensions-box"><h1 class="new-user-text get-extension-header">Get the extension and start saving bookmarks</h1><a class="browser-extensions-link" href="https://chrome.google.com/webstore/detail/bookmarko/cjiadbbjgehkojjabcbegjmmlcfhgped" target="_blank"><img class="browser-extensions-icon" src="http://www.bookmarkoapp.com/static/images/user/webstorex124.png"></a></div>')
+			var getExtensionTemplate = $('<div class="browser-extensions-box"><h1 class="new-user-text get-extension-header">Get the extension and start saving bookmarks</h1></br><h1 class="new-user-text get-extension-header">2020 Update: Rely on the Add button for testing. The extensions are long gone.</h1><a class="browser-extensions-link" href="https://chrome.google.com/webstore/detail/bookmarko/cjiadbbjgehkojjabcbegjmmlcfhgped" target="_blank"><img class="browser-extensions-icon" src="https://www.bookmarkoapp.com/static/images/user/webstorex124.png"></a></div>')
 				getExtensionTemplate.insertAfter('.beta-warning')
 		} else {
-			var getExtensionTemplate = $('<div class="browser-extensions-box"><h1 class="new-user-text get-extension-header">Get the extension and start saving bookmarks</h1><a class="browser-extensions-link" href="https://chrome.google.com/webstore/detail/bookmarko/cjiadbbjgehkojjabcbegjmmlcfhgped" target="_blank"><img class="browser-extensions-icon" src="http://www.bookmarkoapp.com/static/images/user/webstorex124.png"></a></div>')
+			var getExtensionTemplate = $('<div class="browser-extensions-box"><h1 class="new-user-text get-extension-header">Get the extension and start saving bookmarks</h1></br><h1 class="new-user-text get-extension-header">2020 Update: Rely on the Add button for testing. The extensions are long gone.</h1><a class="browser-extensions-link" href="https://chrome.google.com/webstore/detail/bookmarko/cjiadbbjgehkojjabcbegjmmlcfhgped" target="_blank"><img class="browser-extensions-icon" src="https://www.bookmarkoapp.com/static/images/user/webstorex124.png"></a></div>')
 				getExtensionTemplate.insertAfter('.help-arrows')
 		}
 	},
@@ -172,7 +172,7 @@ var ContentView = Backbone.View.extend({
 		$('.add-url-submit').text('').append('<img class="add-url-loading" width="25" height="25" src="/static/images/user/add_url_loading.png">')
 		$.ajax({
 			type: 'POST',
-			url: 'http://www.bookmarkoapp.com/add_from_page',
+			url: ROOT_URL + '/add_from_page',
 			headers: {'Authorization': 'Token ' + TOKEN, 'X-CSRFToken': CSRFTOKEN},
 			data: {url: $('.add-url-input ').val()}
 		}).done(function(data) {
@@ -210,7 +210,7 @@ var ContentView = Backbone.View.extend({
 		if ( message.length > 0 ) {
 			$.ajax({
 				type: 'POST',
-				url: 'http://www.bookmarkoapp.com/report_bug',
+				url: ROOT_URL + '/report_bug',
 				headers: {'Authorization': 'Token ' + TOKEN, 'X-CSRFToken': CSRFTOKEN},
 				data: {message: message}
 			}).done(function() {
@@ -232,7 +232,7 @@ var ContentView = Backbone.View.extend({
 		if ( newpass.length > 0 ) {
 			$.ajax({
 				type: 'POST',
-				url: 'http://www.bookmarkoapp.com/password_change',
+				url: ROOT_URL + '/password_change',
 				headers: {'Authorization': 'Token ' + TOKEN, 'X-CSRFToken': CSRFTOKEN},
 				data: {data: newpass}
 			}).done(function() {
@@ -466,7 +466,7 @@ var SettingsView = Backbone.View.extend({
 	syncSettings: function() {
 		$.ajax({
 			type: 'POST',
-			url: 'http://www.bookmarkoapp.com/change_settings',
+			url: ROOT_URL + '/change_settings',
 			headers: {'Authorization': 'Token ' + TOKEN, 'X-CSRFToken': CSRFTOKEN},
 			data: {'appearance': APPEARANCE, 'order_collections': order_collections}
 		})
@@ -526,7 +526,7 @@ var SettingsView = Backbone.View.extend({
 		if ( newpass.length > 0 ) {
 			$.ajax({
 				type: 'POST',
-				url: 'http://www.bookmarkoapp.com/password_change',
+				url: ROOT_URL + '/password_change',
 				headers: {'Authorization': 'Token ' + TOKEN, 'X-CSRFToken': CSRFTOKEN},
 				data: {data: newpass}
 			}).done(function() {

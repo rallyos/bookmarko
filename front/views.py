@@ -14,7 +14,7 @@ from rest_framework import status
 from rest_framework.authtoken.models import Token
 from django.core.signing import Signer
 from django.core.exceptions import ObjectDoesNotExist
-from google.appengine.api import mail
+from django.core.mail import send_mail
 from front.models import Bookmark, BookmarkCollection, Post, Recover, AppSettings
 from front.serializers import BookmarkSerializer, BookmarkCollectionSerializer
 
@@ -173,21 +173,22 @@ def forgotten_password(request):
             return HttpResponse('User not found', status=404)
 
         key = User.objects.make_random_password(length=32)
-
-        mail.send_mail(sender="Bookmarko support <dimitar@bookmarkoapp.com>",
-        to="<" + email + ">", subject="New password requested for Bookmarko",
-        body="""
+        message="""
             Hello %s
             This message is generate atomatically please don't reply. :)
             <a href="http://bookmarkoapp.com/recover?key=%s">Change password</a>
-            """ % (email, key), html="""
+            """ % (email, key)
+        html_message="""
             Hello %s <br>
             Someone requested password change for your account, if that's you, use the link below.<br>
             <br>
             <a href="http://bookmarkoapp.com/recover?key=%s">Change password</a><br>
             <br>
             This message is generated automatically.
-            """ % (email, key))
+            """ % (email, key)
+
+        send_mail("New password requested for Bookmarko", message, "Bookmarko support <dimitar@bookmarkoapp.com>", email, html_message=html_message)
+
 
         signer = Signer()
         signed_key = signer.sign(key)
@@ -232,15 +233,7 @@ def report_bug(request):
     Sends bug reports to app email. This function is not used for now because google screwed up.
     (Note: Change the email so it can work again)
     '''
-
-    if request.method == 'POST':
-        email = request.user.username
-        message = request.POST['message']
-
-        mail.send_mail(sender="<" + email + ">",
-        to="Dimitar Ralev <dimitar@bookmarkoapp.com>",
-        subject="User Feedback", body=message)
-        return HttpResponse(status=200)
+    return HttpResponse(status=404)
 
 
 def logout_user(request):

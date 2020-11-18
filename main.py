@@ -14,9 +14,7 @@ sys.path.insert(0, 'libs')
 
 # Force Django to reload its settings.
 from django.conf import settings
-from google.appengine.api import memcache
 
-sys.modules['memcache'] = memcache
 
 settings._target = None
 

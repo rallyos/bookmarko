@@ -1,7 +1,8 @@
-from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
+import os
+import dj_database_url
 
 DEBUG = False
-TEMPLATE_DEBUG = DEBUG
+TEMPLATE_DEBUG = False
 
 ADMINS = (
           # ('Your Name', 'your_email@example.com'),
@@ -9,11 +10,7 @@ ADMINS = (
 
 MANAGERS = ADMINS
 DATABASES = {
-    'default': {
-        'ENGINE': 'google.appengine.ext.django.backends.rdbms',
-        'INSTANCE': 'markedbyme:bookmarko-db',
-        'NAME': 'bookmarko',
-}
+  'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
 }
 
 # Local time zone for this installation. Choices can be found here:
@@ -48,22 +45,13 @@ MEDIA_ROOT = ''
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
 MEDIA_URL = ''
 
-# Absolute path to the directory static files should be collected to.
-# Don't put anything in this directory yourself; store your static files
-# in apps' "static/" subdirectories and in STATICFILES_DIRS.
-# Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = ''
-
-# URL prefix for static files.
-# Example: "http://media.lawrence.com/static/"
+PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
+STATIC_ROOT = 'static'
 STATIC_URL = '/static/'
 
-# Additional locations of static files
 STATICFILES_DIRS = (
-                    # Put strings here, like "/home/html/static" or "C:/www/django/static".
-                    # Always use forward slashes, even on Windows.
-                    # Don't forget to use absolute paths, not relative paths.
-                    )
+    os.path.join(PROJECT_PATH, 'static'),
+)
 
 # List of finder classes that know how to find static files in
 # various locations.
@@ -75,17 +63,6 @@ STATICFILES_FINDERS = (
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'a0y%n5)_re&!cniwm13c4&b12jf4scs3^%@ka_8ahj+dfawi00'
-
-# List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
-                    'django.template.loaders.filesystem.Loader',
-                    'django.template.loaders.app_directories.Loader',
-                    #     'django.template.loaders.eggs.Loader',
-                    )
-
-TEMPLATE_CONTEXT_PROCESSORS = TCP + (
-                    'django.core.context_processors.request',
-                    )
 
 MIDDLEWARE_CLASSES = (
                       'django.middleware.common.CommonMiddleware',
@@ -124,6 +101,12 @@ INSTALLED_APPS = (
                   # Uncomment the next line to enable admin documentation:
                   # 'django.contrib.admindocs',
                   )
+
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = os.environ.get('SENDGRID_USERNAME')
+EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_PASSWORD')
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
